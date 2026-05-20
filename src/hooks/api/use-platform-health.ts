@@ -1,0 +1,70 @@
+'use client';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { platformHealthService } from '@/services/platform-health.service';
+import { queryKeys } from './query-keys';
+
+export function useHealthPlatformOverview() {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.overview,
+    queryFn: () => platformHealthService.overview(),
+  });
+}
+
+export function useConsumersList(page: number, search: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.consumers(page, search),
+    queryFn: () => platformHealthService.listConsumers({ page, limit: 20, search }),
+  });
+}
+
+export function useConsumerDetail(userId: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.consumer(userId),
+    queryFn: () => platformHealthService.consumerDetail(userId),
+    enabled: Boolean(userId),
+  });
+}
+
+export function useConsumerMetrics(userId: string, days: number) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.metrics(userId, days),
+    queryFn: () => platformHealthService.consumerMetrics(userId, days),
+    enabled: Boolean(userId),
+  });
+}
+
+export function useConsumerInsights(userId: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.insights(userId),
+    queryFn: () => platformHealthService.consumerInsights(userId),
+    enabled: Boolean(userId),
+  });
+}
+
+export function useGenerateInsight(userId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => platformHealthService.generateInsight(userId),
+    onSuccess: () => {
+      toast.success('AI insight generated');
+      void qc.invalidateQueries({ queryKey: queryKeys.platformHealth.consumer(userId) });
+      void qc.invalidateQueries({ queryKey: queryKeys.platformHealth.insights(userId) });
+      void qc.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
+    },
+    onError: () => toast.error('Failed to generate insight'),
+  });
+}
+
+export function useSyncConsumerDevices(userId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => platformHealthService.syncDevices(userId),
+    onSuccess: () => {
+      toast.success('Device sync triggered');
+      void qc.invalidateQueries({ queryKey: queryKeys.platformHealth.consumer(userId) });
+    },
+    onError: () => toast.error('Sync failed'),
+  });
+}
