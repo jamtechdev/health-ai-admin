@@ -36,5 +36,14 @@ export const queryKeys = {
     metrics: (userId: string, days: number) =>
       ['platform-health', 'metrics', userId, days] as const,
     insights: (userId: string) => ['platform-health', 'insights', userId] as const,
+    adminAnalytics: ['platform-health', 'admin-analytics'] as const,
+    adminWearables: (page: number, search: string) =>
+      ['platform-health', 'admin-wearables', page, search] as const,
+    adminInsights: (page: number, search: string) =>
+      ['platform-health', 'admin-insights', page, search] as const,
+    adminSubscriptions: (page: number, search: string) =>
+      ['platform-health', 'admin-subscriptions', page, search] as const,
+    adminSyncLogs: (page: number) => ['platform-health', 'admin-sync-logs', page] as const,
+    adminApiLogs: (page: number) => ['platform-health', 'admin-api-logs', page] as const,
   },
 } as const;

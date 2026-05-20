@@ -1,12 +1,16 @@
 import { BaseService } from '@/lib/api/base.service';
 import type { ListParams, PaginatedData } from '@/lib/api/types';
 import type {
+  AdminAnalyticsOverview,
+  ApiLogRecord,
   AiInsightRecord,
   ConnectedDeviceRecord,
   ConsumerDashboard,
   ConsumerListItem,
+  DeviceSyncLogRecord,
   HealthMetricRecord,
   HealthPlatformOverview,
+  SubscriptionRecord,
 } from '@/types/platform-health';
 
 class PlatformHealthService extends BaseService {
@@ -40,6 +44,30 @@ class PlatformHealthService extends BaseService {
 
   syncDevices(userId: string) {
     return this.post<Record<string, unknown>>(`/admin/health/consumers/${userId}/sync`);
+  }
+
+  adminAnalyticsOverview() {
+    return this.get<AdminAnalyticsOverview>('/admin/analytics/overview');
+  }
+
+  adminWearables(params?: ListParams) {
+    return this.getPaginated<ConnectedDeviceRecord>('/admin/analytics/wearables', params);
+  }
+
+  adminInsights(params?: ListParams) {
+    return this.getPaginated<AiInsightRecord>('/admin/analytics/insights', params);
+  }
+
+  adminSubscriptions(params?: ListParams) {
+    return this.getPaginated<SubscriptionRecord>('/admin/analytics/subscriptions', params);
+  }
+
+  adminSyncLogs(params?: ListParams) {
+    return this.getPaginated<DeviceSyncLogRecord>('/admin/analytics/sync-logs', params);
+  }
+
+  adminApiLogs(params?: ListParams) {
+    return this.getPaginated<ApiLogRecord>('/admin/analytics/api-logs', params);
   }
 }
 

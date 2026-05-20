@@ -68,3 +68,45 @@ export function useSyncConsumerDevices(userId: string) {
     onError: () => toast.error('Sync failed'),
   });
 }
+
+export function useAdminAnalyticsOverview() {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminAnalytics,
+    queryFn: () => platformHealthService.adminAnalyticsOverview(),
+  });
+}
+
+export function useAdminWearables(page: number, search: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminWearables(page, search),
+    queryFn: () => platformHealthService.adminWearables({ page, limit: 20, search }),
+  });
+}
+
+export function useAdminInsights(page: number, search: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminInsights(page, search),
+    queryFn: () => platformHealthService.adminInsights({ page, limit: 20, search }),
+  });
+}
+
+export function useAdminSubscriptions(page: number, search: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminSubscriptions(page, search),
+    queryFn: () => platformHealthService.adminSubscriptions({ page, limit: 20, search }),
+  });
+}
+
+export function useAdminSyncLogs(page: number) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminSyncLogs(page),
+    queryFn: () => platformHealthService.adminSyncLogs({ page, limit: 20 }),
+  });
+}
+
+export function useAdminApiLogs(page: number) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminApiLogs(page),
+    queryFn: () => platformHealthService.adminApiLogs({ page, limit: 20 }),
+  });
+}

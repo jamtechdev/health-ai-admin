@@ -16,12 +16,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     hydrate();
     loadTokensFromStorage();
-    setReady(true);
+    queueMicrotask(() => {
+      if (mounted) setReady(true);
+    });
 
     const token = localStorage.getItem('accessToken');
-    if (!token) return;
+    if (!token) {
+      return () => {
+        mounted = false;
+      };
+    }
 
     authService
       .me()
@@ -31,6 +38,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           logout();
         }
       });
+    return () => {
+      mounted = false;
+    };
   }, [hydrate, setAuth, logout]);
 
   const sessionActive = isAuthenticated || hasStoredSession();

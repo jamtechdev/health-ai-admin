@@ -13,12 +13,23 @@ import {
   Image,
   User,
   HeartPulse,
+  Watch,
+  Sparkles,
+  CreditCard,
+  LineChart,
+  RadioTower,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/consumers', label: 'App Users', icon: HeartPulse },
+  { href: '/wearables', label: 'Wearables', icon: Watch },
+  { href: '/insights', label: 'AI Insights', icon: Sparkles },
+  { href: '/subscriptions', label: 'Subscriptions', icon: CreditCard },
+  { href: '/analytics', label: 'Analytics', icon: LineChart },
+  { href: '/device-sync-logs', label: 'Sync Logs', icon: RadioTower },
+  { href: '/api-logs', label: 'API Logs', icon: FileText },
   { href: '/users', label: 'Users', icon: Users },
   { href: '/roles', label: 'Roles', icon: Shield },
   { href: '/settings', label: 'Settings', icon: Settings },
