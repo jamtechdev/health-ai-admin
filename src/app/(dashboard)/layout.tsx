@@ -72,7 +72,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           />
         )}
         <div className="relative z-50 h-full">
-          <Sidebar />
+          <Sidebar onNavigate={() => setSidebarOpen(false)} />
         </div>
       </div>
       <div className="flex flex-1 flex-col overflow-hidden">

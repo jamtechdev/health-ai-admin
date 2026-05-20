@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { Moon, Sun, LogOut, Menu } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
 import { authService } from '@/services/auth.service';
@@ -13,9 +15,20 @@ interface HeaderProps {
 }
 
 export function Header({ title, onMenuClick }: HeaderProps) {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const router = useRouter();
   const { user, logout } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    queueMicrotask(() => {
+      if (active) setMounted(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -36,13 +49,20 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         <h1 className="text-xl font-semibold">{title}</h1>
       </div>
       <div className="flex items-center gap-3">
-        <span className="hidden text-sm text-slate-500 sm:inline">{user?.name}</span>
+        <Link href="/profile" className="hidden text-sm text-slate-500 hover:text-emerald-600 sm:inline">
+          {user?.name}
+        </Link>
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+          title="Toggle theme"
         >
-          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          {mounted && resolvedTheme === 'dark' ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
         </Button>
         <Button variant="ghost" size="icon" onClick={handleLogout}>
           <LogOut className="h-4 w-4" />

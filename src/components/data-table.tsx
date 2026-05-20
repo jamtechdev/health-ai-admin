@@ -75,7 +75,7 @@ export function DataTable<T extends { id: string }>({
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-900">
             <tr>
@@ -96,8 +96,11 @@ export function DataTable<T extends { id: string }>({
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + 1} className="px-4 py-12 text-center text-slate-500">
-                  {emptyMessage}
+                <td colSpan={columns.length + 1} className="px-4 py-14 text-center">
+                  <div className="mx-auto max-w-sm rounded-xl border border-dashed border-slate-200 p-6 text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                    <p className="font-medium text-slate-700 dark:text-slate-200">No data yet</p>
+                    <p className="mt-1 text-sm">{emptyMessage}</p>
+                  </div>
                 </td>
               </tr>
             ) : (
