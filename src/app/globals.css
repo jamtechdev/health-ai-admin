@@ -2,7 +2,32 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
+:root,
+.light {
+  --background: #f7f9fc;
+  --foreground: #111827;
+  --surface: #ffffff;
+  --surface-elevated: #f1f5f9;
+  --surface-secondary: #e8eef6;
+  --border: #d8e0ea;
+  --primary: #d94343;
+  --primary-glow: rgba(217, 67, 67, 0.14);
+  --secondary: #0f9f7a;
+  --secondary-glow: rgba(15, 159, 122, 0.13);
+  --tertiary: #2563eb;
+  --tertiary-glow: rgba(37, 99, 235, 0.12);
+  --warning: #b7791f;
+  --low-recovery: #d65f50;
+  --critical: #dc2626;
+  --text-primary: #111827;
+  --text-secondary: #475467;
+  --text-muted: #667085;
+  --text-disabled: #98a2b3;
+  --shadow-soft: 0 4px 20px rgba(15, 23, 42, 0.08);
+  --shadow-floating: 0 8px 30px rgba(15, 23, 42, 0.12);
+}
+
+.dark {
   --background: #0f1115;
   --foreground: #f4f6f8;
   --surface: #171a20;
@@ -24,11 +49,6 @@
   --text-disabled: #5e6672;
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.18);
   --shadow-floating: 0 8px 30px rgba(0, 0, 0, 0.25);
-}
-
-.dark {
-  --background: #0f1115;
-  --foreground: #f4f6f8;
 }
 
 @theme inline {

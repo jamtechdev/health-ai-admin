@@ -24,8 +24,12 @@ class AuthService extends BaseService {
     return this.post<{ message: string }>('/auth/forgot-password', { email });
   }
 
-  resetPassword(token: string, password: string) {
-    return this.post<{ message: string }>('/auth/reset-password', { token, password });
+  resetPassword(email: string, otp: string, password: string) {
+    return this.post<{ message: string }>('/auth/reset-password', { email, otp, password });
+  }
+
+  verifyEmail(token: string) {
+    return this.post<{ message: string }>('/auth/verify-email', { token });
   }
 
   updateProfile(payload: UpdateProfilePayload) {

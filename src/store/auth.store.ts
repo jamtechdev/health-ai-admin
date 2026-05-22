@@ -8,6 +8,7 @@ export interface User {
   name: string;
   avatar?: string | null;
   status: string;
+  emailVerifiedAt?: string | null;
   roles: string[];
   permissions: string[];
 }
