@@ -28,7 +28,7 @@ export default function ActivityLogsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Activity Logs</h2>
-        <p className="text-slate-500">User activity timeline</p>
+        <p className="text-text-muted">User activity timeline</p>
       </div>
       <DataTable
         columns={columns}

@@ -24,7 +24,7 @@ export default function ApiLogsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">API Logs</h2>
-        <p className="text-slate-500">Request-level observability for admin and mobile APIs.</p>
+        <p className="text-text-muted">Request-level observability for admin and mobile APIs.</p>
       </div>
 
       <DataTable

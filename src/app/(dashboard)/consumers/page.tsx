@@ -14,7 +14,7 @@ const columns: Column<ConsumerTableRow>[] = [
     render: (row) => (
       <Link
         href={`/consumers/${row.user.id}`}
-        className="font-medium text-emerald-600 hover:underline"
+        className="font-medium text-brand-primary hover:underline"
       >
         {row.user.name}
       </Link>
@@ -30,7 +30,7 @@ const columns: Column<ConsumerTableRow>[] = [
     key: 'devices',
     header: 'Devices',
     render: (row) => (
-      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+      <span className="rounded-full bg-brand-secondary/15 px-2 py-0.5 text-xs font-medium text-brand-secondary">
         {row.connectedDevices} connected
       </span>
     ),
@@ -44,7 +44,7 @@ const columns: Column<ConsumerTableRow>[] = [
     key: 'insight',
     header: 'Latest insight',
     render: (row) => (
-      <span className="line-clamp-1 max-w-xs text-slate-600">
+      <span className="line-clamp-1 max-w-xs text-text-secondary">
         {row.latestInsight?.title ?? 'No insights yet'}
       </span>
     ),
@@ -55,7 +55,7 @@ const columns: Column<ConsumerTableRow>[] = [
     render: (row) => (
       <Link
         href={`/consumers/${row.user.id}`}
-        className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:underline"
+        className="inline-flex items-center gap-1 text-sm text-brand-primary hover:underline"
       >
         View <ExternalLink className="h-3 w-3" />
       </Link>
@@ -77,7 +77,7 @@ export default function ConsumersPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">App Users</h2>
-        <p className="text-slate-500">
+        <p className="text-text-muted">
           Mobile app consumers — wearables, metrics, and AI insights
         </p>
       </div>

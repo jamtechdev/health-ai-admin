@@ -10,7 +10,7 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Settings</h2>
-        <p className="text-slate-500">Global application configuration</p>
+        <p className="text-text-muted">Global application configuration</p>
       </div>
       {isLoading ? (
         <p>Loading...</p>
@@ -22,7 +22,7 @@ export default function SettingsPage() {
                 <CardTitle className="text-base">{s.key}</CardTitle>
               </CardHeader>
               <CardContent>
-                <pre className="text-sm text-slate-600">{JSON.stringify(s.value, null, 2)}</pre>
+                <pre className="text-sm text-text-secondary">{JSON.stringify(s.value, null, 2)}</pre>
               </CardContent>
             </Card>
           ))}

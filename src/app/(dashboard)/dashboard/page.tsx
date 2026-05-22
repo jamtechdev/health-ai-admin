@@ -15,10 +15,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDashboardStats } from '@/hooks/api/use-dashboard';
 
 const statCards = [
-  { key: 'totalUsers', label: 'Total Users', icon: Users, color: 'text-blue-600' },
-  { key: 'activeUsers', label: 'Active Users', icon: UserCheck, color: 'text-emerald-600' },
-  { key: 'totalRoles', label: 'Roles', icon: Shield, color: 'text-violet-600' },
-  { key: 'unreadNotifications', label: 'Unread', icon: Bell, color: 'text-amber-600' },
+  { key: 'totalUsers', label: 'Total Users', icon: Users, color: 'text-brand-primary' },
+  { key: 'activeUsers', label: 'Active Users', icon: UserCheck, color: 'text-brand-secondary' },
+  { key: 'totalRoles', label: 'Roles', icon: Shield, color: 'text-brand-tertiary' },
+  { key: 'unreadNotifications', label: 'Unread', icon: Bell, color: 'text-brand-warning' },
 ] as const;
 
 export default function DashboardPage() {
@@ -28,7 +28,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Dashboard</h2>
-        <p className="text-slate-500">Overview of your system</p>
+        <p className="text-text-muted">Overview of TovaPulse operations</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -44,7 +44,7 @@ export default function DashboardPage() {
             >
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-500">{stat.label}</CardTitle>
+                  <CardTitle className="text-sm font-medium text-text-muted">{stat.label}</CardTitle>
                   <Icon className={`h-5 w-5 ${stat.color}`} />
                 </CardHeader>
                 <CardContent>
@@ -59,8 +59,8 @@ export default function DashboardPage() {
       {data?.healthPlatform && (
         <>
           <div>
-            <h3 className="text-lg font-semibold">Health AI Platform</h3>
-            <p className="text-sm text-slate-500">App users, wearables, and AI insights</p>
+            <h3 className="text-lg font-semibold">TovaPulse Biometrics</h3>
+            <p className="text-sm text-text-muted">App users, wearables, active biometrics, and AI insights</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
@@ -80,8 +80,8 @@ export default function DashboardPage() {
                 >
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                      <CardTitle className="text-sm font-medium text-slate-500">{item.label}</CardTitle>
-                      <Icon className="h-5 w-5 text-emerald-600" />
+                      <CardTitle className="text-sm font-medium text-text-muted">{item.label}</CardTitle>
+                      <Icon className="h-5 w-5 text-brand-primary" />
                     </CardHeader>
                     <CardContent>
                       <p className="text-2xl font-bold">{isLoading ? '—' : String(item.value)}</p>
@@ -91,7 +91,7 @@ export default function DashboardPage() {
               );
             })}
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-text-muted">
             Integrations: Oura {data.healthPlatform.integrations.oura ? 'on' : 'off'} · OpenAI{' '}
             {data.healthPlatform.integrations.openai ? 'on' : 'rule-based'}
           </p>
@@ -105,15 +105,15 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="h-72">
             {isLoading ? (
-              <div className="flex h-full items-center justify-center text-slate-400">Loading...</div>
+              <div className="flex h-full items-center justify-center text-text-muted">Loading...</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data?.usersByMonth ?? []}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-brand-border" />
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="count" fill="#059669" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="count" fill="#D94343" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -129,19 +129,19 @@ export default function DashboardPage() {
               {(data?.recentActivity ?? []).map((item) => (
                 <li
                   key={item.id}
-                  className="flex items-start gap-3 border-b border-slate-100 pb-3 last:border-0 dark:border-slate-800"
+                  className="flex items-start gap-3 border-b border-brand-border pb-3 last:border-0"
                 >
-                  <div className="mt-1 h-2 w-2 rounded-full bg-emerald-500" />
+                  <div className="mt-1 h-2 w-2 rounded-full bg-brand-primary" />
                   <div>
                     <p className="text-sm font-medium">{item.description}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-text-muted">
                       {item.user?.name ?? 'System'} · {new Date(item.createdAt).toLocaleString()}
                     </p>
                     </div>
                 </li>
               ))}
               {!isLoading && !data?.recentActivity?.length && (
-                <p className="text-sm text-slate-500">No recent activity</p>
+                <p className="text-sm text-text-muted">No recent activity</p>
               )}
             </ul>
           </CardContent>

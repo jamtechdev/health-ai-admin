@@ -45,7 +45,7 @@ export default function ProfilePage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Profile</h2>
-        <p className="text-slate-500">{user?.email}</p>
+        <p className="text-text-muted">{user?.email}</p>
       </div>
       <Card>
         <CardHeader><CardTitle>Personal Info</CardTitle></CardHeader>

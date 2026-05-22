@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               Send reset link
             </Button>
-            <Link href="/login" className="block text-center text-sm text-emerald-600 hover:underline">
+            <Link href="/login" className="block text-center text-sm text-brand-primary hover:underline">
               Back to login
             </Link>
           </form>

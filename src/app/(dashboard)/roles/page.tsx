@@ -21,7 +21,7 @@ export default function RolesPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Roles & Permissions</h2>
-        <p className="text-slate-500">Manage roles and permission assignments</p>
+        <p className="text-text-muted">Manage roles and permission assignments</p>
       </div>
       <DataTable
         columns={columns}

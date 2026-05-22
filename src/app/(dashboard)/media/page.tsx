@@ -19,7 +19,7 @@ export default function MediaPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Media Manager</h2>
-          <p className="text-slate-500">Upload and manage files</p>
+          <p className="text-text-muted">Upload and manage files</p>
         </div>
         <div>
           <input
@@ -52,14 +52,14 @@ export default function MediaPage() {
             <Card key={file.id}>
               <CardContent className="p-4">
                 <p className="truncate font-medium">{file.originalName}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-text-muted">
                   {(file.size / 1024).toFixed(1)} KB · {file.mimeType}
                 </p>
               </CardContent>
             </Card>
           ))}
           {!data?.items?.length && (
-            <p className="col-span-full text-center text-slate-500">No files uploaded</p>
+            <p className="col-span-full text-center text-text-muted">No files uploaded</p>
           )}
         </div>
       )}

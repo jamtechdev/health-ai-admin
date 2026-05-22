@@ -3,15 +3,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 rounded-[18px] text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-emerald-600 text-white hover:bg-emerald-700',
-        secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100',
-        outline: 'border border-slate-200 bg-transparent hover:bg-slate-100 dark:border-slate-700',
-        ghost: 'hover:bg-slate-100 dark:hover:bg-slate-800',
-        destructive: 'bg-red-600 text-white hover:bg-red-700',
+        default: 'bg-brand-primary text-white shadow-[0_0_24px_rgba(217,67,67,0.18)] hover:bg-[#c83e3e]',
+        secondary: 'bg-surface-secondary text-foreground hover:bg-surface-elevated',
+        outline: 'border border-brand-border bg-surface/40 text-foreground hover:bg-surface-elevated',
+        ghost: 'text-text-secondary hover:bg-surface-secondary hover:text-foreground',
+        destructive: 'bg-brand-critical text-white hover:bg-[#e94f54]',
       },
       size: {
         default: 'h-10 px-4 py-2',

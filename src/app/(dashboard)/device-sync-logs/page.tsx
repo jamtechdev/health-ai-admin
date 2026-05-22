@@ -24,7 +24,7 @@ export default function DeviceSyncLogsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Device Sync Logs</h2>
-        <p className="text-slate-500">Track wearable sync jobs, retries, and failures.</p>
+        <p className="text-text-muted">Track wearable sync jobs, retries, and failures.</p>
       </div>
 
       <DataTable

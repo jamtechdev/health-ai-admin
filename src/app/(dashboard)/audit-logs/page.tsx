@@ -29,7 +29,7 @@ export default function AuditLogsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Audit Logs</h2>
-        <p className="text-slate-500">System audit trail</p>
+        <p className="text-text-muted">System audit trail</p>
       </div>
       <DataTable
         columns={columns}

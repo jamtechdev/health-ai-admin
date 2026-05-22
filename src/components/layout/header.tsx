@@ -41,7 +41,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 dark:border-slate-800 dark:bg-slate-950">
+    <header className="flex h-16 items-center justify-between border-b border-brand-border bg-background/95 px-6 backdrop-blur">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="lg:hidden" onClick={onMenuClick}>
           <Menu className="h-5 w-5" />
@@ -49,7 +49,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         <h1 className="text-xl font-semibold">{title}</h1>
       </div>
       <div className="flex items-center gap-3">
-        <Link href="/profile" className="hidden text-sm text-slate-500 hover:text-emerald-600 sm:inline">
+        <Link href="/profile" className="hidden text-sm text-text-muted hover:text-brand-primary sm:inline">
           {user?.name}
         </Link>
         <Button

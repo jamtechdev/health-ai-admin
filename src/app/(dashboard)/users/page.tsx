@@ -22,8 +22,8 @@ const columns: Column<UserRecord>[] = [
       <span
         className={`rounded-full px-2 py-0.5 text-xs font-medium ${
           row.status === 'ACTIVE'
-            ? 'bg-emerald-100 text-emerald-700'
-            : 'bg-slate-100 text-slate-600'
+                    ? 'bg-brand-secondary/15 text-brand-secondary'
+                    : 'bg-surface-secondary text-text-muted'
         }`}
       >
         {row.status}
@@ -47,7 +47,7 @@ const consumerColumns: Column<ConsumerTableRow>[] = [
     key: 'name',
     header: 'Name',
     render: (row) => (
-      <Link href={`/consumers/${row.user.id}`} className="font-medium text-emerald-600 hover:underline">
+      <Link href={`/consumers/${row.user.id}`} className="font-medium text-brand-primary hover:underline">
         {row.user.name}
       </Link>
     ),
@@ -60,7 +60,7 @@ const consumerColumns: Column<ConsumerTableRow>[] = [
     key: 'actions',
     header: '',
     render: (row) => (
-      <Link href={`/consumers/${row.user.id}`} className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:underline">
+              <Link href={`/consumers/${row.user.id}`} className="inline-flex items-center gap-1 text-sm text-brand-primary hover:underline">
         Health detail <ExternalLink className="h-3 w-3" />
       </Link>
     ),
@@ -105,14 +105,14 @@ export default function UsersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Users</h2>
-          <p className="text-slate-500">One place for admins, staff, mobile app users, and health profiles.</p>
+          <p className="text-text-muted">One place for admins, staff, mobile app users, and health profiles.</p>
         </div>
         <Button onClick={() => toast.info('Create user modal — connect to API POST /users')}>
           Add User
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-white p-2 dark:border-slate-800 dark:bg-slate-900">
+      <div className="flex flex-wrap gap-2 rounded-[24px] border border-brand-border bg-surface p-2">
         <Button
           variant={activeTab === 'system' ? 'default' : 'ghost'}
           size="sm"

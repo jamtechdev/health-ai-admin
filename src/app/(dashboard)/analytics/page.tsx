@@ -21,7 +21,7 @@ export default function AnalyticsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Analytics</h2>
-        <p className="text-slate-500">Health AI Platform operations and usage signals.</p>
+        <p className="text-text-muted">TovaPulse operations, telemetry, and usage signals.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -30,8 +30,8 @@ export default function AnalyticsPage() {
           return (
             <Card key={card.key}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-slate-500">{card.label}</CardTitle>
-                <Icon className="h-5 w-5 text-emerald-600" />
+                <CardTitle className="text-sm font-medium text-text-muted">{card.label}</CardTitle>
+                <Icon className="h-5 w-5 text-brand-primary" />
               </CardHeader>
               <CardContent>
                 <p className="text-3xl font-bold">

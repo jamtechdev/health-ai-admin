@@ -29,7 +29,7 @@ export default function SubscriptionsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Subscriptions</h2>
-        <p className="text-slate-500">Stripe-ready subscription monitoring for app users.</p>
+        <p className="text-text-muted">Stripe-ready subscription monitoring for app users.</p>
       </div>
 
       <DataTable

@@ -14,7 +14,7 @@ const columns: Column<ConnectedDeviceRecord>[] = [
     key: 'status',
     header: 'Status',
     render: (row) => (
-      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+      <span className="rounded-full bg-brand-secondary/15 px-2 py-0.5 text-xs font-medium text-brand-secondary">
         {row.status}
       </span>
     ),
@@ -36,7 +36,7 @@ export default function WearablesPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Wearables</h2>
-        <p className="text-slate-500">Monitor Apple Health, Oura, Fitbit, and Garmin connections.</p>
+        <p className="text-text-muted">Monitor Apple Health, Oura, Fitbit, and Garmin connections.</p>
       </div>
 
       <DataTable

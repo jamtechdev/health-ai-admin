@@ -47,7 +47,7 @@ export function DataTable<T extends { id: string }>({
     return (
       <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-12 animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
+          <div key={i} className="h-12 animate-pulse rounded-[18px] bg-surface-secondary" />
         ))}
       </div>
     );
@@ -58,7 +58,7 @@ export function DataTable<T extends { id: string }>({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {onSearchChange && (
           <div className="relative max-w-sm flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
             <Input
               placeholder="Search..."
               value={search ?? ''}
@@ -75,9 +75,9 @@ export function DataTable<T extends { id: string }>({
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+      <div className="overflow-x-auto rounded-[24px] border border-brand-border bg-surface shadow-[0_4px_20px_rgba(0,0,0,0.18)]">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-900">
+          <thead className="bg-surface-elevated">
             <tr>
               <th className="px-4 py-3 text-left">
                 <input
@@ -87,7 +87,7 @@ export function DataTable<T extends { id: string }>({
                 />
               </th>
               {columns.map((col) => (
-                <th key={col.key} className="px-4 py-3 text-left font-medium text-slate-600">
+                <th key={col.key} className="px-4 py-3 text-left font-medium text-text-secondary">
                   {col.header}
                 </th>
               ))}
@@ -97,8 +97,8 @@ export function DataTable<T extends { id: string }>({
             {data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length + 1} className="px-4 py-14 text-center">
-                  <div className="mx-auto max-w-sm rounded-xl border border-dashed border-slate-200 p-6 text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                    <p className="font-medium text-slate-700 dark:text-slate-200">No data yet</p>
+                  <div className="mx-auto max-w-sm rounded-[24px] border border-dashed border-brand-border bg-surface-elevated/50 p-6 text-text-muted">
+                    <p className="font-medium text-foreground">No data yet</p>
                     <p className="mt-1 text-sm">{emptyMessage}</p>
                   </div>
                 </td>
@@ -107,7 +107,7 @@ export function DataTable<T extends { id: string }>({
               data.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-t border-slate-100 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
+                  className="border-t border-brand-border hover:bg-surface-elevated"
                 >
                   <td className="px-4 py-3">
                     <input
@@ -138,7 +138,7 @@ export function DataTable<T extends { id: string }>({
 
       {onPageChange && totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-text-muted">
             Page {page} of {totalPages}
           </span>
           <div className="flex gap-2">

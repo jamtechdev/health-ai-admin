@@ -29,7 +29,7 @@ export default function InsightsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">AI Insights</h2>
-        <p className="text-slate-500">Review generated recommendations and risk levels.</p>
+        <p className="text-text-muted">Review generated recommendations and risk levels.</p>
       </div>
 
       <DataTable

@@ -12,19 +12,19 @@ export default function NotificationsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Notifications</h2>
-        <p className="text-slate-500">Your notification center</p>
+        <p className="text-text-muted">Your notification center</p>
       </div>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         <div className="space-y-3">
           {(data ?? []).map((n) => (
-            <Card key={n.id} className={!n.readAt ? 'border-emerald-200' : ''}>
+            <Card key={n.id} className={!n.readAt ? 'border-brand-primary/50 shadow-[0_0_24px_rgba(217,67,67,0.18)]' : ''}>
               <CardContent className="flex items-center justify-between p-4">
                 <div>
                   <p className="font-medium">{n.title}</p>
-                  <p className="text-sm text-slate-500">{n.body}</p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="text-sm text-text-muted">{n.body}</p>
+                  <p className="mt-1 text-xs text-text-disabled">
                     {new Date(n.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -36,7 +36,7 @@ export default function NotificationsPage() {
               </CardContent>
             </Card>
           ))}
-          {!data?.length && <p className="text-slate-500">No notifications</p>}
+          {!data?.length && <p className="text-text-muted">No notifications</p>}
         </div>
       )}
     </div>
