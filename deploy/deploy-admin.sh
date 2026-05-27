@@ -5,10 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 API_DOMAIN="${API_DOMAIN:-api.34.199.84.247.nip.io}"
-BRANCH="${BRANCH:-main}"
 
 cd "$PROJECT_DIR"
-git pull origin "$BRANCH"
 
 cat > .env.production <<EOF
 NEXT_PUBLIC_API_URL=https://${API_DOMAIN}/api/v1
