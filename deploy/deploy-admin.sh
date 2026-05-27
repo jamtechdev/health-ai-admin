@@ -8,6 +8,9 @@ API_DOMAIN="${API_DOMAIN:-api.34.199.84.247.nip.io}"
 
 cd "$PROJECT_DIR"
 
+export DOCKER_BUILDKIT=1
+export COMPOSE_BAKE=false
+
 cat > .env.production <<EOF
 NEXT_PUBLIC_API_URL=https://${API_DOMAIN}/api/v1
 NEXT_PUBLIC_API_BASE_URL=https://${API_DOMAIN}
