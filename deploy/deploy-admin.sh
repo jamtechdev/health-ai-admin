@@ -14,5 +14,6 @@ NEXT_PUBLIC_API_BASE_URL=https://${API_DOMAIN}
 NEXT_PUBLIC_APP_NAME=TovaPulse
 EOF
 
-docker compose up -d --build
+docker compose build admin
+docker compose up -d --no-build
 docker compose ps
