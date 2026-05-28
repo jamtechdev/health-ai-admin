@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-API_DOMAIN="${API_DOMAIN:-api.34.199.84.247.nip.io}"
+API_DOMAIN="${API_DOMAIN:-api.tovapulse.com}"
 
 cd "$PROJECT_DIR"
 
