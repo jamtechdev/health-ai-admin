@@ -1,9 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  Activity,
   ArrowRight,
   BarChart3,
   Lock,
@@ -67,12 +67,14 @@ export function LandingPage() {
 
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-[18px] bg-brand-primary/20 ring-1 ring-brand-primary/30">
-            <Activity className="h-5 w-5 text-brand-primary" />
-          </div>
-          <span className="text-lg font-semibold tracking-tight">
-            Tova<span className="text-brand-primary">Pulse</span>
-          </span>
+          <Image
+            src="/logo.png"
+            alt="TovaPulse"
+            width={164}
+            height={64}
+            priority
+            className="h-12 w-auto rounded-md object-contain"
+          />
         </div>
         <motion.div
           className="flex items-center gap-2 rounded-full border border-brand-border bg-surface/70 px-3 py-1.5 text-xs text-text-secondary backdrop-blur-md"

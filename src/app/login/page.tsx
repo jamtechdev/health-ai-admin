@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { Activity, ArrowLeft, Lock } from 'lucide-react';
+import { ArrowLeft, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { authService } from '@/services/auth.service';
@@ -86,13 +87,15 @@ export default function LoginPage() {
           <motion.div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-brand-primary/25 blur-[100px]" />
           <motion.div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-brand-tertiary/20 blur-[80px]" />
         </motion.div>
-        <Link href="/" className="relative z-10 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-[18px] bg-brand-primary/20 ring-1 ring-brand-primary/30">
-            <Activity className="h-5 w-5 text-brand-primary" />
-          </div>
-          <span className="text-lg font-semibold">
-            Tova<span className="text-brand-primary">Pulse</span>
-          </span>
+        <Link href="/" className="relative z-10 flex items-center">
+          <Image
+            src="/logo.png"
+            alt="TovaPulse"
+            width={172}
+            height={68}
+            priority
+            className="h-14 w-auto rounded-md object-contain"
+          />
         </Link>
         <motion.div
           className="relative z-10"
