@@ -10,7 +10,6 @@
     "pm2:start": "pm2 start ecosystem.config.cjs --env production",
     "pm2:reload": "pm2 reload ecosystem.config.cjs --env production --update-env",
     "pm2:stop": "pm2 stop tovapulse-admin",
-    "deploy:all": "bash -lc 'if [ -f ../health-ai-backend/scripts/deploy-all.sh ]; then bash ../health-ai-backend/scripts/deploy-all.sh; else bash ../health-api/scripts/deploy-all.sh; fi'",
     "lint": "eslint"
   },
   "dependencies": {
