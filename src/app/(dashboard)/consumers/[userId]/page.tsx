@@ -121,7 +121,7 @@ export default function ConsumerDetailPage() {
           <p className="font-semibold">{data.todayInsight.title}</p>
           <p className="whitespace-pre-wrap text-sm text-text-secondary">{data.todayInsight.body}</p>
           {data.todayInsight.recommendation && (
-            <p className="rounded-[16px] bg-brand-tertiary/10 p-3 text-sm text-brand-tertiary">
+            <p className="rounded-input bg-brand-tertiary-glow p-3 text-sm text-brand-tertiary">
               {data.todayInsight.recommendation}
             </p>
           )}
@@ -188,7 +188,7 @@ export default function ConsumerDetailPage() {
             </div>
             <div className="mb-4 grid grid-cols-2 gap-2 text-sm">
               {Object.entries(data.latestMetrics).map(([type, value]) => (
-                <div key={type} className="rounded-[16px] bg-surface-elevated p-2">
+                <div key={type} className="rounded-input bg-surface-elevated p-2">
                   <span className="text-text-muted">{type.replace(/_/g, ' ')}</span>
                   <p className="font-semibold">{value}</p>
                 </div>

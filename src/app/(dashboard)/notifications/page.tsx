@@ -19,7 +19,7 @@ export default function NotificationsPage() {
       ) : (
         <div className="space-y-3">
           {(data ?? []).map((n) => (
-            <Card key={n.id} className={!n.readAt ? 'border-brand-primary/50 shadow-[0_0_24px_rgba(217,67,67,0.18)]' : ''}>
+            <Card key={n.id} className={!n.readAt ? 'border-brand-primary/50 shadow-[0_0_24px_var(--primary-glow)]' : ''}>
               <CardContent className="flex items-center justify-between p-4">
                 <div>
                   <p className="font-medium">{n.title}</p>

@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!ready || !hasHydrated) {
     return (
       <div className="flex h-screen items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
       </div>
     );
   }
@@ -67,7 +67,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className={`${sidebarOpen ? 'block' : 'hidden'} fixed inset-0 z-40 lg:relative lg:block`}>
         {sidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/50 lg:hidden"
+            className="fixed inset-0 bg-background/80 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}

@@ -3,15 +3,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-[18px] text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 rounded-button text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-brand-primary text-white shadow-[0_0_24px_rgba(217,67,67,0.18)] hover:bg-[#c83e3e]',
-        secondary: 'bg-surface-secondary text-foreground hover:bg-surface-elevated',
+        default: 'bg-brand-primary text-text-primary shadow-[0_0_24px_var(--primary-glow)] hover:bg-brand-primary/90',
+        secondary: 'bg-surface-secondary text-text-primary hover:bg-surface-elevated',
         outline: 'border border-brand-border bg-surface/40 text-foreground hover:bg-surface-elevated',
         ghost: 'text-text-secondary hover:bg-surface-secondary hover:text-foreground',
-        destructive: 'bg-brand-critical text-white hover:bg-[#e94f54]',
+        destructive: 'bg-brand-critical text-text-primary hover:bg-brand-critical/90',
       },
       size: {
         default: 'h-10 px-4 py-2',

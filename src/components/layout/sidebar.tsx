@@ -90,9 +90,9 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   href={item.href}
                   onClick={onNavigate}
                   className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                    'flex items-center gap-3 rounded-button px-3 py-2 text-sm font-medium transition-colors',
                     active
-                      ? 'bg-brand-primary/15 text-brand-primary shadow-[0_0_24px_rgba(217,67,67,0.18)]'
+                      ? 'bg-brand-primary/15 text-brand-primary shadow-[0_0_24px_var(--primary-glow)]'
                       : 'text-text-secondary hover:bg-surface-secondary hover:text-foreground',
                   )}
                 >

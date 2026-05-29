@@ -50,7 +50,7 @@ export function LandingPage() {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-32 top-0 h-[520px] w-[520px] rounded-full bg-brand-primary/20 blur-[120px]" />
         <motion.div
-          className="absolute -right-24 top-1/4 h-[480px] w-[480px] rounded-full bg-brand-tertiary/15 blur-[100px]"
+          className="absolute -right-24 top-1/4 h-[480px] w-[480px] rounded-full bg-brand-tertiary-glow blur-[100px]"
           animate={{ opacity: [0.4, 0.7, 0.4] }}
           transition={{ duration: 8, repeat: Infinity }}
         />
@@ -59,7 +59,7 @@ export function LandingPage() {
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage:
-              'linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px)',
+              'linear-gradient(color-mix(in srgb, var(--text-primary) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--text-primary) 8%, transparent) 1px, transparent 1px)',
             backgroundSize: '64px 64px',
           }}
         />
@@ -114,7 +114,7 @@ export function LandingPage() {
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Link
                 href="/login"
-                className="inline-flex h-12 items-center justify-center rounded-[18px] bg-brand-primary px-8 text-base font-semibold text-white shadow-[0_0_24px_rgba(217,67,67,0.18)] transition hover:bg-[#c83e3e]"
+                className="inline-flex h-12 items-center justify-center rounded-button bg-brand-primary px-8 text-base font-semibold text-text-primary shadow-[0_0_24px_var(--primary-glow)] transition hover:bg-brand-primary/90"
               >
                 Admin Sign In
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -131,7 +131,7 @@ export function LandingPage() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="relative"
           >
-            <div className="rounded-[24px] border border-brand-border bg-surface/80 p-6 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+            <div className="rounded-card border border-brand-border bg-surface/80 p-6 shadow-floating backdrop-blur-xl">
               <motion.div
                 className="mb-6 flex items-center justify-between"
                 animate={{ y: [0, -4, 0] }}
@@ -141,7 +141,7 @@ export function LandingPage() {
                   <p className="text-sm text-text-secondary">Active biometrics</p>
                   <p className="text-3xl font-bold text-foreground">1,248</p>
                 </motion.div>
-                <motion.div className="rounded-lg bg-brand-secondary/20 px-3 py-1 text-sm font-medium text-brand-secondary">
+                <motion.div className="rounded-button bg-brand-secondary-glow px-3 py-1 text-sm font-medium text-brand-secondary">
                   +12.4%
                 </motion.div>
               </motion.div>
@@ -160,7 +160,7 @@ export function LandingPage() {
                 {['Users', 'Roles', 'Logs', 'Media'].map((label) => (
                   <div
                     key={label}
-                    className="rounded-[16px] border border-brand-border bg-surface-elevated px-4 py-3 text-sm text-text-secondary"
+                    className="rounded-input border border-brand-border bg-surface-elevated px-4 py-3 text-sm text-text-secondary"
                   >
                     {label}
                   </div>
@@ -186,9 +186,9 @@ export function LandingPage() {
               <motion.div
                 key={f.title}
                 variants={fadeUp}
-                className="group rounded-[24px] border border-brand-border bg-surface/70 p-6 backdrop-blur-sm transition hover:border-brand-primary/40 hover:bg-surface-elevated"
+                className="group rounded-card border border-brand-border bg-surface/70 p-6 backdrop-blur-sm transition hover:border-brand-primary/40 hover:bg-surface-elevated"
               >
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-[18px] bg-brand-primary/15 text-brand-primary transition group-hover:bg-brand-primary/25">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-button bg-brand-primary-glow text-brand-primary transition group-hover:bg-brand-primary/25">
                   <f.icon className="h-5 w-5" />
                 </div>
                 <h3 className="font-semibold text-foreground">{f.title}</h3>

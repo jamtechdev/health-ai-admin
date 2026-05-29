@@ -84,8 +84,8 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <motion.div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-brand-primary/25 blur-[100px]" />
-          <motion.div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-brand-tertiary/20 blur-[80px]" />
+          <motion.div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-brand-primary-glow blur-[100px]" />
+          <motion.div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-brand-tertiary-glow blur-[80px]" />
         </motion.div>
         <Link href="/" className="relative z-10 flex items-center">
           <Image
@@ -131,7 +131,7 @@ export default function LoginPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mx-auto w-full max-w-md"
         >
-          <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-[18px] bg-brand-primary/15 ring-1 ring-brand-primary/30">
+          <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-button bg-brand-primary-glow ring-1 ring-brand-primary/30">
             <Lock className="h-6 w-6 text-brand-primary" />
           </div>
           <h2 className="text-2xl font-bold">Admin sign in</h2>

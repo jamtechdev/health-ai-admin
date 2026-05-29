@@ -112,7 +112,7 @@ export default function UsersPage() {
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-2 rounded-[24px] border border-brand-border bg-surface p-2">
+      <div className="flex flex-wrap gap-2 rounded-card border border-brand-border bg-surface p-2">
         <Button
           variant={activeTab === 'system' ? 'default' : 'ghost'}
           size="sm"

@@ -3,30 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root,
-.light {
-  --background: #f7f9fc;
-  --foreground: #111827;
-  --surface: #ffffff;
-  --surface-elevated: #f1f5f9;
-  --surface-secondary: #e8eef6;
-  --border: #d8e0ea;
-  --primary: #d94343;
-  --primary-glow: rgba(217, 67, 67, 0.14);
-  --secondary: #0f9f7a;
-  --secondary-glow: rgba(15, 159, 122, 0.13);
-  --tertiary: #2563eb;
-  --tertiary-glow: rgba(37, 99, 235, 0.12);
-  --warning: #b7791f;
-  --low-recovery: #d65f50;
-  --critical: #dc2626;
-  --text-primary: #111827;
-  --text-secondary: #475467;
-  --text-muted: #667085;
-  --text-disabled: #98a2b3;
-  --shadow-soft: 0 4px 20px rgba(15, 23, 42, 0.08);
-  --shadow-floating: 0 8px 30px rgba(15, 23, 42, 0.12);
-}
-
+.light,
 .dark {
   --background: #0f1115;
   --foreground: #f4f6f8;
@@ -47,8 +24,12 @@
   --text-secondary: #b4bcc8;
   --text-muted: #7e8794;
   --text-disabled: #5e6672;
-  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.18);
-  --shadow-floating: 0 8px 30px rgba(0, 0, 0, 0.25);
+  --shadow-soft-value: 0 4px 20px rgba(0, 0, 0, 0.18);
+  --shadow-floating-value: 0 8px 30px rgba(0, 0, 0, 0.25);
+  --radius-card-value: 24px;
+  --radius-button-value: 18px;
+  --radius-input-value: 16px;
+  --radius-sheet-value: 32px;
 }
 
 @theme inline {
@@ -59,13 +40,24 @@
   --color-surface-secondary: var(--surface-secondary);
   --color-brand-border: var(--border);
   --color-brand-primary: var(--primary);
+  --color-brand-primary-glow: var(--primary-glow);
   --color-brand-secondary: var(--secondary);
+  --color-brand-secondary-glow: var(--secondary-glow);
   --color-brand-tertiary: var(--tertiary);
+  --color-brand-tertiary-glow: var(--tertiary-glow);
   --color-brand-warning: var(--warning);
+  --color-brand-low-recovery: var(--low-recovery);
   --color-brand-critical: var(--critical);
+  --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
   --color-text-disabled: var(--text-disabled);
+  --shadow-soft: var(--shadow-soft-value);
+  --shadow-floating: var(--shadow-floating-value);
+  --radius-card: var(--radius-card-value);
+  --radius-button: var(--radius-button-value);
+  --radius-input: var(--radius-input-value);
+  --radius-sheet: var(--radius-sheet-value);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }

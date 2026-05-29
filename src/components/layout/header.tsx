@@ -1,10 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Moon, Sun, LogOut, Menu } from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { LogOut, Menu } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
 import { authService } from '@/services/auth.service';
@@ -15,20 +13,8 @@ interface HeaderProps {
 }
 
 export function Header({ title, onMenuClick }: HeaderProps) {
-  const { resolvedTheme, setTheme } = useTheme();
   const router = useRouter();
   const { user, logout } = useAuthStore();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    queueMicrotask(() => {
-      if (active) setMounted(true);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -52,18 +38,6 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         <Link href="/profile" className="hidden text-sm text-text-muted hover:text-brand-primary sm:inline">
           {user?.name}
         </Link>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-          title="Toggle theme"
-        >
-          {mounted && resolvedTheme === 'dark' ? (
-            <Sun className="h-4 w-4" />
-          ) : (
-            <Moon className="h-4 w-4" />
-          )}
-        </Button>
         <Button variant="ghost" size="icon" onClick={handleLogout}>
           <LogOut className="h-4 w-4" />
         </Button>

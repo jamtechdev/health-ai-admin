@@ -47,7 +47,7 @@ export function DataTable<T extends { id: string }>({
     return (
       <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-12 animate-pulse rounded-[18px] bg-surface-secondary" />
+          <div key={i} className="h-12 animate-pulse rounded-button bg-surface-secondary" />
         ))}
       </div>
     );
@@ -75,7 +75,7 @@ export function DataTable<T extends { id: string }>({
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-[24px] border border-brand-border bg-surface shadow-[0_4px_20px_rgba(0,0,0,0.18)]">
+      <div className="overflow-x-auto rounded-card border border-brand-border bg-surface shadow-soft">
         <table className="w-full text-sm">
           <thead className="bg-surface-elevated">
             <tr>
@@ -97,7 +97,7 @@ export function DataTable<T extends { id: string }>({
             {data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length + 1} className="px-4 py-14 text-center">
-                  <div className="mx-auto max-w-sm rounded-[24px] border border-dashed border-brand-border bg-surface-elevated/50 p-6 text-text-muted">
+                  <div className="mx-auto max-w-sm rounded-card border border-dashed border-brand-border bg-surface-elevated/50 p-6 text-text-muted">
                     <p className="font-medium text-foreground">No data yet</p>
                     <p className="mt-1 text-sm">{emptyMessage}</p>
                   </div>

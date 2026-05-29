@@ -109,11 +109,31 @@ export default function DashboardPage() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data?.usersByMonth ?? []}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-brand-border" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#D94343" radius={[4, 4, 0, 0]} />
+                  <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="month"
+                    axisLine={{ stroke: 'var(--border)' }}
+                    tick={{ fill: 'var(--text-muted)' }}
+                    tickLine={{ stroke: 'var(--border)' }}
+                  />
+                  <YAxis
+                    axisLine={{ stroke: 'var(--border)' }}
+                    tick={{ fill: 'var(--text-muted)' }}
+                    tickLine={{ stroke: 'var(--border)' }}
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'var(--primary-glow)' }}
+                    contentStyle={{
+                      background: 'var(--surface-elevated)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius-input-value)',
+                      boxShadow: 'var(--shadow-floating-value)',
+                      color: 'var(--text-primary)',
+                    }}
+                    itemStyle={{ color: 'var(--text-primary)' }}
+                    labelStyle={{ color: 'var(--text-secondary)' }}
+                  />
+                  <Bar dataKey="count" fill="var(--primary)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -137,7 +157,7 @@ export default function DashboardPage() {
                     <p className="text-xs text-text-muted">
                       {item.user?.name ?? 'System'} · {new Date(item.createdAt).toLocaleString()}
                     </p>
-                    </div>
+                  </div>
                 </li>
               ))}
               {!isLoading && !data?.recentActivity?.length && (

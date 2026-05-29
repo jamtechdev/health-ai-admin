@@ -17,9 +17,21 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
         {children}
-        <Toaster richColors position="top-right" />
+        <Toaster
+          richColors
+          theme="dark"
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: 'var(--surface-elevated)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-input-value)',
+            },
+          }}
+        />
       </ThemeProvider>
     </QueryClientProvider>
   );
