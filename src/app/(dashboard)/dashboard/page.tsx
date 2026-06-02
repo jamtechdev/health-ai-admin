@@ -98,16 +98,16 @@ export default function DashboardPage() {
         </>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+      <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle>User Growth</CardTitle>
           </CardHeader>
-          <CardContent className="h-72">
+          <CardContent className="h-72 min-w-0">
             {isLoading ? (
               <div className="flex h-full items-center justify-center text-text-muted">Loading...</div>
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <BarChart data={data?.usersByMonth ?? []}>
                   <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
                   <XAxis
@@ -140,7 +140,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
           </CardHeader>
@@ -155,7 +155,8 @@ export default function DashboardPage() {
                   <div>
                     <p className="text-sm font-medium">{item.description}</p>
                     <p className="text-xs text-text-muted">
-                      {item.user?.name ?? 'System'} · {new Date(item.createdAt).toLocaleString()}
+                      {item.user?.name ?? item.user?.email ?? 'App user'} · {item.source ?? item.module} ·{' '}
+                      {new Date(item.createdAt).toLocaleString()}
                     </p>
                   </div>
                 </li>

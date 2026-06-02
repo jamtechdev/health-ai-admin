@@ -23,8 +23,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (mounted) setReady(true);
     });
 
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
+    const hasToken = localStorage.getItem('accessToken') || localStorage.getItem('refreshToken');
+    if (!hasToken) {
       return () => {
         mounted = false;
       };
@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     authService
       .me()
-      .then((user) => setAuth(user, token))
+      .then((user) => setAuth(user))
       .catch((err) => {
         if (isAxiosError(err) && err.response?.status === 401) {
           logout();

@@ -61,7 +61,7 @@ export default function LoginPage() {
         return;
       }
 
-      setAuth(payload.user, payload.accessToken);
+      setAuth(payload.user, payload.accessToken, payload.refreshToken ?? null);
       toast.success(`Welcome, ${payload.user.name}`);
       router.replace('/dashboard');
     } catch (err) {

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { setAccessToken, clearTokens, loadTokensFromStorage } from '@/lib/api/client';
+import { setTokens, clearTokens, loadTokensFromStorage } from '@/lib/api/client';
 
 export interface User {
   id: string;
@@ -17,7 +17,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   hasHydrated: boolean;
-  setAuth: (user: User, accessToken: string) => void;
+  setAuth: (user: User, accessToken?: string, refreshToken?: string | null) => void;
   logout: () => void;
   hydrate: () => void;
   setHasHydrated: (value: boolean) => void;
@@ -29,8 +29,10 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       hasHydrated: false,
-      setAuth: (user, accessToken) => {
-        setAccessToken(accessToken);
+      setAuth: (user, accessToken, refreshToken) => {
+        if (accessToken) {
+          setTokens(accessToken, refreshToken);
+        }
         set({ user, isAuthenticated: true });
       },
       logout: () => {
@@ -40,7 +42,8 @@ export const useAuthStore = create<AuthState>()(
       hydrate: () => {
         loadTokensFromStorage();
         const hasToken =
-          typeof window !== 'undefined' && !!localStorage.getItem('accessToken');
+          typeof window !== 'undefined' &&
+          (!!localStorage.getItem('accessToken') || !!localStorage.getItem('refreshToken'));
         if (!hasToken) {
           set({ user: null, isAuthenticated: false });
           return;
@@ -65,5 +68,5 @@ export const useAuthStore = create<AuthState>()(
 
 export function hasStoredSession(): boolean {
   if (typeof window === 'undefined') return false;
-  return !!localStorage.getItem('accessToken');
+  return !!localStorage.getItem('accessToken') || !!localStorage.getItem('refreshToken');
 }

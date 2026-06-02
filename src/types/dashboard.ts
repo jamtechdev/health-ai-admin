@@ -8,6 +8,7 @@ export interface DashboardStats {
   healthPlatform?: HealthPlatformOverview;
   recentActivity: Array<{
     id: string;
+    source?: 'activity' | 'api';
     module: string;
     description: string;
     createdAt: string;

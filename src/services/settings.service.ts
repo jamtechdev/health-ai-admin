@@ -12,7 +12,7 @@ class SettingsService extends BaseService {
   }
 
   upsert(key: string, value: unknown) {
-    return this.post<SettingRecord>('/settings', { key, value });
+    return this.put<SettingRecord>('/settings', { key, value });
   }
 }
 

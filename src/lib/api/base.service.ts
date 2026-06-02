@@ -27,6 +27,11 @@ export abstract class BaseService {
     return data.data;
   }
 
+  protected async put<T>(url: string, body?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const { data } = await api.put<ApiResponse<T>>(url, body, config);
+    return data.data;
+  }
+
   protected async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const { data } = await api.delete<ApiResponse<T>>(url, config);
     return data.data;
