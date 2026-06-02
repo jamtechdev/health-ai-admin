@@ -4,6 +4,9 @@ export interface ActivityLog {
   description: string;
   createdAt: string;
   user?: { name: string; email: string };
+  userAgent?: string | null;
+  ip?: string | null;
+  metadata?: { userAgent?: string | null; ip?: string | null };
 }
 
 export interface AuditLog {

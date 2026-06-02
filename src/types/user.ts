@@ -19,6 +19,8 @@ export interface CreateUserPayload {
 export interface UpdateUserPayload {
   email?: string;
   name?: string;
+  password?: string;
   status?: string;
+  avatar?: string | null;
   roleIds?: string[];
 }

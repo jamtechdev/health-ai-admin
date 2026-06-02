@@ -11,7 +11,6 @@ import {
   Bell,
   FileText,
   History,
-  Image,
   Watch,
   Sparkles,
   CreditCard,
@@ -20,7 +19,14 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const navGroups = [
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  aliases?: string[];
+}
+
+const navGroups: { title: string; items: NavItem[] }[] = [
   {
     title: 'Overview',
     items: [
@@ -31,8 +37,8 @@ const navGroups = [
   {
     title: 'People',
     items: [
-      { href: '/users', label: 'Users & App Users', icon: Users, aliases: ['/consumers', '/profile'] },
-      { href: '/roles', label: 'Roles', icon: Shield },
+      { href: '/users', label: 'Users', icon: Users, aliases: ['/consumers', '/profile'] },
+      // { href: '/roles', label: 'Roles', icon: Shield },
     ],
   },
   {
@@ -47,12 +53,11 @@ const navGroups = [
   {
     title: 'System',
     items: [
-      { href: '/api-logs', label: 'API Logs', icon: FileText },
+      // { href: '/api-logs', label: 'API Logs', icon: FileText },
       { href: '/notifications', label: 'Notifications', icon: Bell },
       { href: '/activity-logs', label: 'Activity Logs', icon: History },
-      { href: '/audit-logs', label: 'Audit Logs', icon: FileText },
+      // { href: '/audit-logs', label: 'Audit Logs', icon: FileText },
       { href: '/settings', label: 'Settings', icon: Settings },
-      { href: '/media', label: 'Media', icon: Image },
     ],
   },
 ];

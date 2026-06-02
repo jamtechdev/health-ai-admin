@@ -9,9 +9,19 @@ const columns: Column<ActivityLog>[] = [
   { key: 'module', header: 'Module' },
   { key: 'description', header: 'Description' },
   {
+    key: 'userAgent',
+    header: 'Device / IP',
+    render: (row) => {
+      if (row.module !== 'auth') return '—';
+      const agent = row.userAgent ?? '';
+      const ip = row.ip ?? '';
+      return [agent, ip].filter(Boolean).join(' · ') || '—';
+    },
+  },
+  {
     key: 'user',
     header: 'User',
-    render: (row) => row.user?.name ?? 'System',
+    render: (row) => row.user?.name ?? row.user?.email ?? 'System',
   },
   {
     key: 'createdAt',
@@ -28,7 +38,7 @@ export default function ActivityLogsPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Activity Logs</h2>
-        <p className="text-text-muted">User activity timeline</p>
+        <p className="text-text-muted">User activity timeline — shows login/logout with device & IP details.</p>
       </div>
       <DataTable
         columns={columns}
