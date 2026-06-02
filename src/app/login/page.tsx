@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { ArrowLeft, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { authService } from '@/services/auth.service';
@@ -73,109 +73,110 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <div className="relative hidden w-1/2 overflow-hidden lg:flex lg:flex-col lg:justify-between lg:p-12">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 py-12 text-foreground">
+      <div className="pointer-events-none absolute inset-0">
         <motion.div
-          className="pointer-events-none absolute inset-0"
+          className="absolute -left-24 top-0 h-[28rem] w-[28rem] rounded-full bg-brand-primary-glow blur-[120px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-        >
-          <motion.div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-brand-primary-glow blur-[100px]" />
-          <motion.div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-brand-tertiary-glow blur-[80px]" />
-        </motion.div>
-        <Link href="/" className="relative z-10 flex items-center">
-          <Image
-            src="/logo.png"
-            alt="TovaPulse"
-            width={172}
-            height={68}
-            priority
-            className="h-14 w-auto rounded-md object-contain"
-          />
-        </Link>
+        />
         <motion.div
-          className="relative z-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h1 className="text-4xl font-bold leading-tight">
-            Secure access for
-            <span className="block bg-gradient-to-r from-brand-primary to-brand-critical bg-clip-text text-transparent">
-              biometric operations
-            </span>
-          </h1>
-          <p className="mt-4 max-w-md text-text-secondary">
-            Manage users, roles, audit logs, telemetry, and AI-driven health insights.
-            End-user accounts are created through the public registration API.
-          </p>
-        </motion.div>
-        <p className="relative z-10 text-sm text-text-muted">© TovaPulse</p>
+          className="absolute -right-20 bottom-0 h-[26rem] w-[26rem] rounded-full bg-brand-tertiary-glow blur-[110px]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_35%)]" />
       </div>
 
-      <div className="flex w-full flex-col justify-center px-6 py-12 lg:w-1/2 lg:px-16">
-        <Link
-          href="/"
-          className="mb-8 inline-flex items-center gap-2 text-sm text-text-secondary transition hover:text-brand-primary lg:hidden"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to home
-        </Link>
+      <motion.div
+        className="relative z-10 w-full max-w-md rounded-[2rem] border border-brand-border/80 bg-surface-elevated/90 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10"
+        initial={{ opacity: 0, y: 18, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.35 }}
+      >
+        <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand-primary/70 to-transparent" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-auto w-full max-w-md"
-        >
-          <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-button bg-brand-primary-glow ring-1 ring-brand-primary/30">
+        <div className="mb-8 flex flex-col items-center text-center">
+          <Link href="/" className="mb-7 inline-flex items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="TovaPulse"
+              width={160}
+              height={64}
+              priority
+              className="h-14 w-auto rounded-md object-contain"
+            />
+          </Link>
+
+          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-primary/30 bg-brand-primary-glow ring-1 ring-brand-primary/20">
             <Lock className="h-6 w-6 text-brand-primary" />
           </div>
-          <h2 className="text-2xl font-bold">Admin sign in</h2>
-          <p className="mt-2 text-text-secondary">Use your administrator credentials</p>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-text-secondary">Email</label>
-              <Input
-                type="email"
-                placeholder="admin@health.local"
-                autoComplete="email"
-                className="h-11"
-                {...register('email')}
-              />
-              {errors.email && (
-                <p className="mt-1 text-xs text-brand-critical">{errors.email.message}</p>
-              )}
-            </div>
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-text-secondary">Password</label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                autoComplete="current-password"
-                className="h-11"
-                {...register('password')}
-              />
-              {errors.password && (
-                <p className="mt-1 text-xs text-brand-critical">{errors.password.message}</p>
-              )}
-            </div>
-            <Button
-              type="submit"
-              disabled={loading}
-              className="h-11 w-full text-base font-semibold"
-            >
-              {loading ? 'Signing in…' : 'Sign in to dashboard'}
-            </Button>
-            <Link
-              href="/forgot-password"
-              className="block text-center text-sm text-brand-primary/90 hover:text-brand-primary"
-            >
-              Forgot password?
-            </Link>
-          </form>
-        </motion.div>
-      </div>
+          <h1 className="text-2xl font-bold tracking-tight">Admin sign in</h1>
+          <p className="mt-2 max-w-sm text-sm leading-6 text-text-secondary">
+            Secure access for biometric operations and admin management.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-text-secondary">Email</label>
+            <Input
+              type="email"
+              placeholder="admin@tovapulse.com"
+              autoComplete="email"
+              className="h-12 border-brand-border/80 bg-background/50"
+              {...register('email')}
+            />
+            {errors.email && (
+              <p className="mt-1 text-xs text-brand-critical">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-text-secondary">Password</label>
+            <Input
+              type="password"
+              placeholder="••••••••"
+              autoComplete="current-password"
+              className="h-12 border-brand-border/80 bg-background/50"
+              {...register('password')}
+            />
+            {errors.password && (
+              <p className="mt-1 text-xs text-brand-critical">{errors.password.message}</p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="h-12 w-full text-base font-semibold shadow-[0_14px_30px_rgba(220,38,38,0.18)]"
+          >
+            {loading ? 'Signing in…' : 'Sign in to dashboard'}
+          </Button>
+
+          <Link
+            href="/forgot-password"
+            className="block text-center text-sm text-brand-primary/90 transition hover:text-brand-primary"
+          >
+            Forgot password?
+          </Link>
+        </form>
+
+        <p className="mt-8 text-center text-xs text-text-muted">
+          Admin access only. App users should sign in from the mobile app.
+        </p>
+      </motion.div>
+
+      <motion.p
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs text-text-muted"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        © TovaPulse
+      </motion.p>
     </div>
   );
 }
