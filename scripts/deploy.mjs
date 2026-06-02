@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, rmSync } from 'node:fs';
 
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const pm2 = process.platform === 'win32' ? 'pm2.cmd' : 'pm2';
@@ -18,6 +18,7 @@ function run(command, args, { allowFail = false } = {}) {
 }
 
 run(npm, installCommand);
+rmSync('.next', { recursive: true, force: true });
 run(npm, ['run', 'build']);
 if (!existsSync(serverEntry)) {
   console.error(`\nBuild did not create ${serverEntry}. Deployment stopped.`);
@@ -33,5 +34,6 @@ if (reloadStatus !== 0) {
 }
 
 run(pm2, ['save']);
+run(pm2, ['flush'], { allowFail: true });
 
 console.log('\nhealth-ai-admin deployed.');

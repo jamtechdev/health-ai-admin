@@ -49,9 +49,9 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      const payload = await authService.login(data);
+      const payload = await authService.login({ ...data, client: 'admin' });
 
-      if (!canAccessAdminPanel(payload.user)) {
+      if (payload.accountType !== 'admin' && !canAccessAdminPanel(payload.user)) {
         try {
           await authService.logout();
         } catch {
@@ -139,6 +139,7 @@ export default function LoginPage() {
               <Input
                 type="email"
                 placeholder="admin@health.local"
+                autoComplete="email"
                 className="h-11"
                 {...register('email')}
               />
@@ -151,6 +152,7 @@ export default function LoginPage() {
               <Input
                 type="password"
                 placeholder="••••••••"
+                autoComplete="current-password"
                 className="h-11"
                 {...register('password')}
               />

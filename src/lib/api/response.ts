@@ -10,7 +10,7 @@ export function getApiErrorMessage(error: unknown, fallback = 'Something went wr
     const msg = axiosError.response?.data?.message;
     if (msg) return msg;
     if (axiosError.code === 'ERR_NETWORK') {
-      return 'Cannot reach API. Start health-api with: npm run dev (port 4000)';
+      return 'Cannot reach API. Please check backend deployment and CORS.';
     }
   }
   return fallback;
