@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useUser, useUpdateUser } from '@/hooks/api/use-users';
 import { api } from '@/lib/api/client';
+import { API_BASE_URL } from '@/constants/api';
 import type { UpdateUserPayload } from '@/types/user';
 import type { RoleRecord } from '@/types/role';
 import type { UploadRecord } from '@/types/upload';
@@ -31,6 +32,7 @@ export default function EditUserPage() {
   const [avatarPreview, setAvatarPreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const fullUrl = (path: string) => path.startsWith('/') ? `${API_BASE_URL}${path}` : path;
 
   useEffect(() => {
     if (user) {
@@ -44,9 +46,8 @@ export default function EditUserPage() {
   }, [user]);
 
   useEffect(() => {
-    fetch('/api/v1/roles?limit=100')
-      .then((res) => res.json())
-      .then((json) => setAllRoles(json.data?.items ?? []))
+    api.get('/roles?limit=100')
+      .then((res) => setAllRoles(res.data.data?.items ?? []))
       .catch(() => {});
   }, []);
 
@@ -70,12 +71,6 @@ export default function EditUserPage() {
     );
   }
 
-  const toggleRole = (roleId: string) => {
-    setSelectedRoleIds((prev) =>
-      prev.includes(roleId) ? prev.filter((id) => id !== roleId) : [...prev, roleId],
-    );
-  };
-
   const handleSave = async () => {
     if (!name.trim() || !email.trim()) {
       setError('Name and email are required');
@@ -87,7 +82,6 @@ export default function EditUserPage() {
         name,
         email,
         status,
-        roleIds: selectedRoleIds,
         avatar: avatar.trim() || null,
       };
       if (password.trim()) payload.password = password;
@@ -116,7 +110,7 @@ export default function EditUserPage() {
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-surface-secondary">
               {avatarPreview ? (
-                <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" onError={() => setAvatarPreview('')} />
+                <img src={fullUrl(avatarPreview)} alt="Avatar" className="h-full w-full object-cover" onError={() => setAvatarPreview('')} />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-text-muted">
                   {name.charAt(0).toUpperCase()}
@@ -165,8 +159,9 @@ export default function EditUserPage() {
                     const url = data.data.url ?? '';
                     setAvatar(url);
                     setAvatarPreview(url);
-                  } catch {
-                    toast.error('Failed to upload image');
+                  } catch (err) {
+                    const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Failed to upload image';
+                    toast.error(msg);
                   } finally {
                     setUploading(false);
                     if (fileRef.current) fileRef.current.value = '';
@@ -213,22 +208,21 @@ export default function EditUserPage() {
 
           <div>
             <label className="mb-1 block text-sm font-medium text-text-secondary">Roles</label>
-            <div className="max-h-40 space-y-1 overflow-y-auto rounded-input border border-brand-border bg-surface-elevated p-2">
-              {allRoles.map((role) => (
-                <label
-                  key={role.id}
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-surface-secondary"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedRoleIds.includes(role.id)}
-                    onChange={() => toggleRole(role.id)}
-                    className="h-4 w-4 rounded border-brand-border accent-brand-primary"
-                  />
-                  <span>{role.name}</span>
-                  <span className="ml-auto text-xs text-text-muted">{role.slug}</span>
-                </label>
-              ))}
+            <div className="flex flex-wrap gap-2">
+              {selectedRoleIds.length === 0 ? (
+                <span className="text-sm text-text-muted">No roles assigned</span>
+              ) : (
+                allRoles
+                  .filter((r) => selectedRoleIds.includes(r.id))
+                  .map((role) => (
+                    <span
+                      key={role.id}
+                      className="rounded-full bg-brand-secondary/15 px-3 py-1 text-xs font-medium text-brand-secondary"
+                    >
+                      {role.name}
+                    </span>
+                  ))
+              )}
             </div>
           </div>
 

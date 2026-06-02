@@ -109,31 +109,38 @@ export default function UsersPage() {
     {
       key: 'actions',
       header: 'Actions',
-      render: (row) => (
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => router.push(`/users/${row.id}/edit`)}
-            className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
-            title="Edit"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => handleToggleStatus(row)}
-            className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
-            title={row.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
-          >
-            {row.status === 'ACTIVE' ? <PowerOff className="h-4 w-4" /> : <Power className="h-4 w-4" />}
-          </button>
-          <button
-            onClick={() => setDeletingUser(row)}
-            className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-brand-critical"
-            title="Delete"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
-      ),
+      render: (row) => {
+        const isSuperAdmin = row.roles?.some((r) => r.slug === 'super-admin');
+        return (
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => router.push(`/users/${row.id}/edit`)}
+              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+              title="Edit"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+            {!isSuperAdmin && (
+              <button
+                onClick={() => handleToggleStatus(row)}
+                className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+                title={row.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+              >
+                {row.status === 'ACTIVE' ? <PowerOff className="h-4 w-4" /> : <Power className="h-4 w-4" />}
+              </button>
+            )}
+            {!isSuperAdmin && (
+              <button
+                onClick={() => setDeletingUser(row)}
+                className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-brand-critical"
+                title="Delete"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        );
+      },
     },
   ];
 
