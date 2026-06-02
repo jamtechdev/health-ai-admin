@@ -24,4 +24,4 @@ if (reloadStatus !== 0) {
   run(pm2, ['start', 'ecosystem.config.cjs', '--env', 'production']);
 }
 
-console.log('\nhealth-admin deployed.');
+console.log('\nhealth-ai-admin deployed.');
