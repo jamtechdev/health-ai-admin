@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { ArrowLeft, Save, Upload } from 'lucide-react';
@@ -105,7 +106,15 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-surface-secondary">
               {avatarPreview ? (
-                <img src={fullUrl(avatarPreview)} alt="Avatar" className="h-full w-full object-cover" onError={() => setAvatarPreview('')} />
+                <Image
+                  src={fullUrl(avatarPreview)}
+                  alt="Avatar"
+                  width={64}
+                  height={64}
+                  unoptimized
+                  className="h-full w-full object-cover"
+                  onError={() => setAvatarPreview('')}
+                />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-text-muted">
                   {name.charAt(0).toUpperCase()}

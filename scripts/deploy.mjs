@@ -4,10 +4,12 @@ import { existsSync, readFileSync, rmSync } from 'node:fs';
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const pm2 = process.platform === 'win32' ? 'pm2.cmd' : 'pm2';
 const git = process.platform === 'win32' ? 'git.exe' : 'git';
+const shell = process.platform === 'win32' ? 'powershell.exe' : 'sh';
 const serverEntry = '.next/standalone/server.js';
 const installCommand = existsSync('package-lock.json') ? ['ci', '--include=dev'] : ['install', '--include=dev'];
 const port = process.env.PORT ?? '3000';
 const localLoginUrl = `http://127.0.0.1:${port}/login`;
+const localProxyHealthUrl = `http://127.0.0.1:${port}/api/health`;
 const publicLoginUrl = process.env.PUBLIC_ADMIN_URL ?? 'https://tovapulse.com/login';
 
 function run(command, args, { allowFail = false } = {}) {
@@ -29,6 +31,36 @@ function output(command, args) {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   });
+}
+
+function runDiagnostic(command, args) {
+  console.log(`\n[diagnostic] $ ${command} ${args.join(' ')}`);
+  spawnSync(command, args, {
+    env: { ...process.env, NODE_ENV: 'production' },
+    stdio: 'inherit',
+  });
+}
+
+function printFailureDiagnostics(url) {
+  console.error(`\nDeployment check failed for ${url}. Printing origin diagnostics...`);
+  runDiagnostic(pm2, ['status']);
+  runDiagnostic(pm2, ['describe', 'tovapulse-admin']);
+  runDiagnostic(pm2, ['logs', 'tovapulse-admin', '--lines', '120', '--nostream']);
+  runDiagnostic(pm2, ['logs', 'tovapulse-api', '--lines', '80', '--nostream']);
+  runDiagnostic(process.execPath, ['--version']);
+  runDiagnostic(npm, ['--version']);
+
+  if (process.platform === 'win32') {
+    runDiagnostic(shell, ['-NoProfile', '-Command', `Test-NetConnection 127.0.0.1 -Port ${port}`]);
+    runDiagnostic(shell, ['-NoProfile', '-Command', `try { Invoke-WebRequest -UseBasicParsing ${localLoginUrl} } catch { $_.Exception.Message }`]);
+    runDiagnostic(shell, ['-NoProfile', '-Command', `try { Invoke-WebRequest -UseBasicParsing ${localProxyHealthUrl} } catch { $_.Exception.Message }`]);
+  } else {
+    runDiagnostic(shell, ['-lc', `curl -i --max-time 10 ${localLoginUrl} || true`]);
+    runDiagnostic(shell, ['-lc', `curl -i --max-time 10 ${localProxyHealthUrl} || true`]);
+    runDiagnostic(shell, ['-lc', 'ss -ltnp || netstat -ltnp || true']);
+    runDiagnostic(shell, ['-lc', 'nginx -t || true']);
+    runDiagnostic(shell, ['-lc', 'systemctl status nginx --no-pager -l || true']);
+  }
 }
 
 function readEnvFile(filePath) {
@@ -148,6 +180,7 @@ async function waitForHttp(url, { attempts = 20, delayMs = 1500, required = true
   const message = `Smoke check failed for ${url}: ${lastError ?? 'unknown error'}`;
   if (required) {
     console.error(`\n${message}`);
+    printFailureDiagnostics(url);
     process.exit(1);
   }
 
@@ -175,8 +208,9 @@ if (reloadStatus !== 0) {
   run(pm2, ['start', 'ecosystem.config.cjs', '--env', 'production']);
 }
 
+run(pm2, ['restart', 'all', '--update-env']);
 await waitForHttp(localLoginUrl, { required: true });
-await waitForHttp(publicLoginUrl, { attempts: 5, required: false });
+await waitForHttp(publicLoginUrl, { attempts: 5, required: true });
 run(pm2, ['status']);
 run(pm2, ['save']);
 run(pm2, ['flush'], { allowFail: true });

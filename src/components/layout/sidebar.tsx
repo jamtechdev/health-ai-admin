@@ -1,15 +1,12 @@
 'use client';
 
-import NextImage from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
-  Shield,
   Settings,
   Bell,
-  FileText,
   History,
   Watch,
   Sparkles,
@@ -68,14 +65,12 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <aside className="flex h-full w-64 flex-col border-r border-brand-border bg-surface">
       <div className="flex h-16 items-center border-b border-brand-border px-6">
-        <NextImage
-          src="/logo.png"
-          alt="TovaPulse"
-          width={142}
-          height={56}
-          priority
-          className="h-10 w-auto rounded-md object-contain"
-        />
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-primary text-xs font-black text-white">
+            TP
+          </span>
+          <span className="text-lg font-bold tracking-tight text-foreground">TovaPulse</span>
+        </div>
       </div>
       <nav className="flex-1 space-y-5 overflow-y-auto p-4">
         {navGroups.map((group) => (

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeUp, navItems } from './landing-content';
@@ -14,14 +13,12 @@ export function LandingHeader({ showApiStatus = false }: LandingHeaderProps) {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-brand-border/60 bg-background/85 shadow-soft backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
         <div className="flex items-center gap-3">
-          <Image
-            src="/logo.png"
-            alt="TovaPulse"
-            width={164}
-            height={64}
-            priority
-            className="h-12 w-auto rounded-md object-contain"
-          />
+          <div className="flex items-center gap-3 rounded-2xl border border-brand-border/70 bg-surface/70 px-3 py-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-primary text-sm font-black text-white">
+              TP
+            </span>
+            <span className="text-lg font-bold tracking-tight text-foreground">TovaPulse</span>
+          </div>
         </div>
 
         <nav className="hidden items-center gap-1 rounded-full border border-brand-border bg-surface/55 p-1 text-sm text-text-secondary xl:flex">
