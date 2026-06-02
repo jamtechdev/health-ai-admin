@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
+const API_BASE =
+  process.env.BACKEND_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
 
 type RouteContext = {
   params: Promise<{ path: string[] }>;
@@ -12,19 +13,36 @@ async function proxy(req: NextRequest, context: RouteContext) {
   upstreamUrl.search = req.nextUrl.search;
 
   const headers = new Headers();
+  const accept = req.headers.get('accept');
   const contentType = req.headers.get('content-type');
   const authorization = req.headers.get('authorization');
 
+  if (accept) headers.set('accept', accept);
   if (contentType) headers.set('content-type', contentType);
   if (authorization) headers.set('authorization', authorization);
 
   const hasBody = !['GET', 'HEAD'].includes(req.method);
-  const upstream = await fetch(upstreamUrl, {
-    method: req.method,
-    headers,
-    body: hasBody ? await req.text() : undefined,
-    cache: 'no-store',
-  });
+  let upstream: Response;
+
+  try {
+    upstream = await fetch(upstreamUrl, {
+      method: req.method,
+      headers,
+      body: hasBody ? await req.arrayBuffer() : undefined,
+      cache: 'no-store',
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unable to reach backend API';
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Backend API is not reachable from admin server.',
+        error: message,
+      },
+      { status: 502 },
+    );
+  }
 
   const body = await upstream.text();
   const responseHeaders = new Headers();
@@ -44,3 +62,7 @@ export const POST = proxy;
 export const PUT = proxy;
 export const PATCH = proxy;
 export const DELETE = proxy;
+
+export function OPTIONS() {
+  return new NextResponse(null, { status: 204 });
+}
