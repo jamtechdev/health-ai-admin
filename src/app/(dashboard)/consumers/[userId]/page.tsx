@@ -17,6 +17,7 @@ import {
 const providerLabel: Record<string, string> = {
   apple_health: 'Apple Health / Watch',
   oura: 'Oura Ring',
+  health_connect: 'Health Connect',
 };
 
 export default function ConsumerDetailPage() {
