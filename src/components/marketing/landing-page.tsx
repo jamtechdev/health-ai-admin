@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useApiHealth } from '@/hooks/api/use-health';
 import { LandingAboutSection } from './landing-about-section';
 import { LandingBackground } from './landing-background';
 import { LandingContactSection } from './landing-contact-section';
@@ -14,13 +13,10 @@ import { LandingUserSection } from './landing-user-section';
 import { LandingWorkflowSection } from './landing-workflow-section';
 
 export function LandingPage() {
-  const { data: health, isLoading: healthLoading } = useApiHealth();
-  const apiOnline = health?.reachable === true;
-
   return (
     <motion.div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       <LandingBackground />
-      <LandingHeader healthLoading={healthLoading} apiOnline={apiOnline} />
+      <LandingHeader />
 
       <main id="home" className="relative z-10 mx-auto max-w-7xl px-6 pb-20 pt-28 md:pt-36">
         <LandingHero />

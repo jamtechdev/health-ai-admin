@@ -6,11 +6,10 @@ import { motion } from 'framer-motion';
 import { fadeUp, navItems } from './landing-content';
 
 type LandingHeaderProps = {
-  healthLoading: boolean;
-  apiOnline: boolean;
+  showApiStatus?: boolean;
 };
 
-export function LandingHeader({ healthLoading, apiOnline }: LandingHeaderProps) {
+export function LandingHeader({ showApiStatus = false }: LandingHeaderProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-brand-border/60 bg-background/85 shadow-soft backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
@@ -38,17 +37,15 @@ export function LandingHeader({ healthLoading, apiOnline }: LandingHeaderProps) 
         </nav>
 
         <div className="flex items-center gap-3">
-          <motion.div
-            className="hidden items-center gap-2 rounded-full border border-brand-border bg-surface/70 px-3 py-1.5 text-xs text-text-secondary backdrop-blur-md sm:flex"
-            {...fadeUp}
-          >
-            <span
-              className={`h-2 w-2 rounded-full ${
-                healthLoading ? 'bg-brand-warning' : apiOnline ? 'bg-brand-secondary' : 'bg-brand-critical'
-              }`}
-            />
-            {healthLoading ? 'Checking API…' : apiOnline ? 'API connected' : 'API offline'}
-          </motion.div>
+          {showApiStatus && (
+            <motion.div
+              className="hidden items-center gap-2 rounded-full border border-brand-border bg-surface/70 px-3 py-1.5 text-xs text-text-secondary backdrop-blur-md sm:flex"
+              {...fadeUp}
+            >
+              <span className="h-2 w-2 rounded-full bg-brand-secondary" />
+              API connected
+            </motion.div>
+          )}
           <Link
             href="/login"
             className="rounded-full border border-brand-primary/30 bg-brand-primary/10 px-4 py-2 text-sm font-semibold text-brand-primary transition hover:bg-brand-primary/20"
