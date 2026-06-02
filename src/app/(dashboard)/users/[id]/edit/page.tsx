@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useUser, useUpdateUser } from '@/hooks/api/use-users';
 import { api } from '@/lib/api/client';
 import { API_BASE_URL } from '@/constants/api';
-import type { UpdateUserPayload } from '@/types/user';
+import type { UpdateUserPayload, UserRecord } from '@/types/user';
 import type { RoleRecord } from '@/types/role';
 import type { UploadRecord } from '@/types/upload';
 
@@ -19,37 +19,6 @@ export default function EditUserPage() {
   const userId = params.id as string;
 
   const { data: user, isLoading: userLoading } = useUser(userId);
-  const updateUser = useUpdateUser();
-
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [status, setStatus] = useState('ACTIVE');
-  const [avatar, setAvatar] = useState('');
-  const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
-  const [allRoles, setAllRoles] = useState<RoleRecord[]>([]);
-  const [error, setError] = useState('');
-  const [avatarPreview, setAvatarPreview] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-  const fullUrl = (path: string) => path.startsWith('/') ? `${API_BASE_URL}${path}` : path;
-
-  useEffect(() => {
-    if (user) {
-      setName(user.name);
-      setEmail(user.email);
-      setStatus(user.status);
-      setAvatar(user.avatar ?? '');
-      setAvatarPreview(user.avatar ?? '');
-      setSelectedRoleIds(user.roles?.map((r) => r.id) ?? []);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    api.get('/roles?limit=100')
-      .then((res) => setAllRoles(res.data.data?.items ?? []))
-      .catch(() => {});
-  }, []);
 
   if (userLoading) {
     return (
@@ -70,6 +39,32 @@ export default function EditUserPage() {
       </div>
     );
   }
+
+  return <EditUserForm key={user.id} user={user} userId={userId} />;
+}
+
+function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
+  const router = useRouter();
+  const updateUser = useUpdateUser();
+
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [password, setPassword] = useState('');
+  const [status, setStatus] = useState(user.status);
+  const [avatar, setAvatar] = useState(user.avatar ?? '');
+  const [selectedRoleIds] = useState<string[]>(user.roles?.map((r) => r.id) ?? []);
+  const [allRoles, setAllRoles] = useState<RoleRecord[]>([]);
+  const [error, setError] = useState('');
+  const [avatarPreview, setAvatarPreview] = useState(user.avatar ?? '');
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const fullUrl = (path: string) => (path.startsWith('/') ? `${API_BASE_URL}${path}` : path);
+
+  useEffect(() => {
+    api.get('/roles?limit=100')
+      .then((res) => setAllRoles(res.data.data?.items ?? []))
+      .catch(() => {});
+  }, []);
 
   const handleSave = async () => {
     if (!name.trim() || !email.trim()) {
