@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { authService } from '@/services/auth.service';
 import { hasStoredSession, useAuthStore } from '@/store/auth.store';
 import { getApiErrorMessage } from '@/lib/api/response';
-import { useApiHealth } from '@/hooks/api/use-health';
 import { canAccessAdminPanel } from '@/lib/auth/admin-access';
 
 const schema = z.object({
@@ -32,7 +31,6 @@ export default function LoginPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const [loading, setLoading] = useState(false);
-  const { data: health, isLoading: healthLoading } = useApiHealth();
 
   useEffect(() => {
     if (hasHydrated && (isAuthenticated || hasStoredSession())) {
@@ -73,8 +71,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  const apiReachable = health?.reachable === true;
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
@@ -137,19 +133,6 @@ export default function LoginPage() {
           <h2 className="text-2xl font-bold">Admin sign in</h2>
           <p className="mt-2 text-text-secondary">Use your administrator credentials</p>
 
-          <div className="mt-4 flex items-center gap-2 text-xs text-text-muted">
-            <span
-              className={`h-2 w-2 rounded-full ${
-                healthLoading ? 'bg-brand-warning' : apiReachable ? 'bg-brand-secondary' : 'bg-brand-critical'
-              }`}
-            />
-            {healthLoading
-              ? 'Checking API…'
-              : apiReachable
-                ? 'API connected'
-                : 'Start health-api (port 4000)'}
-          </div>
-
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-text-secondary">Email</label>
@@ -177,7 +160,7 @@ export default function LoginPage() {
             </div>
             <Button
               type="submit"
-              disabled={loading || !apiReachable}
+              disabled={loading}
               className="h-11 w-full text-base font-semibold"
             >
               {loading ? 'Signing in…' : 'Sign in to dashboard'}
