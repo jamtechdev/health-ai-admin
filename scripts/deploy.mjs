@@ -11,6 +11,7 @@ const port = process.env.PORT ?? '3000';
 const localLoginUrl = `http://127.0.0.1:${port}/login`;
 const localProxyHealthUrl = `http://127.0.0.1:${port}/api/health`;
 const publicLoginUrl = process.env.PUBLIC_ADMIN_URL ?? 'https://tovapulse.com/login';
+const adminAppName = 'tovapulse-admin';
 
 function run(command, args, { allowFail = false } = {}) {
   console.log(`\n$ ${command} ${args.join(' ')}`);
@@ -44,8 +45,8 @@ function runDiagnostic(command, args) {
 function printFailureDiagnostics(url) {
   console.error(`\nDeployment check failed for ${url}. Printing origin diagnostics...`);
   runDiagnostic(pm2, ['status']);
-  runDiagnostic(pm2, ['describe', 'tovapulse-admin']);
-  runDiagnostic(pm2, ['logs', 'tovapulse-admin', '--lines', '120', '--nostream']);
+  runDiagnostic(pm2, ['describe', adminAppName]);
+  runDiagnostic(pm2, ['logs', adminAppName, '--lines', '120', '--nostream']);
   runDiagnostic(pm2, ['logs', 'tovapulse-api', '--lines', '80', '--nostream']);
   runDiagnostic(process.execPath, ['--version']);
   runDiagnostic(npm, ['--version']);
@@ -200,16 +201,10 @@ if (!existsSync(serverEntry)) {
   process.exit(1);
 }
 
-const reloadStatus = run(pm2, ['reload', 'ecosystem.config.cjs', '--env', 'production', '--update-env'], {
-  allowFail: true,
-});
-
-if (reloadStatus !== 0) {
-  run(pm2, ['start', 'ecosystem.config.cjs', '--env', 'production']);
-}
-
-run(pm2, ['restart', 'all', '--update-env']);
+run(pm2, ['delete', adminAppName], { allowFail: true });
+run(pm2, ['start', 'ecosystem.config.cjs', '--env', 'production', '--update-env']);
 await waitForHttp(localLoginUrl, { required: true });
+await waitForHttp(localProxyHealthUrl, { attempts: 5, required: true });
 await waitForHttp(publicLoginUrl, { attempts: 5, required: true });
 run(pm2, ['status']);
 run(pm2, ['save']);
