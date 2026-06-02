@@ -6,6 +6,8 @@ import { useParams } from 'next/navigation';
 import { ArrowLeft, RefreshCw, Sparkles, Watch, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageShell } from '@/components/ui/page-shell';
+import { VitalsLoader } from '@/components/ui/vitals-loader';
 import {
   useConsumerDetail,
   useConsumerInsights,
@@ -32,33 +34,31 @@ export default function ConsumerDetailPage() {
   const sync = useSyncConsumerDevices(userId);
 
   if (isLoading) {
-    return <div className="py-12 text-center text-text-muted">Loading consumer health data…</div>;
+    return <VitalsLoader label="Loading consumer health data" />;
   }
 
   if (!data) {
     return (
-      <div className="space-y-4">
+      <PageShell title="Consumer not found" description="This health profile could not be loaded.">
         <Link href="/consumers" className="inline-flex items-center gap-2 text-sm text-brand-primary">
           <ArrowLeft className="h-4 w-4" /> Back to app users
         </Link>
-        <p className="text-text-muted">Consumer not found.</p>
-      </div>
+      </PageShell>
     );
   }
 
   const profile = data.profile;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <Link href="/consumers" className="mb-2 inline-flex items-center gap-2 text-sm text-brand-primary">
+    <PageShell
+      eyebrow="Consumer Vitals"
+      title="Health profile"
+      description={`User ID: ${userId}`}
+      actions={
+        <>
+          <Link href="/consumers" className="inline-flex items-center gap-2 text-sm text-brand-primary">
             <ArrowLeft className="h-4 w-4" /> App users
           </Link>
-          <h2 className="text-2xl font-bold">Health profile</h2>
-          <p className="text-text-muted">User ID: {userId}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             disabled={sync.isPending}
@@ -71,8 +71,9 @@ export default function ConsumerDetailPage() {
             <Sparkles className="mr-2 h-4 w-4" />
             Generate AI insight
           </Button>
-        </div>
-      </div>
+        </>
+      }
+    >
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -255,6 +256,6 @@ export default function ConsumerDetailPage() {
           </ul>
         </CardContent>
       </Card>
-    </div>
+    </PageShell>
   );
 }

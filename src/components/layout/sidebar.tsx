@@ -14,6 +14,7 @@ import {
   LineChart,
   RadioTower,
   Activity,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -60,20 +61,30 @@ const navGroups: { title: string; items: NavItem[] }[] = [
   },
 ];
 
-export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
+export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onClose?: () => void }) {
   const pathname = usePathname();
 
   return (
     <aside className="flex h-full w-72 max-w-[86vw] flex-col border-r border-brand-border/80 bg-background/95 shadow-[24px_0_80px_rgba(0,0,0,0.32)] backdrop-blur-xl lg:w-72">
       <div className="border-b border-brand-border/70 px-5 py-5">
-        <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-primary text-sm font-black text-white shadow-[0_16px_34px_rgba(220,38,38,0.24)]">
-            TP
-          </span>
-          <div className="min-w-0">
-            <span className="block truncate text-lg font-bold tracking-tight text-foreground">TovaPulse</span>
-            <span className="text-xs font-medium text-text-muted">Admin Control Center</span>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-primary text-sm font-black text-white shadow-[0_16px_34px_rgba(220,38,38,0.24)]">
+              TP
+            </span>
+            <div className="min-w-0">
+              <span className="block truncate text-lg font-bold tracking-tight text-foreground">TovaPulse</span>
+              <span className="text-xs font-medium text-text-muted">Admin Control Center</span>
+            </div>
           </div>
+          <button
+            type="button"
+            className="rounded-xl p-2 text-text-muted transition hover:bg-surface-secondary hover:text-foreground lg:hidden"
+            onClick={onClose}
+            aria-label="Close sidebar"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
       </div>
       <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">

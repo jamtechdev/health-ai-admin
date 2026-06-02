@@ -7,6 +7,8 @@ import { toast } from 'sonner';
 import { ArrowLeft, Save, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PageShell } from '@/components/ui/page-shell';
+import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useUser, useUpdateUser } from '@/hooks/api/use-users';
 import { api } from '@/lib/api/client';
 import { API_BASE_URL } from '@/constants/api';
@@ -22,22 +24,16 @@ export default function EditUserPage() {
   const { data: user, isLoading: userLoading } = useUser(userId);
 
   if (userLoading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-8 w-48 animate-pulse rounded bg-surface-secondary" />
-        <div className="h-64 animate-pulse rounded-card bg-surface-secondary" />
-      </div>
-    );
+    return <VitalsLoader label="Loading user profile" />;
   }
 
   if (!user) {
     return (
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold">User not found</h2>
+      <PageShell title="User not found" description="This user record could not be loaded.">
         <Button variant="outline" onClick={() => router.push('/users')}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Users
         </Button>
-      </div>
+      </PageShell>
     );
   }
 
@@ -90,18 +86,19 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
   };
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div className="flex items-center gap-4">
-        <button onClick={() => router.push('/users')} className="text-text-muted hover:text-foreground">
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <div>
-          <h2 className="text-2xl font-bold">Edit User</h2>
-          <p className="text-text-muted">{user.email}</p>
-        </div>
-      </div>
+    <PageShell
+      eyebrow="People"
+      title="Edit User"
+      description={user.email}
+      className="mx-auto max-w-3xl"
+      actions={
+        <Button variant="outline" onClick={() => router.push('/users')}>
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back
+        </Button>
+      }
+    >
 
-      <div className="rounded-card border border-brand-border bg-surface p-6 shadow-soft">
+      <div className="rounded-card border border-brand-border/80 bg-surface/85 p-4 shadow-soft sm:p-6">
         <div className="space-y-5">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-surface-secondary">
@@ -232,7 +229,7 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
 
           {error && <p className="text-sm text-brand-critical">{error}</p>}
 
-          <div className="flex justify-end gap-3 border-t border-brand-border pt-4">
+          <div className="flex flex-col justify-end gap-3 border-t border-brand-border pt-4 sm:flex-row">
             <Button variant="outline" onClick={() => router.push('/users')}>Cancel</Button>
             <Button onClick={handleSave} disabled={updateUser.isPending}>
               <Save className="mr-2 h-4 w-4" />
@@ -241,6 +238,6 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
           </div>
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

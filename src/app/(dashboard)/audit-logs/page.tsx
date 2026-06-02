@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DataTable, type Column } from '@/components/data-table';
+import { PageShell } from '@/components/ui/page-shell';
 import { useAuditLogs } from '@/hooks/api/use-logs';
 import type { AuditLog } from '@/types/logs';
 
@@ -26,11 +27,11 @@ export default function AuditLogsPage() {
   const { data, isLoading } = useAuditLogs(page);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Audit Logs</h2>
-        <p className="text-text-muted">System audit trail</p>
-      </div>
+    <PageShell
+      eyebrow="Governance"
+      title="Audit Logs"
+      description="System audit trail for administrative changes and sensitive operations."
+    >
       <DataTable
         columns={columns}
         data={data?.items ?? []}
@@ -39,6 +40,6 @@ export default function AuditLogsPage() {
         totalPages={data?.meta?.totalPages ?? 1}
         onPageChange={setPage}
       />
-    </div>
+    </PageShell>
   );
 }

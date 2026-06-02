@@ -5,6 +5,8 @@ import { toast } from 'sonner';
 import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { PageShell } from '@/components/ui/page-shell';
+import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useUploadFile, useUploadsList } from '@/hooks/api/use-uploads';
 import { getApiErrorMessage } from '@/lib/api/response';
 
@@ -15,13 +17,12 @@ export default function MediaPage() {
   const uploadMutation = useUploadFile();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Media Manager</h2>
-          <p className="text-text-muted">Upload and manage files</p>
-        </div>
-        <div>
+    <PageShell
+      eyebrow="Assets"
+      title="Media Manager"
+      description="Upload and manage media assets, documents, and health-related files."
+      actions={
+        <>
           <input
             ref={inputRef}
             type="file"
@@ -41,11 +42,12 @@ export default function MediaPage() {
             <Upload className="mr-2 h-4 w-4" />
             Upload
           </Button>
-        </div>
-      </div>
+        </>
+      }
+    >
 
       {isLoading ? (
-        <p>Loading...</p>
+        <VitalsLoader label="Loading media assets" />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {(data?.items ?? []).map((file) => (
@@ -59,10 +61,12 @@ export default function MediaPage() {
             </Card>
           ))}
           {!data?.items?.length && (
-            <p className="col-span-full text-center text-text-muted">No files uploaded</p>
+            <Card className="col-span-full">
+              <CardContent className="p-8 text-center text-text-muted">No files uploaded yet.</CardContent>
+            </Card>
           )}
         </div>
       )}
-    </div>
+    </PageShell>
   );
 }

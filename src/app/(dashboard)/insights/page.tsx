@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DataTable, type Column } from '@/components/data-table';
+import { PageShell } from '@/components/ui/page-shell';
 import { useAdminInsights } from '@/hooks/api/use-platform-health';
 import type { AiInsightRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
@@ -26,12 +27,11 @@ export default function InsightsPage() {
   const rows = data?.items ?? [];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">AI Insights</h2>
-        <p className="text-text-muted">Review generated recommendations and risk levels.</p>
-      </div>
-
+    <PageShell
+      eyebrow="AI Health"
+      title="AI Insights"
+      description="Review generated recommendations, risk levels, and health scores for app users."
+    >
       <DataTable
         columns={columns}
         data={rows}
@@ -59,6 +59,6 @@ export default function InsightsPage() {
           )
         }
       />
-    </div>
+    </PageShell>
   );
 }

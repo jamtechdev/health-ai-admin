@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Pencil, Trash2, Power, PowerOff } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
+import { PageShell } from '@/components/ui/page-shell';
 import { useUsersList, useUpdateUser, useDeleteUser } from '@/hooks/api/use-users';
 import type { UserRecord } from '@/types/user';
 import { exportCsv } from '@/lib/csv';
@@ -151,14 +152,11 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Users</h2>
-          <p className="text-text-muted">Manage all platform users.</p>
-        </div>
-      </div>
-
+    <PageShell
+      eyebrow="People"
+      title="Users"
+      description="Manage platform users, roles, account status, and lifecycle actions."
+    >
       <DataTable
         columns={columns}
         data={data?.items ?? []}
@@ -184,6 +182,6 @@ export default function UsersPage() {
           isPending={deleteUser.isPending}
         />
       )}
-    </div>
+    </PageShell>
   );
 }

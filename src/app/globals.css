@@ -72,6 +72,24 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+.vitals-line {
+  animation: vitals-scan 1.65s linear infinite;
+}
+
+@keyframes vitals-scan {
+  0% {
+    transform: translateX(-72%);
+    opacity: 0.35;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(72%);
+    opacity: 0.35;
+  }
+}
+
 ::selection {
   background: var(--primary-glow);
   color: var(--text-primary);

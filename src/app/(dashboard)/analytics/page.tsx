@@ -2,6 +2,7 @@
 
 import { Activity, Bell, Database, Sparkles, Users, Watch, XCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageShell } from '@/components/ui/page-shell';
 import { useAdminAnalyticsOverview } from '@/hooks/api/use-platform-health';
 
 const cards = [
@@ -18,12 +19,11 @@ export default function AnalyticsPage() {
   const { data, isLoading } = useAdminAnalyticsOverview();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Analytics</h2>
-        <p className="text-text-muted">TovaPulse operations, telemetry, and usage signals.</p>
-      </div>
-
+    <PageShell
+      eyebrow="Telemetry"
+      title="Analytics"
+      description="TovaPulse operations, biometric telemetry, usage signals, and sync health."
+    >
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => {
           const Icon = card.icon;
@@ -42,6 +42,6 @@ export default function AnalyticsPage() {
           );
         })}
       </div>
-    </div>
+    </PageShell>
   );
 }

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { Activity, ChevronLeft, ChevronRight, Download, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { VitalsTableSkeleton } from '@/components/ui/vitals-loader';
 
 export interface Column<T> {
   key: string;
@@ -44,50 +45,48 @@ export function DataTable<T extends { id: string }>({
   };
 
   if (isLoading) {
-    return (
-      <div className="space-y-3">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-12 animate-pulse rounded-button bg-surface-secondary" />
-        ))}
-      </div>
-    );
+    return <VitalsTableSkeleton />;
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {onSearchChange && (
-          <div className="relative max-w-sm flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
-            <Input
-              placeholder="Search..."
-              value={search ?? ''}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-        )}
-        {onExport && (
-          <Button variant="outline" size="sm" onClick={onExport}>
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-        )}
-      </div>
+      {(onSearchChange || onExport) && (
+        <div className="flex flex-col gap-3 rounded-card border border-brand-border/80 bg-surface/75 p-3 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+          {onSearchChange && (
+            <div className="relative min-w-0 flex-1 sm:max-w-md">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+              <Input
+                placeholder="Search records..."
+                value={search ?? ''}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="h-11 border-brand-border/80 bg-background/60 pl-9"
+              />
+            </div>
+          )}
+          {onExport && (
+            <Button variant="outline" size="sm" onClick={onExport} className="h-11 w-full sm:w-auto">
+              <Download className="mr-2 h-4 w-4" />
+              Export
+            </Button>
+          )}
+        </div>
+      )}
 
-      <div className="overflow-x-auto rounded-card border border-brand-border bg-surface shadow-soft">
-        <table className="w-full text-sm">
-          <thead className="bg-surface-elevated">
+      <div className="overflow-hidden rounded-card border border-brand-border/80 bg-surface shadow-soft">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[720px] text-sm">
+          <thead className="sticky top-0 z-10 bg-surface-elevated/95 backdrop-blur">
             <tr>
-              <th className="px-4 py-3 text-left">
+              <th className="w-12 px-4 py-3 text-left">
                 <input
                   type="checkbox"
+                  className="h-4 w-4 rounded border-brand-border accent-brand-primary"
                   checked={data.length > 0 && selected.length === data.length}
                   onChange={toggleAll}
                 />
               </th>
               {columns.map((col) => (
-                <th key={col.key} className="px-4 py-3 text-left font-medium text-text-secondary">
+                <th key={col.key} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-text-muted">
                   {col.header}
                 </th>
               ))}
@@ -97,8 +96,11 @@ export function DataTable<T extends { id: string }>({
             {data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length + 1} className="px-4 py-14 text-center">
-                  <div className="mx-auto max-w-sm rounded-card border border-dashed border-brand-border bg-surface-elevated/50 p-6 text-text-muted">
-                    <p className="font-medium text-foreground">No data yet</p>
+                  <div className="mx-auto max-w-sm rounded-card border border-dashed border-brand-border bg-surface-elevated/50 p-7 text-text-muted">
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-secondary/10 text-brand-secondary">
+                      <Activity className="h-6 w-6" />
+                    </div>
+                    <p className="font-semibold text-foreground">No data yet</p>
                     <p className="mt-1 text-sm">{emptyMessage}</p>
                   </div>
                 </td>
@@ -107,11 +109,12 @@ export function DataTable<T extends { id: string }>({
               data.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-t border-brand-border hover:bg-surface-elevated"
+                  className="border-t border-brand-border/70 transition-colors hover:bg-surface-elevated/70"
                 >
                   <td className="px-4 py-3">
                     <input
                       type="checkbox"
+                      className="h-4 w-4 rounded border-brand-border accent-brand-primary"
                       checked={selected.includes(row.id)}
                       onChange={() =>
                         setSelected((prev) =>
@@ -123,7 +126,7 @@ export function DataTable<T extends { id: string }>({
                     />
                   </td>
                   {columns.map((col) => (
-                    <td key={col.key} className="px-4 py-3">
+                    <td key={col.key} className="px-4 py-3 align-middle text-text-secondary">
                       {col.render
                         ? col.render(row)
                         : String((row as Record<string, unknown>)[col.key] ?? '')}
@@ -134,10 +137,11 @@ export function DataTable<T extends { id: string }>({
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {onPageChange && totalPages > 1 && (
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 rounded-card border border-brand-border/80 bg-surface/70 p-3 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-sm text-text-muted">
             Page {page} of {totalPages}
           </span>
@@ -145,6 +149,7 @@ export function DataTable<T extends { id: string }>({
             <Button
               variant="outline"
               size="sm"
+              className="flex-1 sm:flex-none"
               disabled={page <= 1}
               onClick={() => onPageChange(page - 1)}
             >
@@ -153,6 +158,7 @@ export function DataTable<T extends { id: string }>({
             <Button
               variant="outline"
               size="sm"
+              className="flex-1 sm:flex-none"
               disabled={page >= totalPages}
               onClick={() => onPageChange(page + 1)}
             >

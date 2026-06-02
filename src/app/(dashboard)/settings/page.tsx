@@ -6,6 +6,7 @@ import { Save, Settings2, ShieldCheck, Smartphone, Bell, Sparkles, SlidersHorizo
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PageShell } from '@/components/ui/page-shell';
 import { useSettingsList, useUpsertSetting } from '@/hooks/api/use-settings';
 
 type FieldType = 'text' | 'number' | 'boolean' | 'select' | 'textarea';
@@ -204,13 +205,11 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-3xl border border-brand-border/80 bg-surface/70 p-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-primary">Configuration</p>
-          <h2 className="mt-2 text-2xl font-bold">Settings</h2>
-          <p className="mt-1 text-sm text-text-muted">Global application configuration for admin and mobile clients.</p>
-        </div>
+    <PageShell
+      eyebrow="Configuration"
+      title="Settings"
+      description="Global application configuration for admin and mobile clients."
+      actions={
         <Button
           disabled={isLoading || upsertSetting.isPending}
           onClick={() =>
@@ -224,7 +223,8 @@ export default function SettingsPage() {
           <Save className="h-4 w-4" />
           Save all
         </Button>
-      </div>
+      }
+    >
 
       {isLoading ? (
         <div className="grid gap-4 md:grid-cols-2">
@@ -297,6 +297,6 @@ export default function SettingsPage() {
           </Card>
         </>
       )}
-    </div>
+    </PageShell>
   );
 }

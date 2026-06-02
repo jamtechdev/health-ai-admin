@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DataTable, type Column } from '@/components/data-table';
+import { PageShell } from '@/components/ui/page-shell';
 import { useAdminSyncLogs } from '@/hooks/api/use-platform-health';
 import type { DeviceSyncLogRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
@@ -21,12 +22,11 @@ export default function DeviceSyncLogsPage() {
   const rows = data?.items ?? [];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Device Sync Logs</h2>
-        <p className="text-text-muted">Track wearable sync jobs, retries, and failures.</p>
-      </div>
-
+    <PageShell
+      eyebrow="Sync Health"
+      title="Device Sync Logs"
+      description="Track wearable sync jobs, retries, metrics ingested, and failures."
+    >
       <DataTable
         columns={columns}
         data={rows}
@@ -48,6 +48,6 @@ export default function DeviceSyncLogsPage() {
           )
         }
       />
-    </div>
+    </PageShell>
   );
 }

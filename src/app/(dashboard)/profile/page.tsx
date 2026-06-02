@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageShell } from '@/components/ui/page-shell';
 import { useAuthStore } from '@/store/auth.store';
 import { authService } from '@/services/auth.service';
 import { getApiErrorMessage } from '@/lib/api/response';
@@ -42,17 +43,18 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Profile</h2>
-        <p className="text-text-muted">{user?.email}</p>
-      </div>
+    <PageShell
+      eyebrow="Account"
+      title="Profile"
+      description={user?.email ?? 'Manage your admin profile and password.'}
+      className="mx-auto max-w-3xl"
+    >
       <Card>
         <CardHeader><CardTitle>Personal Info</CardTitle></CardHeader>
         <CardContent>
           <form onSubmit={profileForm.handleSubmit(onProfile)} className="space-y-4">
             <Input {...profileForm.register('name')} placeholder="Name" />
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="w-full sm:w-auto">Save</Button>
           </form>
         </CardContent>
       </Card>
@@ -62,10 +64,10 @@ export default function ProfilePage() {
           <form onSubmit={passwordForm.handleSubmit(onPassword)} className="space-y-4">
             <Input type="password" placeholder="Current password" {...passwordForm.register('currentPassword')} />
             <Input type="password" placeholder="New password" {...passwordForm.register('newPassword')} />
-            <Button type="submit">Update Password</Button>
+            <Button type="submit" className="w-full sm:w-auto">Update Password</Button>
           </form>
         </CardContent>
       </Card>
-    </div>
+    </PageShell>
   );
 }

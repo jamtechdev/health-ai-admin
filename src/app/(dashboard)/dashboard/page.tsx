@@ -12,6 +12,8 @@ import {
 } from 'recharts';
 import { Users, UserCheck, Shield, Bell, HeartPulse, Watch, Sparkles, Database } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageShell } from '@/components/ui/page-shell';
+import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useDashboardStats } from '@/hooks/api/use-dashboard';
 
 const statCards = [
@@ -25,12 +27,11 @@ export default function DashboardPage() {
   const { data, isLoading } = useDashboardStats();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Dashboard</h2>
-        <p className="text-text-muted">Overview of TovaPulse operations</p>
-      </div>
-
+    <PageShell
+      eyebrow="Command Center"
+      title="Dashboard"
+      description="Overview of TovaPulse operations, app users, biometrics, and platform activity."
+    >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat, i) => {
           const Icon = stat.icon;
@@ -105,7 +106,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="h-72 min-w-0">
             {isLoading ? (
-              <div className="flex h-full items-center justify-center text-text-muted">Loading...</div>
+              <VitalsLoader label="Charting user growth" compact className="h-full min-h-0 border-0 bg-transparent shadow-none" />
             ) : (
               <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <BarChart data={data?.usersByMonth ?? []}>
@@ -168,6 +169,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageShell>
   );
 }

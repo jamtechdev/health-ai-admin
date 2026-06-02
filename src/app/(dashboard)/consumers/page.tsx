@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
+import { PageShell } from '@/components/ui/page-shell';
 import type { ConsumerTableRow } from '@/types/platform-health';
 import { useConsumersList } from '@/hooks/api/use-platform-health';
 
@@ -74,14 +75,11 @@ export default function ConsumersPage() {
   }));
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">App Users</h2>
-        <p className="text-text-muted">
-          Mobile app consumers — wearables, metrics, and AI insights
-        </p>
-      </div>
-
+    <PageShell
+      eyebrow="Consumers"
+      title="App Users"
+      description="Mobile app consumers, wearables, health metrics, and AI insights."
+    >
       <DataTable
         columns={columns}
         data={rows}
@@ -96,6 +94,6 @@ export default function ConsumersPage() {
         onPageChange={setPage}
         emptyMessage="No app users yet. Users appear here after mobile app registration."
       />
-    </div>
+    </PageShell>
   );
 }

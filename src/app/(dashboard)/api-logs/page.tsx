@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DataTable, type Column } from '@/components/data-table';
+import { PageShell } from '@/components/ui/page-shell';
 import { useAdminApiLogs } from '@/hooks/api/use-platform-health';
 import type { ApiLogRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
@@ -21,12 +22,11 @@ export default function ApiLogsPage() {
   const rows = data?.items ?? [];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">API Logs</h2>
-        <p className="text-text-muted">Request-level observability for admin and mobile APIs.</p>
-      </div>
-
+    <PageShell
+      eyebrow="Observability"
+      title="API Logs"
+      description="Request-level observability for admin and mobile API traffic."
+    >
       <DataTable
         columns={columns}
         data={rows}
@@ -48,6 +48,6 @@ export default function ApiLogsPage() {
           )
         }
       />
-    </div>
+    </PageShell>
   );
 }

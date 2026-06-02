@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DataTable, type Column } from '@/components/data-table';
+import { PageShell } from '@/components/ui/page-shell';
 import { useActivityLogs } from '@/hooks/api/use-logs';
 import type { ActivityLog } from '@/types/logs';
 
@@ -35,11 +36,11 @@ export default function ActivityLogsPage() {
   const { data, isLoading } = useActivityLogs(page);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Activity Logs</h2>
-        <p className="text-text-muted">User activity timeline — shows login/logout with device & IP details.</p>
-      </div>
+    <PageShell
+      eyebrow="User Activity"
+      title="Activity Logs"
+      description="App user activity timeline with login, logout, device, and IP details."
+    >
       <DataTable
         columns={columns}
         data={data?.items ?? []}
@@ -48,6 +49,6 @@ export default function ActivityLogsPage() {
         totalPages={data?.meta?.totalPages ?? 1}
         onPageChange={setPage}
       />
-    </div>
+    </PageShell>
   );
 }

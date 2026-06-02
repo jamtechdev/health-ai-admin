@@ -2,6 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { PageShell } from '@/components/ui/page-shell';
+import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useMarkNotificationRead, useNotificationsList } from '@/hooks/api/use-notifications';
 
 export default function NotificationsPage() {
@@ -9,13 +11,13 @@ export default function NotificationsPage() {
   const markRead = useMarkNotificationRead();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Notifications</h2>
-        <p className="text-text-muted">Your notification center</p>
-      </div>
+    <PageShell
+      eyebrow="Alerts"
+      title="Notifications"
+      description="Operational notifications, user health reminders, and admin alerts."
+    >
       {isLoading ? (
-        <p>Loading...</p>
+        <VitalsLoader label="Loading notifications" />
       ) : (
         <div className="space-y-3">
           {(data ?? []).map((n) => (
@@ -36,9 +38,15 @@ export default function NotificationsPage() {
               </CardContent>
             </Card>
           ))}
-          {!data?.length && <p className="text-text-muted">No notifications</p>}
+          {!data?.length && (
+            <Card>
+              <CardContent className="p-8 text-center text-text-muted">
+                No notification vitals yet.
+              </CardContent>
+            </Card>
+          )}
         </div>
       )}
-    </div>
+    </PageShell>
   );
 }
