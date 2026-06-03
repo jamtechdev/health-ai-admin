@@ -5,7 +5,20 @@ export interface UserRecord {
   status: string;
   avatar?: string | null;
   roles?: { id: string; name: string; slug: string }[];
+  deletedAt?: string | null;
   createdAt: string;
+  profile?: UserHealthProfileData | null;
+}
+
+export interface UserHealthProfileData {
+  age?: number | null;
+  gender?: string | null;
+  weightKg?: number | null;
+  heightCm?: number | null;
+  targetWeightKg?: number | null;
+  primaryGoal?: string | null;
+  activityLevel?: string | null;
+  sleepGoal?: number | null;
 }
 
 export interface CreateUserPayload {
@@ -23,4 +36,12 @@ export interface UpdateUserPayload {
   status?: string;
   avatar?: string | null;
   roleIds?: string[];
+  age?: number | null;
+  gender?: string | null;
+  weightKg?: number | null;
+  heightCm?: number | null;
+  targetWeightKg?: number | null;
+  primaryGoal?: string | null;
+  activityLevel?: string | null;
+  sleepGoal?: number | null;
 }

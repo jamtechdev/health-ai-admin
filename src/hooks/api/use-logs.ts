@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { logsService } from '@/services/logs.service';
 import { queryKeys } from './query-keys';
 
@@ -15,5 +15,15 @@ export function useAuditLogs(page: number) {
   return useQuery({
     queryKey: queryKeys.logs.audit(page),
     queryFn: () => logsService.auditList({ page, limit: 10 }),
+  });
+}
+
+export function useClearActivityLogs() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => logsService.clearAllActivityLogs(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['logs', 'activity'] });
+    },
   });
 }

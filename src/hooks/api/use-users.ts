@@ -44,7 +44,16 @@ export function useUpdateUser() {
 export function useDeleteUser() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => usersService.remove(id),
+    mutationFn: ({ id, action, reason }: { id: string; action: 'soft' | 'hard'; reason?: string }) =>
+      usersService.remove(id, action, reason),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.users.all }),
+  });
+}
+
+export function useRevertUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => usersService.revert(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.users.all }),
   });
 }

@@ -49,6 +49,17 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState(user.status);
   const [avatar, setAvatar] = useState(user.avatar ?? '');
+
+  const p = user.profile ?? {};
+  const [age, setAge] = useState<number | null>(p.age ?? null);
+  const [gender, setGender] = useState<string | null>(p.gender ?? null);
+  const [weightKg, setWeightKg] = useState<number | null>(p.weightKg ?? null);
+  const [heightCm, setHeightCm] = useState<number | null>(p.heightCm ?? null);
+  const [targetWeightKg, setTargetWeightKg] = useState<number | null>(p.targetWeightKg ?? null);
+  const [primaryGoal, setPrimaryGoal] = useState<string | null>(p.primaryGoal ?? null);
+  const [activityLevel, setActivityLevel] = useState<string | null>(p.activityLevel ?? null);
+  const [sleepGoal, setSleepGoal] = useState<number | null>(p.sleepGoal ?? null);
+
   const [selectedRoleIds] = useState<string[]>(user.roles?.map((r) => r.id) ?? []);
   const [allRoles, setAllRoles] = useState<RoleRecord[]>([]);
   const [error, setError] = useState('');
@@ -75,6 +86,14 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
         email,
         status,
         avatar: avatar.trim() || null,
+        age: age ?? null,
+        gender: gender ?? null,
+        weightKg: weightKg ?? null,
+        heightCm: heightCm ?? null,
+        targetWeightKg: targetWeightKg ?? null,
+        primaryGoal: primaryGoal ?? null,
+        activityLevel: activityLevel ?? null,
+        sleepGoal: sleepGoal ?? null,
       };
       if (password.trim()) payload.password = password;
       await updateUser.mutateAsync({ id: userId, payload });
@@ -205,6 +224,65 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
               <option value="INACTIVE">INACTIVE</option>
               <option value="SUSPENDED">SUSPENDED</option>
             </select>
+          </div>
+
+          <div className="border-t border-brand-border pt-4">
+            <h3 className="mb-3 text-sm font-semibold text-text-secondary">Health Profile</h3>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Age</label>
+                <Input type="number" value={age ?? ''} onChange={(e) => setAge(e.target.value ? Number(e.target.value) : null)} />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Gender</label>
+                <select
+                  value={gender ?? ''}
+                  onChange={(e) => setGender(e.target.value || null)}
+                  className="flex h-10 w-full rounded-input border border-brand-border bg-surface-elevated px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60"
+                >
+                  <option value="">Not set</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                  <option value="prefer_not_to_say">Prefer not to say</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Weight (kg)</label>
+                <Input type="number" step="0.1" value={weightKg ?? ''} onChange={(e) => setWeightKg(e.target.value ? Number(e.target.value) : null)} />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Height (cm)</label>
+                <Input type="number" step="0.1" value={heightCm ?? ''} onChange={(e) => setHeightCm(e.target.value ? Number(e.target.value) : null)} />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Target Weight (kg)</label>
+                <Input type="number" step="0.1" value={targetWeightKg ?? ''} onChange={(e) => setTargetWeightKg(e.target.value ? Number(e.target.value) : null)} />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Sleep Goal (hours)</label>
+                <Input type="number" step="0.5" value={sleepGoal ?? ''} onChange={(e) => setSleepGoal(e.target.value ? Number(e.target.value) : null)} />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Primary Goal</label>
+                <Input value={primaryGoal ?? ''} onChange={(e) => setPrimaryGoal(e.target.value || null)} />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Activity Level</label>
+                <select
+                  value={activityLevel ?? ''}
+                  onChange={(e) => setActivityLevel(e.target.value || null)}
+                  className="flex h-10 w-full rounded-input border border-brand-border bg-surface-elevated px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60"
+                >
+                  <option value="">Not set</option>
+                  <option value="sedentary">Sedentary</option>
+                  <option value="lightly_active">Lightly Active</option>
+                  <option value="moderately_active">Moderately Active</option>
+                  <option value="very_active">Very Active</option>
+                  <option value="extremely_active">Extremely Active</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div>

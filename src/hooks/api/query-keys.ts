@@ -46,4 +46,8 @@ export const queryKeys = {
     adminSyncLogs: (page: number) => ['platform-health', 'admin-sync-logs', page] as const,
     adminApiLogs: (page: number) => ['platform-health', 'admin-api-logs', page] as const,
   },
+  accountRequests: {
+    all: ['account-requests'] as const,
+    list: (page: number) => ['account-requests', 'list', page] as const,
+  },
 } as const;

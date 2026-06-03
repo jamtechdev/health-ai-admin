@@ -15,6 +15,7 @@ import {
   RadioTower,
   Activity,
   X,
+  AlertTriangle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -37,7 +38,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
     title: 'People',
     items: [
       { href: '/users', label: 'Users', icon: Users, aliases: ['/consumers', '/profile'] },
-      // { href: '/roles', label: 'Roles', icon: Shield },
+      { href: '/account-requests', label: 'Account Requests', icon: AlertTriangle },
     ],
   },
   {

@@ -10,6 +10,10 @@ class LogsService extends BaseService {
   auditList(params?: ListParams) {
     return this.getPaginated<AuditLog>('/audit-logs', params);
   }
+
+  clearAllActivityLogs() {
+    return this.delete<null>('/activity-logs/all');
+  }
 }
 
 export const logsService = new LogsService();

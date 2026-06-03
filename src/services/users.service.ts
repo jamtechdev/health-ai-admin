@@ -19,8 +19,16 @@ class UsersService extends BaseService {
     return this.patch<UserRecord>(`/users/${id}`, payload);
   }
 
-  remove(id: string) {
-    return this.delete<{ message: string }>(`/users/${id}`);
+  remove(id: string, action?: 'soft' | 'hard', reason?: string) {
+    const config: Record<string, unknown> = {};
+    if (action || reason) {
+      (config as Record<string, unknown>).data = { action, reason };
+    }
+    return this.delete<{ message: string }>(`/users/${id}`, config as Record<string, unknown>);
+  }
+
+  revert(id: string) {
+    return this.post<{ message: string }>(`/users/${id}/revert`);
   }
 
   bulk(ids: string[], action: string) {
