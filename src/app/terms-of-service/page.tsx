@@ -13,7 +13,7 @@ interface PageData {
 }
 
 const legalContentClass =
-  'mt-8 max-w-none space-y-4 text-text-secondary [&_a]:text-brand-tertiary [&_a]:underline [&_h1]:hidden [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-foreground [&_li]:text-text-secondary [&_li]:leading-relaxed [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_p]:text-text-secondary [&_p]:leading-relaxed [&_strong]:text-foreground [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_.updated]:text-sm [&_.updated]:text-text-muted';
+  'public-page-content mt-8 max-w-none space-y-4';
 
 const termsOfServiceFallback = `
 <p class="updated">Last updated: June 2026</p>

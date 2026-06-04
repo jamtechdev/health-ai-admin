@@ -264,3 +264,73 @@ body {
   text-decoration: line-through;
   color: var(--text-disabled);
 }
+
+.public-page-content {
+  color: #d7dee8 !important;
+}
+
+.public-page-content h1 {
+  display: none !important;
+}
+
+.public-page-content h2,
+.public-page-content h3,
+.public-page-content h4 {
+  color: #f4f6f8 !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+
+.public-page-content h2 {
+  margin-top: 2rem !important;
+  margin-bottom: 0.75rem !important;
+  font-size: 1.25rem !important;
+}
+
+.public-page-content h3,
+.public-page-content h4 {
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
+  font-size: 1.05rem !important;
+}
+
+.public-page-content p,
+.public-page-content li,
+.public-page-content span {
+  color: #c7d0dc !important;
+  line-height: 1.8 !important;
+}
+
+.public-page-content p {
+  margin: 0.85rem 0 !important;
+}
+
+.public-page-content ul,
+.public-page-content ol {
+  margin: 1rem 0 !important;
+  padding-left: 1.5rem !important;
+}
+
+.public-page-content ul {
+  list-style: disc !important;
+}
+
+.public-page-content ol {
+  list-style: decimal !important;
+}
+
+.public-page-content a {
+  color: #7ab8ff !important;
+  text-decoration: underline !important;
+}
+
+.public-page-content strong,
+.public-page-content b {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.public-page-content .updated {
+  color: #9aa6b2 !important;
+  font-size: 0.875rem !important;
+}
