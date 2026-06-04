@@ -16,6 +16,7 @@ import {
   Activity,
   X,
   AlertTriangle,
+  FileText,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -32,6 +33,12 @@ const navGroups: { title: string; items: NavItem[] }[] = [
     items: [
       { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { href: '/analytics', label: 'Analytics', icon: LineChart },
+    ],
+  },
+  {
+    title: 'Content',
+    items: [
+      { href: '/pages', label: 'Pages', icon: FileText },
     ],
   },
   {

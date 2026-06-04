@@ -8,3 +8,4 @@ export { uploadsService } from './uploads.service';
 export { logsService } from './logs.service';
 export { healthService } from './health.service';
 export { platformHealthService } from './platform-health.service';
+export { pagesService } from './pages.service';

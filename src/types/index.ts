@@ -9,3 +9,4 @@ export * from './setting';
 export * from './health';
 export * from './platform-health';
 export * from './common';
+export * from './page';
