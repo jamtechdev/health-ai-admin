@@ -58,8 +58,8 @@ export default function InsightDetailsPage() {
               </div>
             </div>
             <div>
-              <p className="text-sm text-text-muted">Description</p>
-              <p className="mt-1">{insight.description}</p>
+              <p className="text-sm text-text-muted">Body</p>
+              <p className="mt-1">{insight.body}</p>
             </div>
             <div>
               <p className="text-sm text-text-muted">Generated At</p>
