@@ -27,10 +27,10 @@ export function useConsumerDetail(userId: string) {
   });
 }
 
-export function useConsumerMetrics(userId: string, days: number) {
+export function useConsumerDevices(userId: string) {
   return useQuery({
-    queryKey: queryKeys.platformHealth.metrics(userId, days),
-    queryFn: () => platformHealthService.consumerMetrics(userId, days),
+    queryKey: queryKeys.platformHealth.devices(userId),
+    queryFn: () => platformHealthService.consumerDevices(userId),
     enabled: Boolean(userId),
   });
 }

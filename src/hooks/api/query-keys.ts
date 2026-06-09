@@ -34,6 +34,7 @@ export const queryKeys = {
     consumers: (page: number, search: string) =>
       ['platform-health', 'consumers', page, search] as const,
     consumer: (userId: string) => ['platform-health', 'consumer', userId] as const,
+    devices: (userId: string) => ['platform-health', 'devices', userId] as const,
     metrics: (userId: string, days: number) =>
       ['platform-health', 'metrics', userId, days] as const,
     insights: (userId: string) => ['platform-health', 'insights', userId] as const,
