@@ -2,72 +2,75 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
+import { useRouter } from 'next/navigation';
 import type { ConsumerTableRow } from '@/types/platform-health';
 import { useConsumersList } from '@/hooks/api/use-platform-health';
 
-const columns: Column<ConsumerTableRow>[] = [
-  {
-    key: 'name',
-    header: 'Name',
-    render: (row) => (
-      <Link
-        href={`/consumers/${row.user.id}`}
-        className="font-medium text-brand-primary hover:underline"
-      >
-        {row.user.name}
-      </Link>
-    ),
-  },
-  { key: 'email', header: 'Email', render: (row) => row.user.email },
-  {
-    key: 'goal',
-    header: 'Goal',
-    render: (row) => row.profile?.primaryGoal ?? '—',
-  },
-  {
-    key: 'devices',
-    header: 'Devices',
-    render: (row) => (
-      <span className="rounded-full bg-brand-secondary/15 px-2 py-0.5 text-xs font-medium text-brand-secondary">
-        {row.connectedDevices} connected
-      </span>
-    ),
-  },
-  {
-    key: 'score',
-    header: 'Health score',
-    render: (row) => row.latestInsight?.healthScore ?? '—',
-  },
-  {
-    key: 'insight',
-    header: 'Latest insight',
-    render: (row) => (
-      <span className="line-clamp-1 max-w-xs text-text-secondary">
-        {row.latestInsight?.title ?? 'No insights yet'}
-      </span>
-    ),
-  },
-  {
-    key: 'actions',
-    header: '',
-    render: (row) => (
-      <Link
-        href={`/consumers/${row.user.id}`}
-        className="inline-flex items-center gap-1 text-sm text-brand-primary hover:underline"
-      >
-        View <ExternalLink className="h-3 w-3" />
-      </Link>
-    ),
-  },
-];
-
 export default function ConsumersPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const { data, isLoading } = useConsumersList(page, search);
+
+  const columns: Column<ConsumerTableRow>[] = [
+    {
+      key: 'name',
+      header: 'Name',
+      render: (row) => (
+        <Link
+          href={`/consumers/${row.user.id}`}
+          className="font-medium text-brand-primary hover:underline"
+        >
+          {row.user.name}
+        </Link>
+      ),
+    },
+    { key: 'email', header: 'Email', render: (row) => row.user.email },
+    {
+      key: 'goal',
+      header: 'Goal',
+      render: (row) => row.profile?.primaryGoal ?? '—',
+    },
+    {
+      key: 'devices',
+      header: 'Devices',
+      render: (row) => (
+        <span className="rounded-full bg-brand-secondary/15 px-2 py-0.5 text-xs font-medium text-brand-secondary">
+          {row.connectedDevices} connected
+        </span>
+      ),
+    },
+    {
+      key: 'score',
+      header: 'Health score',
+      render: (row) => row.latestInsight?.healthScore ?? '—',
+    },
+    {
+      key: 'insight',
+      header: 'Latest insight',
+      render: (row) => (
+        <span className="line-clamp-1 max-w-xs text-text-secondary">
+          {row.latestInsight?.title ?? 'No insights yet'}
+        </span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row) => (
+        <button
+          onClick={() => router.push(`/consumers/${row.user.id}`)}
+          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          title="View details"
+        >
+          <Eye className="h-4 w-4" />
+        </button>
+      ),
+    },
+  ];
 
   const rows: ConsumerTableRow[] = (data?.items ?? []).map((item) => ({
     ...item,

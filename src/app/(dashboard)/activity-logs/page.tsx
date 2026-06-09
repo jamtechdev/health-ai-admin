@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Trash2, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
@@ -9,32 +10,8 @@ import { Button } from '@/components/ui/button';
 import { useActivityLogs, useClearActivityLogs } from '@/hooks/api/use-logs';
 import type { ActivityLog } from '@/types/logs';
 
-const columns: Column<ActivityLog>[] = [
-  { key: 'module', header: 'Module' },
-  { key: 'description', header: 'Description' },
-  {
-    key: 'userAgent',
-    header: 'Device / IP',
-    render: (row) => {
-      if (row.module !== 'auth') return '—';
-      const agent = row.userAgent ?? '';
-      const ip = row.ip ?? '';
-      return [agent, ip].filter(Boolean).join(' · ') || '—';
-    },
-  },
-  {
-    key: 'user',
-    header: 'User',
-    render: (row) => row.user?.name ?? row.user?.email ?? 'System',
-  },
-  {
-    key: 'createdAt',
-    header: 'Date',
-    render: (row) => new Date(row.createdAt).toLocaleString(),
-  },
-];
-
 export default function ActivityLogsPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const { data, isLoading } = useActivityLogs(page);
   const clearMutation = useClearActivityLogs();
@@ -48,6 +25,34 @@ export default function ActivityLogsPage() {
       toast.error('Failed to clear activity logs');
     }
   };
+
+  const columns: Column<ActivityLog>[] = [
+    { key: 'module', header: 'Module' },
+    { key: 'description', header: 'Description' },
+    {
+      key: 'user',
+      header: 'User',
+      render: (row) => row.user?.name ?? row.user?.email ?? 'System',
+    },
+    {
+      key: 'createdAt',
+      header: 'Date',
+      render: (row) => new Date(row.createdAt).toLocaleString(),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row) => (
+        <button
+          onClick={() => router.push(`/activity-logs/${row.id}`)}
+          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          title="View details"
+        >
+          <Eye className="h-4 w-4" />
+        </button>
+      ),
+    },
+  ];
 
   return (
     <PageShell

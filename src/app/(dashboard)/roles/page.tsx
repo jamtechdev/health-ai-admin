@@ -1,22 +1,38 @@
 'use client';
 
 import { useState } from 'react';
+import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
+import { useRouter } from 'next/navigation';
 import { useRolesList } from '@/hooks/api/use-roles';
 import type { RoleRecord } from '@/types/role';
 
-const columns: Column<RoleRecord>[] = [
-  { key: 'name', header: 'Name' },
-  { key: 'slug', header: 'Slug' },
-  { key: 'description', header: 'Description' },
-  { key: 'userCount', header: 'Users' },
-];
-
 export default function RolesPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const { data, isLoading } = useRolesList(page, search);
+
+  const columns: Column<RoleRecord>[] = [
+    { key: 'name', header: 'Name' },
+    { key: 'slug', header: 'Slug' },
+    { key: 'description', header: 'Description' },
+    { key: 'userCount', header: 'Users' },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row) => (
+        <button
+          onClick={() => router.push(`/roles/${row.id}`)}
+          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          title="View details"
+        >
+          <Eye className="h-4 w-4" />
+        </button>
+      ),
+    },
+  ];
 
   return (
     <PageShell

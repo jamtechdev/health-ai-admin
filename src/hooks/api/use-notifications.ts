@@ -4,10 +4,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { notificationsService } from '@/services/notifications.service';
 import { queryKeys } from './query-keys';
 
-export function useNotificationsList() {
+export function useNotificationsList(page = 1) {
   return useQuery({
-    queryKey: queryKeys.notifications.list(),
-    queryFn: async () => (await notificationsService.list({ limit: 50 })).items,
+    queryKey: [...queryKeys.notifications.list(), page],
+    queryFn: () => notificationsService.list({ page, limit: 10 }),
   });
 }
 

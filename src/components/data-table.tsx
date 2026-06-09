@@ -5,6 +5,7 @@ import { Activity, ChevronLeft, ChevronRight, Download, Search } from 'lucide-re
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { VitalsTableSkeleton } from '@/components/ui/vitals-loader';
+import { useDelayedLoading } from '@/hooks/use-delayed-loading';
 
 export interface Column<T> {
   key: string;
@@ -28,7 +29,7 @@ interface DataTableProps<T extends { id: string }> {
 export function DataTable<T extends { id: string }>({
   columns,
   data,
-  isLoading,
+  isLoading = false,
   search,
   onSearchChange,
   page = 1,
@@ -38,13 +39,14 @@ export function DataTable<T extends { id: string }>({
   emptyMessage = 'No records found',
 }: DataTableProps<T>) {
   const [selected, setSelected] = useState<string[]>([]);
+  const isDelayedLoading = useDelayedLoading(isLoading);
 
   const toggleAll = () => {
     if (selected.length === data.length) setSelected([]);
     else setSelected(data.map((r) => r.id));
   };
 
-  if (isLoading) {
+  if (isDelayedLoading) {
     return <VitalsTableSkeleton />;
   }
 

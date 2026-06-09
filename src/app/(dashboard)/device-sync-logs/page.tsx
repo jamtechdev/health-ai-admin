@@ -1,25 +1,41 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminSyncLogs } from '@/hooks/api/use-platform-health';
 import type { DeviceSyncLogRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
 
-const columns: Column<DeviceSyncLogRecord>[] = [
-  { key: 'user', header: 'User', render: (row) => row.User?.name ?? row.userId },
-  { key: 'provider', header: 'Provider', render: (row) => row.provider.replace('_', ' ') },
-  { key: 'status', header: 'Status' },
-  { key: 'metricsSynced', header: 'Metrics', render: (row) => row.metricsSynced },
-  { key: 'errorMessage', header: 'Error', render: (row) => row.errorMessage ?? '—' },
-  { key: 'createdAt', header: 'Created', render: (row) => new Date(row.createdAt).toLocaleString() },
-];
-
 export default function DeviceSyncLogsPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const { data, isLoading } = useAdminSyncLogs(page);
   const rows = data?.items ?? [];
+
+  const columns: Column<DeviceSyncLogRecord>[] = [
+    { key: 'user', header: 'User', render: (row) => row.User?.name ?? row.userId },
+    { key: 'provider', header: 'Provider', render: (row) => row.provider.replace('_', ' ') },
+    { key: 'status', header: 'Status' },
+    { key: 'metricsSynced', header: 'Metrics', render: (row) => row.metricsSynced },
+    { key: 'errorMessage', header: 'Error', render: (row) => row.errorMessage ?? '—' },
+    { key: 'createdAt', header: 'Created', render: (row) => new Date(row.createdAt).toLocaleString() },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row) => (
+        <button
+          onClick={() => router.push(`/device-sync-logs/${row.id}`)}
+          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          title="View details"
+        >
+          <Eye className="h-4 w-4" />
+        </button>
+      ),
+    },
+  ];
 
   return (
     <PageShell

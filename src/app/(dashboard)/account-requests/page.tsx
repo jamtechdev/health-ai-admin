@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { RotateCcw, Trash2, AlertTriangle, Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
@@ -12,62 +13,6 @@ import {
   usePermanentDeleteRequest,
 } from '@/hooks/api/use-account-requests';
 import type { AccountDeletionRequestRecord } from '@/types/account-request';
-
-function ViewDetailsModal({
-  request,
-  open,
-  onClose,
-}: {
-  request: AccountDeletionRequestRecord;
-  open: boolean;
-  onClose: () => void;
-}) {
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
-      <div className="w-full max-w-md rounded-card bg-surface p-6 shadow-soft" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-lg font-bold">Request Details</h3>
-        <div className="mt-4 space-y-3 text-sm">
-          <div>
-            <span className="text-text-muted">User:</span>
-            <p className="font-medium">{request.user?.name ?? 'Unknown'}</p>
-          </div>
-          <div>
-            <span className="text-text-muted">Email:</span>
-            <p className="font-medium">{request.user?.email ?? '—'}</p>
-          </div>
-          <div>
-            <span className="text-text-muted">Type:</span>
-            <p className="font-medium capitalize">{request.action === 'user_request' ? 'User Requested Deletion' : 'Admin Soft Deleted'}</p>
-          </div>
-          {request.reason && (
-            <div>
-              <span className="text-text-muted">Reason:</span>
-              <p className="mt-1 rounded-md bg-surface-secondary p-3 text-foreground">{request.reason}</p>
-            </div>
-          )}
-          <div>
-            <span className="text-text-muted">Requested on:</span>
-            <p className="font-medium">{request.createdAt ? new Date(request.createdAt).toLocaleString() : '—'}</p>
-          </div>
-          <div>
-            <span className="text-text-muted">Status:</span>
-            <p className="font-medium capitalize">{request.status.replace('_', ' ')}</p>
-          </div>
-          {request.deletedAt && (
-            <div>
-              <span className="text-text-muted">Deleted on:</span>
-              <p className="font-medium">{new Date(request.deletedAt).toLocaleString()}</p>
-            </div>
-          )}
-        </div>
-        <div className="mt-6 flex justify-end">
-          <Button variant="outline" onClick={onClose}>Close</Button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function ConfirmActionModal({
   request,
@@ -112,11 +57,11 @@ function ConfirmActionModal({
 }
 
 export default function AccountRequestsPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const { data, isLoading } = useAccountRequests(page);
   const revertMutation = useRevertRequest();
   const deleteMutation = usePermanentDeleteRequest();
-  const [viewedRequest, setViewedRequest] = useState<AccountDeletionRequestRecord | null>(null);
   const [confirmModal, setConfirmModal] = useState<{
     request: AccountDeletionRequestRecord;
     action: 'revert' | 'permanent_delete';
@@ -197,7 +142,7 @@ export default function AccountRequestsPage() {
         return (
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setViewedRequest(row)}
+              onClick={() => router.push(`/account-requests/${row.id}`)}
               className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
               title="View details"
             >
@@ -243,14 +188,6 @@ export default function AccountRequestsPage() {
           totalPages={data?.meta?.totalPages ?? 1}
           onPageChange={setPage}
           emptyMessage="No deletion requests found."
-        />
-      )}
-
-      {viewedRequest && (
-        <ViewDetailsModal
-          request={viewedRequest}
-          open={!!viewedRequest}
-          onClose={() => setViewedRequest(null)}
         />
       )}
 

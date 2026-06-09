@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
-      hasHydrated: false,
+      hasHydrated: typeof window === 'undefined' ? false : true,
       setAuth: (user, accessToken, refreshToken) => {
         if (accessToken) {
           setTokens(accessToken, refreshToken);
@@ -40,6 +40,7 @@ export const useAuthStore = create<AuthState>()(
         set({ user: null, isAuthenticated: false });
       },
       hydrate: () => {
+        set({ hasHydrated: true });
         loadTokensFromStorage();
         const hasToken =
           typeof window !== 'undefined' &&
@@ -58,13 +59,10 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'tovapulse-auth',
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-        state?.hydrate();
-      },
     },
   ),
 );
+
 
 export function hasStoredSession(): boolean {
   if (typeof window === 'undefined') return false;

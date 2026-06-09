@@ -1,25 +1,41 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminApiLogs } from '@/hooks/api/use-platform-health';
 import type { ApiLogRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
 
-const columns: Column<ApiLogRecord>[] = [
-  { key: 'method', header: 'Method' },
-  { key: 'path', header: 'Path' },
-  { key: 'statusCode', header: 'Status', render: (row) => row.statusCode ?? '—' },
-  { key: 'durationMs', header: 'Duration', render: (row) => `${row.durationMs ?? 0}ms` },
-  { key: 'user', header: 'User', render: (row) => row.User?.email ?? 'Anonymous' },
-  { key: 'createdAt', header: 'Created', render: (row) => new Date(row.createdAt).toLocaleString() },
-];
-
 export default function ApiLogsPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const { data, isLoading } = useAdminApiLogs(page);
   const rows = data?.items ?? [];
+
+  const columns: Column<ApiLogRecord>[] = [
+    { key: 'method', header: 'Method' },
+    { key: 'path', header: 'Path' },
+    { key: 'statusCode', header: 'Status', render: (row) => row.statusCode ?? '—' },
+    { key: 'durationMs', header: 'Duration', render: (row) => `${row.durationMs ?? 0}ms` },
+    { key: 'user', header: 'User', render: (row) => row.User?.email ?? 'Anonymous' },
+    { key: 'createdAt', header: 'Created', render: (row) => new Date(row.createdAt).toLocaleString() },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row) => (
+        <button
+          onClick={() => router.push(`/api-logs/${row.id}`)}
+          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          title="View details"
+        >
+          <Eye className="h-4 w-4" />
+        </button>
+      ),
+    },
+  ];
 
   return (
     <PageShell

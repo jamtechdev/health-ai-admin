@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Power, PowerOff, RotateCcw } from 'lucide-react';
+import { Pencil, Trash2, Power, PowerOff, RotateCcw, Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -222,6 +222,13 @@ export default function UsersPage() {
         }
         return (
           <div className="flex items-center gap-1">
+            <button
+              onClick={() => router.push(`/users/${row.id}`)}
+              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+              title="View details"
+            >
+              <Eye className="h-4 w-4" />
+            </button>
             <button
               onClick={() => router.push(`/users/${row.id}/edit`)}
               className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"

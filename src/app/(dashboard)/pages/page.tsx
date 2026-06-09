@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Plus, ExternalLink, Pencil, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Eye, Plus, Pencil, ExternalLink, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
@@ -11,28 +12,8 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { usePagesList, useDeletePage } from '@/hooks/api/use-pages';
 import type { PageRecord } from '@/types/page';
 
-const columns: Column<PageRecord>[] = [
-  { key: 'title', header: 'Title' },
-  { key: 'slug', header: 'Slug' },
-  {
-    key: 'status',
-    header: 'Status',
-    render: (row) => (
-      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-        row.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-      }`}>
-        {row.status}
-      </span>
-    ),
-  },
-  {
-    key: 'actions',
-    header: '',
-    render: (row) => <ActionsRow row={row} />,
-  },
-];
-
 function ActionsRow({ row }: { row: PageRecord }) {
+  const router = useRouter();
   const deletePage = useDeletePage();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -47,8 +28,15 @@ function ActionsRow({ row }: { row: PageRecord }) {
 
   return (
     <div className="flex items-center gap-2">
+      <button
+        onClick={() => router.push(`/pages/${row.id}`)}
+        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface-secondary hover:text-foreground"
+        title="Quick view"
+      >
+        <Eye className="h-4 w-4" />
+      </button>
       <Link
-        href={`/pages/${row.id}`}
+        href={`/pages/${row.id}/edit`}
         className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface-secondary hover:text-foreground"
       >
         <Pencil className="h-4 w-4" />
@@ -86,6 +74,27 @@ export default function PagesPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const { data, isLoading } = usePagesList(page, search);
+
+  const columns: Column<PageRecord>[] = [
+    { key: 'title', header: 'Title' },
+    { key: 'slug', header: 'Slug' },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (row) => (
+        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+          row.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        }`}>
+          {row.status}
+        </span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row) => <ActionsRow row={row} />,
+    },
+  ];
 
   return (
     <PageShell
