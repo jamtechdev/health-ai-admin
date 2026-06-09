@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminInsights } from '@/hooks/api/use-platform-health';
@@ -18,13 +20,45 @@ const columns: Column<AiInsightRecord>[] = [
     header: 'Generated',
     render: (row) => new Date(row.generatedAt).toLocaleString(),
   },
+  {
+    key: 'actions',
+    header: 'Actions',
+    render: (row) => (
+      <button
+        onClick={() => {}} // Placeholder, will be fixed by router context
+        className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
+        title="View details"
+      >
+        <Eye className="h-4 w-4" />
+      </button>
+    ),
+  },
 ];
 
 export default function InsightsPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const { data, isLoading } = useAdminInsights(page, search);
   const rows = data?.items ?? [];
+
+  const columnsWithRouter: Column<AiInsightRecord>[] = columns.map(col => {
+    if (col.key === 'actions') {
+      return {
+        ...col,
+        render: (row) => (
+          <button
+            onClick={() => router.push(`/insights/${row.id}`)}
+            className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
+            title="View details"
+          >
+            <Eye className="h-4 w-4" />
+          </button>
+        )
+      };
+    }
+    return col;
+  });
 
   return (
     <PageShell
@@ -33,7 +67,7 @@ export default function InsightsPage() {
       description="Review generated recommendations, risk levels, and health scores for app users."
     >
       <DataTable
-        columns={columns}
+        columns={columnsWithRouter}
         data={rows}
         isLoading={isLoading}
         search={search}
