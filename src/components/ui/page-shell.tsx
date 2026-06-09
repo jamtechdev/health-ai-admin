@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 interface PageShellProps {
   eyebrow?: string;
   title: string;
+  titleColor?: string;
   description?: string;
   actions?: ReactNode;
   children: ReactNode;
@@ -13,6 +14,7 @@ interface PageShellProps {
 export function PageShell({
   eyebrow,
   title,
+  titleColor = 'text-red-500',
   description,
   actions,
   children,
@@ -27,7 +29,7 @@ export function PageShell({
               {eyebrow}
             </p>
           )}
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h2>
+          <h2 className={cn("mt-1 text-2xl font-bold tracking-tight sm:text-3xl", titleColor)}>{title}</h2>
           {description && <p className="mt-2 max-w-3xl text-sm leading-6 text-text-muted">{description}</p>}
         </div>
         {actions && <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">{actions}</div>}

@@ -45,7 +45,7 @@ export default function ActivityLogsPage() {
       render: (row) => (
         <button
           onClick={() => router.push(`/activity-logs/${row.id}`)}
-          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
           title="View details"
         >
           <Eye className="h-4 w-4" />

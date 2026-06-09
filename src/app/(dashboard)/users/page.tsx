@@ -205,14 +205,14 @@ export default function UsersPage() {
             <div className="flex items-center gap-1">
               <button
                 onClick={() => handleRevertFromList(row.id)}
-                className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-brand-secondary"
+                className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-brand-secondary"
                 title="Revert (restore user)"
               >
                 <RotateCcw className="h-4 w-4" />
               </button>
               <button
                 onClick={() => handlePermanentDeleteFromList(row.id)}
-                className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-brand-critical"
+                className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-red-500"
                 title="Permanent delete"
               >
                 <Trash2 className="h-4 w-4" />
@@ -224,21 +224,21 @@ export default function UsersPage() {
           <div className="flex items-center gap-1">
             <button
               onClick={() => router.push(`/users/${row.id}`)}
-              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+              className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
               title="View details"
             >
               <Eye className="h-4 w-4" />
             </button>
             <button
               onClick={() => router.push(`/users/${row.id}/wearables`)}
-              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+              className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-green-600"
               title="View wearables"
             >
               <Watch className="h-4 w-4" />
             </button>
             <button
               onClick={() => router.push(`/users/${row.id}/edit`)}
-              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+              className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-orange-500"
               title="Edit"
             >
               <Pencil className="h-4 w-4" />
@@ -246,7 +246,7 @@ export default function UsersPage() {
             {!isSuperAdmin && (
               <button
                 onClick={() => handleToggleStatus(row)}
-                className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+                className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-blue-500"
                 title={row.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
               >
                 {row.status === 'ACTIVE' ? <PowerOff className="h-4 w-4" /> : <Power className="h-4 w-4" />}
@@ -255,7 +255,7 @@ export default function UsersPage() {
             {!isSuperAdmin && (
               <button
                 onClick={() => setDeletingUser({ user: row, action: 'soft' })}
-                className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-brand-critical"
+                className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-red-500"
                 title="Delete"
               >
                 <Trash2 className="h-4 w-4" />
@@ -277,6 +277,7 @@ export default function UsersPage() {
     <PageShell
       eyebrow="People"
       title="Users"
+      
       description="Manage platform users, roles, account status, and lifecycle actions."
     >
       <DataTable

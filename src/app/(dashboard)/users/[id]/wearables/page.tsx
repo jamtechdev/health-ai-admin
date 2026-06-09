@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { Watch, ArrowLeft } from 'lucide-react';
+import { Watch, ArrowLeft, Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,19 @@ export default function UserWearablesPage() {
       key: 'lastSyncAt',
       header: 'Last sync',
       render: (row) => (row.lastSyncAt ? new Date(row.lastSyncAt).toLocaleString() : 'Never'),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (row) => (
+        <button
+          onClick={() => router.push(`/wearables/${row.id}`)}
+          className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
+          title="View details"
+        >
+          <Eye className="h-4 w-4" />
+        </button>
+      ),
     },
   ];
 

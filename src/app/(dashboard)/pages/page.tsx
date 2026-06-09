@@ -27,17 +27,18 @@ function ActionsRow({ row }: { row: PageRecord }) {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       <button
         onClick={() => router.push(`/pages/${row.id}`)}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface-secondary hover:text-foreground"
+        className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
         title="Quick view"
       >
         <Eye className="h-4 w-4" />
       </button>
       <Link
         href={`/pages/${row.id}/edit`}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface-secondary hover:text-foreground"
+        className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-orange-500"
+        title="Edit"
       >
         <Pencil className="h-4 w-4" />
       </Link>
@@ -45,14 +46,16 @@ function ActionsRow({ row }: { row: PageRecord }) {
         href={`/${row.slug}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface-secondary hover:text-foreground"
+        className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-blue-500"
+        title="Open in new tab"
       >
         <ExternalLink className="h-4 w-4" />
       </a>
       <button
         type="button"
         onClick={() => setDeleteOpen(true)}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition hover:bg-red-50 hover:text-red-600"
+        className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-red-500"
+        title="Delete"
       >
         <Trash2 className="h-4 w-4" />
       </button>
@@ -100,6 +103,7 @@ export default function PagesPage() {
     <PageShell
       eyebrow="Content"
       title="Pages"
+      
       description="Manage CMS pages like Privacy Policy, Terms of Service, and more."
       actions={
         <Link href="/pages/create">

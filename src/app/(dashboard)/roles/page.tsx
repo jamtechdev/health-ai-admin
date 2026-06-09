@@ -25,7 +25,7 @@ export default function RolesPage() {
       render: (row) => (
         <button
           onClick={() => router.push(`/roles/${row.id}`)}
-          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
           title="View details"
         >
           <Eye className="h-4 w-4" />
@@ -38,6 +38,7 @@ export default function RolesPage() {
     <PageShell
       eyebrow="Access"
       title="Roles & Permissions"
+      
       description="Manage role definitions, permission groups, and user access levels."
     >
       <DataTable

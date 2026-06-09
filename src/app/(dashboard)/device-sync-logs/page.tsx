@@ -28,7 +28,7 @@ export default function DeviceSyncLogsPage() {
       render: (row) => (
         <button
           onClick={() => router.push(`/device-sync-logs/${row.id}`)}
-          className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+          className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
           title="View details"
         >
           <Eye className="h-4 w-4" />
@@ -41,6 +41,7 @@ export default function DeviceSyncLogsPage() {
     <PageShell
       eyebrow="Sync Health"
       title="Device Sync Logs"
+      
       description="Track wearable sync jobs, retries, metrics ingested, and failures."
     >
       <DataTable

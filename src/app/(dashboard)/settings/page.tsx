@@ -208,6 +208,7 @@ export default function SettingsPage() {
     <PageShell
       eyebrow="Configuration"
       title="Settings"
+      
       description="Global application configuration for admin and mobile clients."
       actions={
         <Button

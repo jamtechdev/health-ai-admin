@@ -143,21 +143,21 @@ export default function AccountRequestsPage() {
           <div className="flex items-center gap-1">
             <button
               onClick={() => router.push(`/account-requests/${row.id}`)}
-              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+              className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
               title="View details"
             >
               <Eye className="h-4 w-4" />
             </button>
             <button
               onClick={() => setConfirmModal({ request: row, action: 'revert' })}
-              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-brand-secondary"
+              className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-brand-secondary"
               title="Revert (restore user)"
             >
               <RotateCcw className="h-4 w-4" />
             </button>
             <button
               onClick={() => setConfirmModal({ request: row, action: 'permanent_delete' })}
-              className="rounded p-1.5 text-text-muted transition-colors hover:bg-surface-secondary hover:text-brand-critical"
+              className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-red-500"
               title="Permanent delete"
             >
               <Trash2 className="h-4 w-4" />
