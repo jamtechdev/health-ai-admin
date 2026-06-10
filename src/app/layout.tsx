@@ -27,11 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${geistMono.variable} h-full`}>
       <head>
-        <Script
-          src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-          strategy="afterInteractive"
-          defer
-        />
+        <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
       </head>
       <body className="min-h-full antialiased">
         <AppProviders>{children}</AppProviders>

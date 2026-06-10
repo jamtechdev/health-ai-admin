@@ -28,8 +28,6 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       window.OneSignalDeferred.push(async (OneSignal: any) => {
         await OneSignal.init({
           appId: '3ada2ae3-e9c0-4385-aa4c-48ae22db8614',
-          allowLocalhostAsSecureOrigin: true,
-          serviceWorkerPath: 'OneSignalSDKWorker.js',
         });
       });
     }
