@@ -8,7 +8,9 @@ import { Header } from '@/components/layout/header';
 import { hasStoredSession, useAuthStore } from '@/store/auth.store';
 import { loadTokensFromStorage } from '@/lib/api/client';
 import { authService } from '@/services/auth.service';
-
+import { useUnreadNotificationsCount } from '@/hooks/api/use-notifications';
+import { toast } from 'sonner';
+import { Bell } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();

@@ -73,6 +73,18 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+button,
+[role='button'],
+.cursor-pointer,
+a,
+select,
+input[type='checkbox'],
+input[type='radio'],
+input[type='submit'],
+input[type='button'] {
+  cursor: pointer !important;
+}
+
 .vitals-line {
   animation: vitals-scan 1.65s linear infinite;
 }

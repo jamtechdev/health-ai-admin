@@ -19,6 +19,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useUnreadNotificationsCount } from '@/hooks/api/use-notifications';
 
 interface NavItem {
   href: string;
@@ -27,50 +28,51 @@ interface NavItem {
   aliases?: string[];
 }
 
-const navGroups: { title: string; items: NavItem[] }[] = [
-  {
-    title: 'Overview',
-    items: [
-      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { href: '/analytics', label: 'Analytics', icon: LineChart },
-    ],
-  },
-  {
-    title: 'Content',
-    items: [
-      { href: '/pages', label: 'Pages', icon: FileText },
-    ],
-  },
-  {
-    title: 'People',
-    items: [
-      { href: '/users', label: 'Users', icon: Users, aliases: ['/consumers', '/profile'] },
-      { href: '/account-requests', label: 'Account Requests', icon: AlertTriangle },
-    ],
-  },
-  {
-    title: 'Health AI',
-    items: [
-      { href: '/wearables', label: 'Wearables', icon: Watch },
-      { href: '/insights', label: 'AI Insights', icon: Sparkles },
-      { href: '/subscriptions', label: 'Subscriptions', icon: CreditCard },
-      { href: '/device-sync-logs', label: 'Sync Logs', icon: RadioTower },
-    ],
-  },
-  {
-    title: 'System',
-    items: [
-      // { href: '/api-logs', label: 'API Logs', icon: FileText },
-      { href: '/notifications', label: 'Notifications', icon: Bell },
-      { href: '/activity-logs', label: 'Activity Logs', icon: History },
-      // { href: '/audit-logs', label: 'Audit Logs', icon: FileText },
-      { href: '/settings', label: 'Settings', icon: Settings },
-    ],
-  },
-];
-
 export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onClose?: () => void }) {
   const pathname = usePathname();
+  const { data: unreadCount } = useUnreadNotificationsCount();
+
+  const navGroups: { title: string; items: NavItem[] }[] = [
+    {
+      title: 'Overview',
+      items: [
+        { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { href: '/analytics', label: 'Analytics', icon: LineChart },
+      ],
+    },
+    {
+      title: 'Content',
+      items: [
+        { href: '/pages', label: 'Pages', icon: FileText },
+      ],
+    },
+    {
+      title: 'People',
+      items: [
+        { href: '/users', label: 'Users', icon: Users, aliases: ['/consumers', '/profile'] },
+        { href: '/account-requests', label: 'Account Requests', icon: AlertTriangle },
+      ],
+    },
+    {
+      title: 'Health AI',
+      items: [
+        { href: '/wearables', label: 'Wearables', icon: Watch },
+        { href: '/insights', label: 'AI Insights', icon: Sparkles },
+        { href: '/subscriptions', label: 'Subscriptions', icon: CreditCard },
+        { href: '/device-sync-logs', label: 'Sync Logs', icon: RadioTower },
+      ],
+    },
+    {
+      title: 'System',
+      items: [
+        // { href: '/api-logs', label: 'API Logs', icon: FileText },
+        { href: '/notifications', label: 'Notifications', icon: Bell },
+        { href: '/activity-logs', label: 'Activity Logs', icon: History },
+        // { href: '/audit-logs', label: 'Audit Logs', icon: FileText },
+        { href: '/settings', label: 'Settings', icon: Settings },
+      ],
+    },
+  ];
 
   return (
     <aside className="flex h-full w-72 max-w-[86vw] flex-col border-r border-brand-border/80 bg-background/95 shadow-[24px_0_80px_rgba(0,0,0,0.32)] backdrop-blur-xl lg:w-72">
@@ -107,6 +109,9 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
                 pathname === item.href ||
                 pathname.startsWith(`${item.href}/`) ||
                 item.aliases?.some((alias) => pathname === alias || pathname.startsWith(`${alias}/`));
+              
+              const isNotifications = item.href === '/notifications';
+
               return (
                 <Link
                   key={item.href}
@@ -130,6 +135,11 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
                     <Icon className="h-4 w-4" />
                   </span>
                   <span className="truncate">{item.label}</span>
+                  {isNotifications && !!unreadCount && unreadCount > 0 && (
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-primary px-1 text-[10px] font-bold text-white shadow-[0_4px_12px_rgba(220,38,38,0.3)]">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                   {active && <span className="absolute inset-y-3 right-2 w-1 rounded-full bg-brand-primary" />}
                 </Link>
               );

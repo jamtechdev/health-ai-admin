@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageShell } from '@/components/ui/page-shell';
 import { VitalsLoader } from '@/components/ui/vitals-loader';
-import { useNotificationsList } from '@/hooks/api/use-notifications';
+import { useNotificationDetails } from '@/hooks/api/use-notifications';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
 
 export default function NotificationViewPage() {
@@ -14,9 +14,8 @@ export default function NotificationViewPage() {
   const router = useRouter();
   const notificationId = params.id as string;
 
-  const { data, isLoading } = useNotificationsList(1);
+  const { data: notification, isLoading } = useNotificationDetails(notificationId);
   const isDelayedLoading = useDelayedLoading(isLoading);
-  const notification = data?.items.find(n => n.id === notificationId);
 
   if (isDelayedLoading) {
     return <VitalsLoader label="Loading notification" />;
@@ -63,6 +62,31 @@ export default function NotificationViewPage() {
 
         {/* Info Card */}
         <div className="lg:col-span-1 space-y-6">
+           <Card>
+             <CardHeader>
+               <CardTitle className="flex items-center gap-2">
+                 <User className="h-5 w-5 text-brand-primary" />
+                 Recipient
+               </CardTitle>
+             </CardHeader>
+             <CardContent>
+                {notification.User ? (
+                  <div className="space-y-3">
+                    <div>
+                      <span className="text-xs text-text-muted block">Name</span>
+                      <span className="font-bold">{notification.User.name}</span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-text-muted block">Email</span>
+                      <span className="text-sm">{notification.User.email}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-text-muted italic">User information unavailable</p>
+                )}
+             </CardContent>
+           </Card>
+
            <Card>
              <CardHeader>
                <CardTitle className="flex items-center gap-2">

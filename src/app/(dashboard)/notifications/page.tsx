@@ -7,16 +7,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageShell } from '@/components/ui/page-shell';
 import { VitalsLoader } from '@/components/ui/vitals-loader';
-import { useMarkNotificationRead, useNotificationsList } from '@/hooks/api/use-notifications';
+import {
+  useMarkAllNotificationsRead,
+  useMarkNotificationRead,
+  useNotificationsList,
+  useUnreadNotificationsCount,
+} from '@/hooks/api/use-notifications';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCheck } from 'lucide-react';
 
 export default function NotificationsPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const { data, isLoading } = useNotificationsList(page);
+  const { data: unreadCount } = useUnreadNotificationsCount();
   const isDelayedLoading = useDelayedLoading(isLoading);
   const markRead = useMarkNotificationRead();
+  const markAllRead = useMarkAllNotificationsRead();
 
   const notifications = data?.items ?? [];
   const totalPages = data?.meta?.totalPages ?? 1;
@@ -26,6 +33,17 @@ export default function NotificationsPage() {
       eyebrow="Alerts"
       title="Notifications"
       description="Operational notifications, user health reminders, and admin alerts."
+      actions={
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => markAllRead.mutate()}
+          disabled={!unreadCount || unreadCount === 0 || markAllRead.isPending}
+        >
+          <CheckCheck className="mr-2 h-4 w-4 text-brand-secondary" />
+          Mark all as read
+        </Button>
+      }
     >
       {isDelayedLoading ? (
         <VitalsLoader label="Loading notifications" />
@@ -36,7 +54,14 @@ export default function NotificationsPage() {
               <Card key={n.id} className={!n.readAt ? 'border-brand-primary/50 shadow-[0_0_24px_var(--primary-glow)]' : ''}>
                 <CardContent className="flex items-center justify-between p-4">
                   <div className="flex-1">
-                    <p className="font-medium">{n.title}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{n.title}</p>
+                      {n.User && (
+                        <span className="rounded-full bg-surface-secondary px-2 py-0.5 text-[10px] font-semibold text-text-muted border border-brand-border/50">
+                          To: {n.User.name} ({n.User.email})
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-text-muted line-clamp-1">{n.body}</p>
                     <p className="mt-1 text-xs text-text-disabled">
                       {new Date(n.createdAt).toLocaleString()}

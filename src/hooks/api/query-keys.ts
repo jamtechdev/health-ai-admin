@@ -20,6 +20,7 @@ export const queryKeys = {
   notifications: {
     all: ['notifications'] as const,
     list: (page?: number) => ['notifications', 'list', page] as const,
+    detail: (id: string) => ['notifications', 'detail', id] as const,
   },
   uploads: {
     all: ['uploads'] as const,

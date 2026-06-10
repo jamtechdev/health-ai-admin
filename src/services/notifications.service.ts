@@ -7,12 +7,16 @@ class NotificationsService extends BaseService {
     return this.getPaginated<NotificationRecord>('/notifications', params);
   }
 
+  getById(id: string) {
+    return this.get<NotificationRecord>(`/notifications/${id}`);
+  }
+
   markRead(id: string) {
     return this.patch<NotificationRecord>(`/notifications/${id}/read`);
   }
 
   markAllRead() {
-    return this.patch<{ message: string }>('/notifications/read-all');
+    return this.put<{ message: string }>('/notifications/read-all');
   }
 }
 

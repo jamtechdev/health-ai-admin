@@ -3,7 +3,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+declare global {
+  interface Window {
+    OneSignal: any;
+  }
+}
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -14,6 +20,22 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         },
       }),
   );
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.OneSignal = window.OneSignal || [];
+      window.OneSignal.push(() => {
+        window.OneSignal.init({
+          appId: '3ada2ae3-e9c0-4385-aa4c-48ae22db8614',
+          allowLocalhostAsSecureOrigin: true,
+        }).then(() => {
+          console.log('OneSignal Initialized');
+        }).catch((e: any) => {
+          console.error('OneSignal Init Error:', e);
+        });
+      });
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
