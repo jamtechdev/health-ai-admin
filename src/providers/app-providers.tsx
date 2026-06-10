@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 declare global {
   interface Window {
+    OneSignalDeferred: any[];
     OneSignal: any;
   }
 }
@@ -23,13 +24,12 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      window.OneSignal = window.OneSignal || [];
-      window.OneSignal.push(() => {
-        window.OneSignal.init({
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(async (OneSignal: any) => {
+        await OneSignal.init({
           appId: '3ada2ae3-e9c0-4385-aa4c-48ae22db8614',
           allowLocalhostAsSecureOrigin: true,
           serviceWorkerPath: 'OneSignalSDKWorker.js',
-          serviceWorkerParam: { scope: '/' },
         });
       });
     }

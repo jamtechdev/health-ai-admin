@@ -29,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <Script
           src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
+          defer
         />
       </head>
       <body className="min-h-full antialiased">
