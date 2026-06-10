@@ -28,10 +28,8 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         window.OneSignal.init({
           appId: '3ada2ae3-e9c0-4385-aa4c-48ae22db8614',
           allowLocalhostAsSecureOrigin: true,
-        }).then(() => {
-          console.log('OneSignal Initialized');
-        }).catch((e: any) => {
-          console.error('OneSignal Init Error:', e);
+          serviceWorkerPath: 'OneSignalSDKWorker.js',
+          serviceWorkerParam: { scope: '/' },
         });
       });
     }

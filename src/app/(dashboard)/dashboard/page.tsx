@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import {
   BarChart,
   Bar,
@@ -25,6 +26,13 @@ const statCards = [
 
 export default function DashboardPage() {
   const { data, isLoading } = useDashboardStats();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Small delay to ensure live layout has stabilized
+    const timer = setTimeout(() => setMounted(true), 150);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <PageShell
@@ -100,43 +108,45 @@ export default function DashboardPage() {
       )}
 
       <div className="grid min-w-0 gap-6 lg:grid-cols-2">
-        <Card className="min-w-0">
+        <Card className="min-w-0 overflow-hidden">
           <CardHeader>
             <CardTitle>User Growth</CardTitle>
           </CardHeader>
-          <CardContent className="h-72 min-w-0">
-            {isLoading ? (
+          <CardContent className="h-80 w-full min-w-0">
+            {isLoading || !mounted ? (
               <VitalsLoader label="Charting user growth" compact className="h-full min-h-0 border-0 bg-transparent shadow-none" />
             ) : (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                <BarChart data={data?.usersByMonth ?? []}>
-                  <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="month"
-                    axisLine={{ stroke: 'var(--border)' }}
-                    tick={{ fill: 'var(--text-muted)' }}
-                    tickLine={{ stroke: 'var(--border)' }}
-                  />
-                  <YAxis
-                    axisLine={{ stroke: 'var(--border)' }}
-                    tick={{ fill: 'var(--text-muted)' }}
-                    tickLine={{ stroke: 'var(--border)' }}
-                  />
-                  <Tooltip
-                    cursor={{ fill: 'var(--primary-glow)' }}
-                    contentStyle={{
-                      background: 'var(--surface-elevated)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 'var(--radius-input-value)',
-                      boxShadow: 'var(--shadow-floating-value)',
-                      color: 'var(--text-primary)',
-                    }}
-                    itemStyle={{ color: 'var(--text-primary)' }}
-                    labelStyle={{ color: 'var(--text-secondary)' }}
-                  />
-                  <Bar dataKey="count" fill="var(--primary)" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="h-full w-full min-h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data?.usersByMonth ?? []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+                    <XAxis
+                      dataKey="month"
+                      axisLine={{ stroke: 'var(--border)' }}
+                      tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                      tickLine={{ stroke: 'var(--border)' }}
+                    />
+                    <YAxis
+                      axisLine={{ stroke: 'var(--border)' }}
+                      tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                      tickLine={{ stroke: 'var(--border)' }}
+                    />
+                    <Tooltip
+                      cursor={{ fill: 'var(--primary-glow)' }}
+                      contentStyle={{
+                        background: 'var(--surface-elevated)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-input-value)',
+                        boxShadow: 'var(--shadow-floating-value)',
+                        color: 'var(--text-primary)',
+                      }}
+                      itemStyle={{ color: 'var(--text-primary)' }}
+                      labelStyle={{ color: 'var(--text-secondary)' }}
+                    />
+                    <Bar dataKey="count" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             )}
           </CardContent>
         </Card>
