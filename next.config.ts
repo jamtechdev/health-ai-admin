@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
         source: '/api/public/delete-account',
         destination: `${API_BACKEND}/delete-account`,
       },
+      {
+        source: '/.well-known/apple-app-site-association',
+        destination: '/api/apple-app-site-association',
+      },
     ];
   },
 };
