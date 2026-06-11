@@ -59,20 +59,21 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      window.OneSignalDeferred.push(async (OneSignal: OneSignalSdk) => {
-        await OneSignal.init({
-          appId: ONESIGNAL_APP_ID,
-          serviceWorkerPath: "/OneSignalSDKWorker.js",
-          serviceWorkerParam: { scope: "/" },
-        });
+    if (typeof window === "undefined") return;
+    if (window.location.hostname === "localhost") return;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async (OneSignal: OneSignalSdk) => {
+      await OneSignal.init({
+        appId: ONESIGNAL_APP_ID,
+        serviceWorkerPath: "/OneSignalSDKWorker.js",
+        serviceWorkerParam: { scope: "/" },
       });
-    }
+    });
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (window.location.hostname === "localhost") return;
     if (!localStorage.getItem("accessToken")) return;
 
     window.OneSignalDeferred = window.OneSignalDeferred || [];

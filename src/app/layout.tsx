@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist_Mono, Inter } from 'next/font/google';
 import { AppProviders } from '@/providers/app-providers';
-import Script from 'next/script';
 import './globals.css';
 
 const inter = Inter({
@@ -27,7 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${geistMono.variable} h-full`}>
       <head>
-        <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+        {process.env.NODE_ENV === 'production' && (
+          <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+        )}
       </head>
       <body className="min-h-full antialiased">
         <AppProviders>{children}</AppProviders>
