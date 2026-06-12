@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Search, Send, Check, ChevronLeft, ChevronRight, X, Users, Loader2 } from 'lucide-react';
@@ -8,10 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { PageShell } from '@/components/ui/page-shell';
-import { useUsersList } from '@/hooks/api/use-users';
 import { useBroadcastNotification } from '@/hooks/api/use-notifications';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
+import { useQuery } from '@tanstack/react-query';
 import { usersService } from '@/services/users.service';
+import { queryKeys } from '@/hooks/api/query-keys';
 
 export default function ComposeNotificationPage() {
   const router = useRouter();
@@ -25,7 +26,10 @@ export default function ComposeNotificationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const allFetchedRef = useRef(false);
 
-  const { data, isLoading } = useUsersList(page, search);
+  const { data, isLoading } = useQuery({
+    queryKey: [...queryKeys.users.all, 'consumers', page, search],
+    queryFn: () => usersService.listConsumers({ page, limit: 10, search }),
+  });
   const isDelayedLoading = useDelayedLoading(isLoading);
   const broadcast = useBroadcastNotification();
 
@@ -60,7 +64,7 @@ export default function ComposeNotificationPage() {
     }
     setSelectingAll(true);
     try {
-      const allIds = await usersService.fetchAllIds();
+      const allIds = await usersService.fetchAllConsumerIds();
       setSelectedIds(new Set(allIds));
       allFetchedRef.current = true;
     } catch {

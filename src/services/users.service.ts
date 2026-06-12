@@ -35,13 +35,17 @@ class UsersService extends BaseService {
     return this.post<{ message: string }>('/users/bulk', { ids, action });
   }
 
-  async fetchAllIds(): Promise<string[]> {
+  listConsumers(params?: ListParams) {
+    return this.getPaginated<UserRecord>('/users', { ...params, 'filter[role]': 'user' });
+  }
+
+  async fetchAllConsumerIds(): Promise<string[]> {
     let allUsers: { id: string; name: string; email: string }[] = [];
     let page = 1;
     let totalPages = 1;
 
     while (page <= totalPages) {
-      const res = await this.list({ page, limit: 100 });
+      const res = await this.listConsumers({ page, limit: 100 });
       allUsers = allUsers.concat(res.items);
       totalPages = res.meta.totalPages;
       page++;
