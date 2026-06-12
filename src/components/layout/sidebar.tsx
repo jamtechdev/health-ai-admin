@@ -17,6 +17,7 @@ import {
   X,
   AlertTriangle,
   FileText,
+  Send,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUnreadNotificationsCount } from '@/hooks/api/use-notifications';
@@ -67,6 +68,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       items: [
         // { href: '/api-logs', label: 'API Logs', icon: FileText },
         { href: '/notifications', label: 'Notifications', icon: Bell },
+        { href: '/notifications/compose', label: 'Push Notification', icon: Send },
         { href: '/activity-logs', label: 'Activity Logs', icon: History },
         // { href: '/audit-logs', label: 'Audit Logs', icon: FileText },
         { href: '/settings', label: 'Settings', icon: Settings },
@@ -105,9 +107,15 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
             </p>
             {group.items.map((item) => {
               const Icon = item.icon;
+              const siblingHrefs = navGroups.flatMap((g) => g.items.map((i) => i.href));
               const active =
                 pathname === item.href ||
-                pathname.startsWith(`${item.href}/`) ||
+                (pathname.startsWith(`${item.href}/`) &&
+                  !siblingHrefs.some(
+                    (s) =>
+                      s !== item.href &&
+                      (pathname === s || pathname.startsWith(`${s}/`)),
+                  )) ||
                 item.aliases?.some((alias) => pathname === alias || pathname.startsWith(`${alias}/`));
               
               const isNotifications = item.href === '/notifications';

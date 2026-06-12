@@ -18,6 +18,13 @@ class NotificationsService extends BaseService {
   markAllRead() {
     return this.put<{ message: string }>('/notifications/read-all');
   }
+
+  broadcastSelected(payload: { userIds: string[]; title: string; body: string; type?: string }) {
+    return this.post<{ sent: number; failed: number; pushSent: number; total: number }>(
+      '/notifications/broadcast/selected',
+      payload,
+    );
+  }
 }
 
 export const notificationsService = new NotificationsService();

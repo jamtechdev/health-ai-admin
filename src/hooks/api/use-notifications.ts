@@ -45,3 +45,12 @@ export function useMarkAllNotificationsRead() {
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.notifications.all }),
   });
 }
+
+export function useBroadcastNotification() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: { userIds: string[]; title: string; body: string; type?: string }) =>
+      notificationsService.broadcastSelected(payload),
+    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.notifications.all }),
+  });
+}
