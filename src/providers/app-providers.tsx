@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { api } from "@/lib/api/client";
+import { useAuthStore } from "@/store/auth.store";
 
 const ONESIGNAL_APP_ID =
   process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID ??
@@ -49,6 +50,7 @@ declare global {
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const pushListenerAttached = useRef(false);
+  const { isAuthenticated } = useAuthStore();
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -61,24 +63,18 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.location.hostname === "localhost") return;
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async (OneSignal: OneSignalSdk) => {
-      await OneSignal.init({
-        appId: ONESIGNAL_APP_ID,
-        serviceWorkerPath: "/OneSignalSDKWorker.js",
-        serviceWorkerParam: { scope: "/" },
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.location.hostname === "localhost") return;
-    if (!localStorage.getItem("accessToken")) return;
+    if (!isAuthenticated) return;
 
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     window.OneSignalDeferred.push(async (OneSignal: OneSignalSdk) => {
       try {
+        // Initialize OneSignal
+        await OneSignal.init({
+          appId: ONESIGNAL_APP_ID,
+          serviceWorkerPath: "/OneSignalSDKWorker.js",
+          serviceWorkerParam: { scope: "/" },
+        });
+
         const registerSubscription = async (subscriptionId?: string | null) => {
           if (!subscriptionId) return;
           await api.post("/app/push-token", {
@@ -110,7 +106,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         console.warn("Failed to register OneSignal push subscription", error);
       }
     });
-  }, [pathname]);
+  }, [isAuthenticated, pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>

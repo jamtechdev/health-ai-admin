@@ -36,7 +36,7 @@ export default function DynamicPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="h-full overflow-y-auto bg-background">
         <header className="border-b border-brand-border bg-surface/80 backdrop-blur-sm">
           <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
             <Link href="/" className="text-lg font-bold text-foreground">TovaPulse</Link>
@@ -57,7 +57,7 @@ export default function DynamicPage() {
 
   if (notFound || !data) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="h-full overflow-y-auto bg-background">
         <header className="border-b border-brand-border bg-surface/80 backdrop-blur-sm">
           <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
             <Link href="/" className="text-lg font-bold text-foreground">TovaPulse</Link>
@@ -78,7 +78,7 @@ export default function DynamicPage() {
   const title = data.title;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full overflow-y-auto bg-background">
       <header className="border-b border-brand-border bg-surface/80 backdrop-blur-sm">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
           <Link href="/" className="text-lg font-bold text-foreground">TovaPulse</Link>

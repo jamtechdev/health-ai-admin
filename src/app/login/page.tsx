@@ -72,7 +72,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black text-foreground">
+    <div className="relative h-full overflow-x-hidden overflow-y-auto bg-black text-foreground">
       <div className="pointer-events-none absolute inset-0">
         <motion.div
           className="absolute -left-24 top-0 h-[28rem] w-[28rem] rounded-full bg-brand-primary-glow blur-[120px]"
