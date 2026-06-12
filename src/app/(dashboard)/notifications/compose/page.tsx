@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Search, Send, Check, ChevronLeft, ChevronRight, X, Users, Loader2 } from 'lucide-react';
@@ -11,6 +11,7 @@ import { PageShell } from '@/components/ui/page-shell';
 import { useUsersList } from '@/hooks/api/use-users';
 import { useBroadcastNotification } from '@/hooks/api/use-notifications';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
+import { usersService } from '@/services/users.service';
 
 export default function ComposeNotificationPage() {
   const router = useRouter();
@@ -18,9 +19,11 @@ export default function ComposeNotificationPage() {
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectingAll, setSelectingAll] = useState(false);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const allFetchedRef = useRef(false);
 
   const { data, isLoading } = useUsersList(page, search);
   const isDelayedLoading = useDelayedLoading(isLoading);
@@ -33,6 +36,7 @@ export default function ComposeNotificationPage() {
     setSearch(searchInput);
     setPage(1);
     setSelectedIds(new Set());
+    allFetchedRef.current = false;
   }, [searchInput]);
 
   const toggleUser = (id: string) => {
@@ -44,15 +48,33 @@ export default function ComposeNotificationPage() {
     });
   };
 
-  const toggleSelectAll = () => {
-    if (selectedIds.size === users.length && users.length > 0) {
+  const toggleSelectAll = async () => {
+    if (selectedIds.size === users.length && users.length > 0 && !allFetchedRef.current) {
       setSelectedIds(new Set());
-    } else {
+      return;
+    }
+    if (allFetchedRef.current && selectedIds.size > users.length) {
+      setSelectedIds(new Set());
+      allFetchedRef.current = false;
+      return;
+    }
+    setSelectingAll(true);
+    try {
+      const allIds = await usersService.fetchAllIds();
+      setSelectedIds(new Set(allIds));
+      allFetchedRef.current = true;
+    } catch {
+      toast.error('Failed to fetch all users');
       setSelectedIds(new Set(users.map((u) => u.id)));
+    } finally {
+      setSelectingAll(false);
     }
   };
 
-  const clearSelection = () => setSelectedIds(new Set());
+  const clearSelection = () => {
+    setSelectedIds(new Set());
+    allFetchedRef.current = false;
+  };
 
   const handleSubmit = async () => {
     if (!title.trim() || !body.trim()) {
@@ -124,13 +146,28 @@ export default function ComposeNotificationPage() {
 
             <div className="mb-3 flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-brand-border accent-brand-primary"
-                  checked={users.length > 0 && selectedIds.size === users.length}
-                  onChange={toggleSelectAll}
-                />
-                Select all ({users.length})
+                {selectingAll ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-brand-primary" />
+                ) : (
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-brand-border accent-brand-primary"
+                    checked={
+                      users.length > 0 &&
+                      (allFetchedRef.current
+                        ? selectedIds.size > users.length
+                        : selectedIds.size === users.length)
+                    }
+                    onChange={toggleSelectAll}
+                  />
+                )}
+                <span>
+                  {selectingAll
+                    ? 'Fetching all users...'
+                    : allFetchedRef.current
+                      ? `All users selected (${selectedIds.size})`
+                      : `Select all (${data?.meta?.total ?? users.length})`}
+                </span>
               </label>
               {selectedIds.size > 0 && (
                 <button
@@ -203,6 +240,11 @@ export default function ComposeNotificationPage() {
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
+                {allFetchedRef.current && (
+                  <Button variant="ghost" size="sm" onClick={clearSelection}>
+                    Deselect all
+                  </Button>
+                )}
               </div>
             )}
           </CardContent>

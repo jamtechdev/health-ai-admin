@@ -34,6 +34,21 @@ class UsersService extends BaseService {
   bulk(ids: string[], action: string) {
     return this.post<{ message: string }>('/users/bulk', { ids, action });
   }
+
+  async fetchAllIds(): Promise<string[]> {
+    let allUsers: { id: string; name: string; email: string }[] = [];
+    let page = 1;
+    let totalPages = 1;
+
+    while (page <= totalPages) {
+      const res = await this.list({ page, limit: 100 });
+      allUsers = allUsers.concat(res.items);
+      totalPages = res.meta.totalPages;
+      page++;
+    }
+
+    return allUsers.map((u) => u.id);
+  }
 }
 
 export const usersService = new UsersService();
