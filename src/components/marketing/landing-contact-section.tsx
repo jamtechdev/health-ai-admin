@@ -31,20 +31,22 @@ export function LandingContactSection() {
   function handleContactSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const subject = encodeURIComponent(`TovaPulse contact request from ${contactForm.name}`);
-    const body = encodeURIComponent(
-      [
-        `Name: ${contactForm.name}`,
-        `Email: ${contactForm.email}`,
-        `Company: ${contactForm.company || 'Not provided'}`,
-        '',
-        'Message:',
-        contactForm.message,
-      ].join('\n'),
-    );
-
-    window.location.href = `mailto:admin@tovapulse.com?subject=${subject}&body=${body}`;
-    setContactSent(true);
+    fetch('/api/public/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(contactForm),
+    })
+      .then((res) => {
+        if (res.ok) {
+          setContactSent(true);
+          setContactForm(initialContactForm);
+        } else {
+          alert('Failed to send message. Please try again.');
+        }
+      })
+      .catch(() => {
+        alert('An error occurred. Please try again.');
+      });
   }
 
   return (
@@ -130,7 +132,7 @@ export function LandingContactSection() {
               </button>
               {contactSent ? (
                 <p className="rounded-input border border-brand-secondary/30 bg-brand-secondary-glow px-4 py-3 text-sm text-brand-secondary">
-                  Your email app is ready with the message. Send it to contact the admin team.
+                  Message sent successfully! We will get back to you shortly.
                 </p>
               ) : null}
             </form>
