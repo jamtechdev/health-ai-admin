@@ -11,11 +11,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { Users, UserCheck, Shield, Bell, HeartPulse, Watch, Sparkles, Database } from 'lucide-react';
+import { Users, UserCheck, Shield, Bell, HeartPulse, Watch, Sparkles, Database, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { PageShell } from '@/components/ui/page-shell';
 import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useDashboardStats } from '@/hooks/api/use-dashboard';
+import Link from 'next/link';
 
 const statCards = [
   { key: 'totalUsers', label: 'Total Users', icon: Users, color: 'text-brand-primary' },
@@ -64,6 +66,79 @@ export default function DashboardPage() {
           );
         })}
       </div>
+
+      {data?.contacts && (
+        <Card className="min-w-0">
+          <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <CardTitle>Contact Inquiries</CardTitle>
+              <p className="mt-1 text-sm text-text-muted">
+                Pending support requests and the latest admin replies
+              </p>
+            </div>
+            <Button asChild variant="outline" className="w-full sm:w-auto">
+              <Link href="/contacts">Open contacts</Link>
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                { label: 'Pending', value: data.contacts.pendingCount },
+                { label: 'Replied', value: data.contacts.repliedCount },
+                { label: 'Closed', value: data.contacts.closedCount },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-card border border-brand-border/80 bg-surface-elevated/50 p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-text-muted">{item.label}</p>
+                    <Mail className="h-4 w-4 text-brand-primary" />
+                  </div>
+                  <p className="mt-2 text-2xl font-bold">{item.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              {(data.contacts.recentContacts ?? []).map((contact) => (
+                <div
+                  key={contact.id}
+                  className="rounded-card border border-brand-border/70 p-4"
+                >
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="font-medium">{contact.name}</p>
+                      <p className="text-sm text-text-muted">{contact.email}</p>
+                      <p className="mt-2 text-sm text-text-secondary">{contact.subject || 'No subject'}</p>
+                    </div>
+                    <span className="inline-flex w-fit rounded-full bg-brand-secondary/10 px-2.5 py-1 text-xs font-semibold capitalize text-brand-secondary">
+                      {contact.status}
+                    </span>
+                  </div>
+                  <p className="mt-3 line-clamp-2 text-sm text-text-secondary">{contact.message}</p>
+                  {contact.adminReply && (
+                    <div className="mt-3 rounded-card border border-emerald-500/20 bg-emerald-500/5 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">
+                        Latest admin reply
+                      </p>
+                      <p className="mt-2 line-clamp-3 text-sm text-text-secondary">{contact.adminReply}</p>
+                      {contact.repliedAt && (
+                        <p className="mt-2 text-xs text-text-muted">
+                          {new Date(contact.repliedAt).toLocaleString()}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {!isLoading && !data.contacts.recentContacts?.length && (
+                <p className="text-sm text-text-muted">No contact requests yet.</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {data?.healthPlatform && (
         <>

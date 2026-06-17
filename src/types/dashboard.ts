@@ -1,4 +1,5 @@
 import type { HealthPlatformOverview } from './platform-health';
+import type { ContactDashboardSummary } from './contact';
 
 export interface DashboardStats {
   totalUsers: number;
@@ -6,6 +7,7 @@ export interface DashboardStats {
   totalRoles: number;
   unreadNotifications: number;
   healthPlatform?: HealthPlatformOverview;
+  contacts?: ContactDashboardSummary;
   recentActivity: Array<{
     id: string;
     source?: 'activity' | 'api';
