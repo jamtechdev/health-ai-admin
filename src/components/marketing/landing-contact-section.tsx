@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { Mail, Send } from 'lucide-react';
 import { contactCards } from './landing-content';
+import { toast } from 'sonner';
 
 type ContactFormState = {
   name: string;
@@ -34,18 +35,19 @@ export function LandingContactSection() {
     fetch('/api/public/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(contactForm),
+      body: JSON.stringify({ ...contactForm, subject: 'New Contact Request' }),
     })
       .then((res) => {
         if (res.ok) {
+          toast.success('Message sent successfully! We will get back to you shortly.');
           setContactSent(true);
           setContactForm(initialContactForm);
         } else {
-          alert('Failed to send message. Please try again.');
+          toast.error('Failed to send message. Please try again.');
         }
       })
       .catch(() => {
-        alert('An error occurred. Please try again.');
+        toast.error('An error occurred. Please try again.');
       });
   }
 
@@ -66,7 +68,7 @@ export function LandingContactSection() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href="mailto:admin@tovapulse.com"
+                href="mailto:ari@tovapulse.com"
                 className="inline-flex h-12 items-center justify-center rounded-button bg-brand-primary px-6 text-sm font-semibold text-text-primary shadow-[0_0_24px_var(--primary-glow)] transition hover:bg-brand-primary/90"
               >
                 Email operations

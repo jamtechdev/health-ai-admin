@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   FileText,
   Send,
+  Mail,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUnreadNotificationsCount } from '@/hooks/api/use-notifications';
@@ -69,6 +70,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
         // { href: '/api-logs', label: 'API Logs', icon: FileText },
         { href: '/notifications', label: 'Notifications', icon: Bell },
         { href: '/notifications/compose', label: 'Push Notification', icon: Send },
+        { href: '/contacts', label: 'Contacts', icon: Mail },
         { href: '/activity-logs', label: 'Activity Logs', icon: History },
         // { href: '/audit-logs', label: 'Audit Logs', icon: FileText },
         { href: '/settings', label: 'Settings', icon: Settings },

@@ -4,5 +4,6 @@ export interface UploadRecord {
   mimeType: string;
   size: number;
   url?: string;
+  domain?: string;
   createdAt: string;
 }

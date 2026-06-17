@@ -54,8 +54,11 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
   const [age, setAge] = useState<number | null>(p.age ?? null);
   const [gender, setGender] = useState<string | null>(p.gender ?? null);
   const [weightKg, setWeightKg] = useState<number | null>(p.weightKg ?? null);
+  const [weightUnit, setWeightUnit] = useState<string>(p.weightUnit ?? 'kg');
   const [heightCm, setHeightCm] = useState<number | null>(p.heightCm ?? null);
+  const [heightUnit, setHeightUnit] = useState<string>(p.heightUnit ?? 'cm');
   const [targetWeightKg, setTargetWeightKg] = useState<number | null>(p.targetWeightKg ?? null);
+  const [targetWeightUnit, setTargetWeightUnit] = useState<string>(p.targetWeightUnit ?? 'kg');
   const [primaryGoal, setPrimaryGoal] = useState<string | null>(p.primaryGoal ?? null);
   const [activityLevel, setActivityLevel] = useState<string | null>(p.activityLevel ?? null);
   const [sleepGoal, setSleepGoal] = useState<number | null>(p.sleepGoal ?? null);
@@ -63,10 +66,8 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
   const [selectedRoleIds] = useState<string[]>(user.roles?.map((r) => r.id) ?? []);
   const [allRoles, setAllRoles] = useState<RoleRecord[]>([]);
   const [error, setError] = useState('');
-  const [avatarPreview, setAvatarPreview] = useState(user.avatar ?? '');
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-  const fullUrl = (path: string) => (path.startsWith('/') ? `${API_BASE_URL}${path}` : path);
 
   useEffect(() => {
     api.get('/roles?limit=100')
@@ -75,6 +76,7 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
   }, []);
 
   const handleSave = async () => {
+    console.log('Saving user...', { name, email, avatar });
     if (!name.trim() || !email.trim()) {
       setError('Name and email are required');
       return;
@@ -86,20 +88,25 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
         email,
         status,
         avatar: avatar.trim() || null,
-        age: age ?? null,
+        age: age !== null ? Number(age) : null,
         gender: gender ?? null,
-        weightKg: weightKg ?? null,
-        heightCm: heightCm ?? null,
-        targetWeightKg: targetWeightKg ?? null,
+        weightKg: weightKg !== null ? Number(weightKg) : null,
+        weightUnit: weightUnit,
+        heightCm: heightCm !== null ? Number(heightCm) : null,
+        heightUnit: heightUnit,
+        targetWeightKg: targetWeightKg !== null ? Number(targetWeightKg) : null,
+        targetWeightUnit: targetWeightUnit,
         primaryGoal: primaryGoal ?? null,
         activityLevel: activityLevel ?? null,
-        sleepGoal: sleepGoal ?? null,
+        sleepGoal: sleepGoal !== null ? Number(sleepGoal) : null,
       };
+      console.log('Payload:', payload);
       if (password.trim()) payload.password = password;
       await updateUser.mutateAsync({ id: userId, payload });
       toast.success('User updated successfully');
       router.push('/users');
-    } catch {
+    } catch (err) {
+      console.error('Save failed:', err);
       setError('Failed to update user');
     }
   };
@@ -121,15 +128,15 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
         <div className="space-y-5">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-surface-secondary">
-              {avatarPreview ? (
-                <Image
-                  src={fullUrl(avatarPreview)}
+              {avatar ? (
+                <img
+                  src={avatar}
                   alt="Avatar"
-                  width={64}
-                  height={64}
-                  unoptimized
                   className="h-full w-full object-cover"
-                  onError={() => setAvatarPreview('')}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    setAvatar('');
+                  }}
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-text-muted">
@@ -156,7 +163,6 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
                     className="text-xs text-brand-critical hover:underline"
                     onClick={() => {
                       setAvatar('');
-                      setAvatarPreview('');
                     }}
                   >
                     Remove
@@ -171,14 +177,26 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
+
+                  // Create local preview immediately
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                    setAvatar(event.target?.result as string);
+                  };
+                  reader.readAsDataURL(file);
+
                   setUploading(true);
                   try {
                     const form = new FormData();
                     form.append('file', file);
-                    const { data } = await api.post<{ data: UploadRecord }>('/uploads', form);
+                    const { data } = await api.post<{ data: UploadRecord }>('/uploads', form, {
+                      headers: { 'Content-Type': 'multipart/form-data' },
+                    });
                     const url = data.data.url ?? '';
-                    setAvatar(url);
-                    setAvatarPreview(url);
+                    const domain = data.data.domain ?? API_BASE_URL;
+                    // Always construct the absolute URL using the domain and relative path
+                    const absoluteUrl = `${domain}${url}`;
+                    setAvatar(absoluteUrl);
                   } catch (err) {
                     const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Failed to upload image';
                     toast.error(msg);
@@ -193,12 +211,12 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
 
           <div>
             <label className="mb-1 block text-sm font-medium text-text-secondary">Name</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter full name" />
           </div>
 
           <div>
             <label className="mb-1 block text-sm font-medium text-text-secondary">Email</label>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter email address" />
           </div>
 
           <div>
@@ -231,7 +249,7 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-sm font-medium text-text-secondary">Age</label>
-                <Input type="number" value={age ?? ''} onChange={(e) => setAge(e.target.value ? Number(e.target.value) : null)} />
+                <Input type="number" value={age ?? ''} onChange={(e) => setAge(e.target.value ? Number(e.target.value) : null)} placeholder="Enter age" />
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-text-secondary">Gender</label>
@@ -240,7 +258,7 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
                   onChange={(e) => setGender(e.target.value || null)}
                   className="flex h-10 w-full rounded-input border border-brand-border bg-surface-elevated px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60"
                 >
-                  <option value="">Not set</option>
+                  <option value="">Select gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                   <option value="other">Other</option>
@@ -248,24 +266,42 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-text-secondary">Weight (kg)</label>
-                <Input type="number" step="0.1" value={weightKg ?? ''} onChange={(e) => setWeightKg(e.target.value ? Number(e.target.value) : null)} />
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Weight</label>
+                <div className="flex gap-2">
+                  <Input type="number" step="0.1" value={weightKg ?? ''} onChange={(e) => setWeightKg(e.target.value ? Number(e.target.value) : null)} placeholder="Enter weight" />
+                  <select value={weightUnit} onChange={(e) => setWeightUnit(e.target.value)} className="h-10 rounded-input border border-brand-border bg-surface-elevated px-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60">
+                    <option value="kg">kg</option>
+                    <option value="lbs">lbs</option>
+                  </select>
+                </div>
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-text-secondary">Height (cm)</label>
-                <Input type="number" step="0.1" value={heightCm ?? ''} onChange={(e) => setHeightCm(e.target.value ? Number(e.target.value) : null)} />
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Height</label>
+                <div className="flex gap-2">
+                  <Input type="number" step="0.1" value={heightCm ?? ''} onChange={(e) => setHeightCm(e.target.value ? Number(e.target.value) : null)} placeholder="Enter height" />
+                  <select value={heightUnit} onChange={(e) => setHeightUnit(e.target.value)} className="h-10 rounded-input border border-brand-border bg-surface-elevated px-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60">
+                    <option value="cm">cm</option>
+                    <option value="in">in</option>
+                  </select>
+                </div>
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-text-secondary">Target Weight (kg)</label>
-                <Input type="number" step="0.1" value={targetWeightKg ?? ''} onChange={(e) => setTargetWeightKg(e.target.value ? Number(e.target.value) : null)} />
+                <label className="mb-1 block text-sm font-medium text-text-secondary">Target Weight</label>
+                <div className="flex gap-2">
+                  <Input type="number" step="0.1" value={targetWeightKg ?? ''} onChange={(e) => setTargetWeightKg(e.target.value ? Number(e.target.value) : null)} placeholder="Enter target weight" />
+                  <select value={targetWeightUnit} onChange={(e) => setTargetWeightUnit(e.target.value)} className="h-10 rounded-input border border-brand-border bg-surface-elevated px-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60">
+                    <option value="kg">kg</option>
+                    <option value="lbs">lbs</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-text-secondary">Sleep Goal (hours)</label>
-                <Input type="number" step="0.5" value={sleepGoal ?? ''} onChange={(e) => setSleepGoal(e.target.value ? Number(e.target.value) : null)} />
+                <Input type="number" step="0.5" value={sleepGoal ?? ''} onChange={(e) => setSleepGoal(e.target.value ? Number(e.target.value) : null)} placeholder="Enter sleep goal in hours" />
               </div>
               <div className="sm:col-span-2">
                 <label className="mb-1 block text-sm font-medium text-text-secondary">Primary Goal</label>
-                <Input value={primaryGoal ?? ''} onChange={(e) => setPrimaryGoal(e.target.value || null)} />
+                <Input value={primaryGoal ?? ''} onChange={(e) => setPrimaryGoal(e.target.value || null)} placeholder="Enter primary health goal" />
               </div>
               <div className="sm:col-span-2">
                 <label className="mb-1 block text-sm font-medium text-text-secondary">Activity Level</label>
@@ -274,7 +310,7 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
                   onChange={(e) => setActivityLevel(e.target.value || null)}
                   className="flex h-10 w-full rounded-input border border-brand-border bg-surface-elevated px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60"
                 >
-                  <option value="">Not set</option>
+                  <option value="">Select activity level</option>
                   <option value="sedentary">Sedentary</option>
                   <option value="lightly_active">Lightly Active</option>
                   <option value="moderately_active">Moderately Active</option>

@@ -14,8 +14,11 @@ export interface UserHealthProfileData {
   age?: number | null;
   gender?: string | null;
   weightKg?: number | null;
+  weightUnit?: string | null;
   heightCm?: number | null;
+  heightUnit?: string | null;
   targetWeightKg?: number | null;
+  targetWeightUnit?: string | null;
   primaryGoal?: string | null;
   activityLevel?: string | null;
   sleepGoal?: number | null;
@@ -39,8 +42,11 @@ export interface UpdateUserPayload {
   age?: number | null;
   gender?: string | null;
   weightKg?: number | null;
+  weightUnit?: string | null;
   heightCm?: number | null;
+  heightUnit?: string | null;
   targetWeightKg?: number | null;
+  targetWeightUnit?: string | null;
   primaryGoal?: string | null;
   activityLevel?: string | null;
   sleepGoal?: number | null;

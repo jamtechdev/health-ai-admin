@@ -123,7 +123,7 @@ export const aboutHighlights = [
 ];
 
 export const contactCards: IconCard[] = [
-  { icon: Mail, label: 'Email', value: 'admin@tovapulse.com' },
+  { icon: Mail, label: 'Email', value: 'ari@tovapulse.com' },
   { icon: PhoneCall, label: 'Support', value: 'Admin operations desk' },
   { icon: MapPin, label: 'Coverage', value: 'Remote health-tech platform' },
 ];

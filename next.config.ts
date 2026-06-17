@@ -4,6 +4,16 @@ const API_BACKEND = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:40
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '4000',
+        pathname: '/uploads/**',
+      },
+    ],
+  },
   async rewrites() {
     return [
       {

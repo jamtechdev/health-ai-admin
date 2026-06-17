@@ -154,7 +154,7 @@ export default function LoginPage() {
                 <label className="mb-1.5 block text-sm font-medium text-text-secondary">Email</label>
                 <Input
                   type="email"
-                  placeholder="admin@tovapulse.com"
+                  placeholder="ari@tovapulse.com"
                   autoComplete="email"
                   className="h-12 border-brand-border/80 bg-background/50"
                   {...register('email')}
