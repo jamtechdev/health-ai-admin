@@ -13,7 +13,6 @@ import {
 } from 'recharts';
 import { Users, UserCheck, Shield, Bell, HeartPulse, Watch, Sparkles, Database, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { PageShell } from '@/components/ui/page-shell';
 import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useDashboardStats } from '@/hooks/api/use-dashboard';
@@ -76,9 +75,12 @@ export default function DashboardPage() {
                 Pending support requests and the latest admin replies
               </p>
             </div>
-            <Button asChild variant="outline" className="w-full sm:w-auto">
-              <Link href="/contacts">Open contacts</Link>
-            </Button>
+            <Link
+              href="/contacts"
+              className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
+            >
+              Open contacts
+            </Link>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-3">
