@@ -14,7 +14,7 @@ import {
   useUnreadNotificationsCount,
 } from '@/hooks/api/use-notifications';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
-import { ChevronLeft, ChevronRight, CheckCheck } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CheckCheck } from 'lucide-react';
 
 export default function NotificationsPage() {
   const router = useRouter();
@@ -104,6 +104,16 @@ export default function NotificationsPage() {
                   size="sm"
                   className="flex-1 sm:flex-none"
                   disabled={page <= 1}
+                  onClick={() => setPage(1)}
+                  title="First page"
+                >
+                  <ChevronsLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 sm:flex-none"
+                  disabled={page <= 1}
                   onClick={() => setPage(page - 1)}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -116,6 +126,16 @@ export default function NotificationsPage() {
                   onClick={() => setPage(page + 1)}
                 >
                   <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 sm:flex-none"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage(totalPages)}
+                  title="Last page"
+                >
+                  <ChevronsRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>

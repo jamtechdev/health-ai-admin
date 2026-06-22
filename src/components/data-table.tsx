@@ -142,7 +142,7 @@ export function DataTable<T extends { id: string }>({
         </div>
       </div>
 
-      {onPageChange && totalPages > 1 && (
+      {onPageChange && data.length > 0 && (
         <div className="flex flex-col gap-3 rounded-card border border-brand-border/80 bg-surface/70 p-3 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-sm text-text-muted">
             Page {page} of {totalPages}
