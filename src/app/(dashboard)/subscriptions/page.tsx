@@ -6,8 +6,10 @@ import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminSubscriptions } from '@/hooks/api/use-platform-health';
+import { platformHealthService } from '@/services/platform-health.service';
 import type { SubscriptionRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
+import { toast } from 'sonner';
 
 export default function SubscriptionsPage() {
   const router = useRouter();
@@ -60,19 +62,25 @@ export default function SubscriptionsPage() {
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
         onPageChange={setPage}
-        onExport={() =>
-          exportCsv(
-            'subscriptions.csv',
-            rows.map((row) => ({
-              user: row.User?.name,
-              email: row.User?.email,
-              status: row.status,
-              stripeCustomerId: row.stripeCustomerId,
-              stripeSubscriptionId: row.stripeSubscriptionId,
-              expiresAt: row.expiresAt,
-            })),
-          )
-        }
+        onExport={async () => {
+          try {
+            const result = await platformHealthService.adminSubscriptions({ limit: 0, search, export: 1 });
+            exportCsv(
+              'subscriptions.csv',
+              result.items.map((row) => ({
+                user: row.User?.name,
+                email: row.User?.email,
+                status: row.status,
+                stripeCustomerId: row.stripeCustomerId,
+                stripeSubscriptionId: row.stripeSubscriptionId,
+                expiresAt: row.expiresAt,
+              })),
+            );
+            toast.success('Exported subscriptions');
+          } catch {
+            toast.error('Failed to export subscriptions');
+          }
+        }}
       />
     </PageShell>
   );

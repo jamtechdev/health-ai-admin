@@ -6,8 +6,10 @@ import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminSyncLogs } from '@/hooks/api/use-platform-health';
+import { platformHealthService } from '@/services/platform-health.service';
 import type { DeviceSyncLogRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
+import { toast } from 'sonner';
 
 export default function DeviceSyncLogsPage() {
   const router = useRouter();
@@ -51,19 +53,25 @@ export default function DeviceSyncLogsPage() {
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
         onPageChange={setPage}
-        onExport={() =>
-          exportCsv(
-            'device-sync-logs.csv',
-            rows.map((row) => ({
-              user: row.User?.name,
-              provider: row.provider,
-              status: row.status,
-              metricsSynced: row.metricsSynced,
-              errorMessage: row.errorMessage,
-              createdAt: row.createdAt,
-            })),
-          )
-        }
+        onExport={async () => {
+          try {
+            const result = await platformHealthService.adminSyncLogs({ limit: 0, export: 1 });
+            exportCsv(
+              'device-sync-logs.csv',
+              result.items.map((row) => ({
+                user: row.User?.name,
+                provider: row.provider,
+                status: row.status,
+                metricsSynced: row.metricsSynced,
+                errorMessage: row.errorMessage,
+                createdAt: row.createdAt,
+              })),
+            );
+            toast.success('Exported device sync logs');
+          } catch {
+            toast.error('Failed to export device sync logs');
+          }
+        }}
       />
     </PageShell>
   );

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PageShell } from '@/components/ui/page-shell';
 import { useUsersList, useUpdateUser, useDeleteUser, useRevertUser } from '@/hooks/api/use-users';
+import { usersService } from '@/services/users.service';
 import type { UserRecord } from '@/types/user';
 import { exportCsv } from '@/lib/csv';
 
@@ -267,10 +268,14 @@ export default function UsersPage() {
     },
   ];
 
-  const handleExport = () => {
-    const rows = data?.items ?? [];
-    exportCsv('users.csv', rows.map((r) => ({ name: r.name, email: r.email, status: r.status })));
-    toast.success('Exported users');
+  const handleExport = async () => {
+    try {
+      const result = await usersService.list({ limit: 0, search, export: 1 });
+      exportCsv('users.csv', result.items.map((r) => ({ name: r.name, email: r.email, status: r.status })));
+      toast.success('Exported users');
+    } catch {
+      toast.error('Failed to export users');
+    }
   };
 
   return (

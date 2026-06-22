@@ -6,8 +6,10 @@ import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminApiLogs } from '@/hooks/api/use-platform-health';
+import { platformHealthService } from '@/services/platform-health.service';
 import type { ApiLogRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
+import { toast } from 'sonner';
 
 export default function ApiLogsPage() {
   const router = useRouter();
@@ -50,19 +52,25 @@ export default function ApiLogsPage() {
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
         onPageChange={setPage}
-        onExport={() =>
-          exportCsv(
-            'api-logs.csv',
-            rows.map((row) => ({
-              method: row.method,
-              path: row.path,
-              statusCode: row.statusCode,
-              durationMs: row.durationMs,
-              user: row.User?.email,
-              createdAt: row.createdAt,
-            })),
-          )
-        }
+        onExport={async () => {
+          try {
+            const result = await platformHealthService.adminApiLogs({ limit: 0, export: 1 });
+            exportCsv(
+              'api-logs.csv',
+              result.items.map((row) => ({
+                method: row.method,
+                path: row.path,
+                statusCode: row.statusCode,
+                durationMs: row.durationMs,
+                user: row.User?.email,
+                createdAt: row.createdAt,
+              })),
+            );
+            toast.success('Exported API logs');
+          } catch {
+            toast.error('Failed to export API logs');
+          }
+        }}
       />
     </PageShell>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Activity, ChevronLeft, ChevronRight, Download, Search } from 'lucide-react';
+import { Activity, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { VitalsTableSkeleton } from '@/components/ui/vitals-loader';
@@ -153,6 +153,16 @@ export function DataTable<T extends { id: string }>({
               size="sm"
               className="flex-1 sm:flex-none"
               disabled={page <= 1}
+              onClick={() => onPageChange(1)}
+              title="First page"
+            >
+              <ChevronsLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 sm:flex-none"
+              disabled={page <= 1}
               onClick={() => onPageChange(page - 1)}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -165,6 +175,16 @@ export function DataTable<T extends { id: string }>({
               onClick={() => onPageChange(page + 1)}
             >
               <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 sm:flex-none"
+              disabled={page >= totalPages}
+              onClick={() => onPageChange(totalPages)}
+              title="Last page"
+            >
+              <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
         </div>

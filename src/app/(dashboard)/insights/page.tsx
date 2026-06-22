@@ -6,8 +6,10 @@ import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminInsights } from '@/hooks/api/use-platform-health';
+import { platformHealthService } from '@/services/platform-health.service';
 import type { AiInsightRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
+import { toast } from 'sonner';
 
 const columns: Column<AiInsightRecord>[] = [
   { key: 'user', header: 'User', render: (row) => row.User?.name ?? row.userId },
@@ -78,20 +80,26 @@ export default function InsightsPage() {
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
         onPageChange={setPage}
-        onExport={() =>
-          exportCsv(
-            'ai-insights.csv',
-            rows.map((row) => ({
-              user: row.User?.name,
-              email: row.User?.email,
-              title: row.title,
-              type: row.insightType,
-              risk: row.riskLevel,
-              score: row.healthScore,
-              generatedAt: row.generatedAt,
-            })),
-          )
-        }
+        onExport={async () => {
+          try {
+            const result = await platformHealthService.adminInsights({ limit: 0, search, export: 1 });
+            exportCsv(
+              'ai-insights.csv',
+              result.items.map((row) => ({
+                user: row.User?.name,
+                email: row.User?.email,
+                title: row.title,
+                type: row.insightType,
+                risk: row.riskLevel,
+                score: row.healthScore,
+                generatedAt: row.generatedAt,
+              })),
+            );
+            toast.success('Exported AI insights');
+          } catch {
+            toast.error('Failed to export AI insights');
+          }
+        }}
       />
     </PageShell>
   );

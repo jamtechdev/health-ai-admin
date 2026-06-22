@@ -6,8 +6,10 @@ import { Eye } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
 import { useAdminWearables } from '@/hooks/api/use-platform-health';
+import { platformHealthService } from '@/services/platform-health.service';
 import type { ConnectedDeviceRecord } from '@/types/platform-health';
 import { exportCsv } from '@/lib/csv';
+import { toast } from 'sonner';
 
 export default function WearablesPage() {
   const router = useRouter();
@@ -68,18 +70,24 @@ export default function WearablesPage() {
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
         onPageChange={setPage}
-        onExport={() =>
-          exportCsv(
-            'wearables.csv',
-            rows.map((row) => ({
-              user: row.User?.name,
-              email: row.User?.email,
-              provider: row.provider,
-              status: row.status,
-              lastSyncAt: row.lastSyncAt,
-            })),
-          )
-        }
+        onExport={async () => {
+          try {
+            const result = await platformHealthService.adminWearables({ limit: 0, search, export: 1 });
+            exportCsv(
+              'wearables.csv',
+              result.items.map((row) => ({
+                user: row.User?.name,
+                email: row.User?.email,
+                provider: row.provider,
+                status: row.status,
+                lastSyncAt: row.lastSyncAt,
+              })),
+            );
+            toast.success('Exported wearables');
+          } catch {
+            toast.error('Failed to export wearables');
+          }
+        }}
       />
     </PageShell>
   );
