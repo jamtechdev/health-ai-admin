@@ -1,13 +1,14 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Pencil, CreditCard, Tag, DollarSign, Calendar, Hash, Apple, Info } from 'lucide-react';
+import { ArrowLeft, Pencil, CreditCard, Tag, DollarSign, Calendar, Hash, Apple, Info, CheckCircle2, XCircle, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageShell } from '@/components/ui/page-shell';
 import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { usePlan } from '@/hooks/api/use-plans';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
+import { parsePlanFeatures } from '@/lib/plan-features';
 
 export default function PlanViewPage() {
   const params = useParams();
@@ -30,6 +31,8 @@ export default function PlanViewPage() {
       </PageShell>
     );
   }
+
+  const features = parsePlanFeatures(plan.features);
 
   return (
     <PageShell
@@ -93,7 +96,7 @@ export default function PlanViewPage() {
           </Card>
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
           <Card className="h-full">
             <CardHeader className="border-b border-brand-border/50 pb-4">
               <CardTitle className="flex items-center gap-2">
@@ -142,6 +145,50 @@ export default function PlanViewPage() {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-brand-primary" />
+                Plan Features
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {features.length === 0 ? (
+                <p className="text-sm text-text-muted italic">No features configured for this plan.</p>
+              ) : (
+                <ul className="space-y-3">
+                  {features.map((feature, index) => (
+                    <li
+                      key={`${feature.name}-${index}`}
+                      className="flex items-start gap-3 rounded-xl border border-brand-border/50 bg-surface-elevated/40 p-3"
+                    >
+                      {feature.included ? (
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
+                      ) : (
+                        <XCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
+                      )}
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{feature.name}</p>
+                        {feature.description ? (
+                          <p className="mt-0.5 text-xs text-text-muted">{feature.description}</p>
+                        ) : null}
+                        <span
+                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${
+                            feature.included
+                              ? 'bg-green-500/10 text-green-600'
+                              : 'bg-red-500/10 text-red-500'
+                          }`}
+                        >
+                          {feature.included ? 'Included' : 'Not included'}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </CardContent>
           </Card>
         </div>

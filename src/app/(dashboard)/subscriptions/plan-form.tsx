@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { PlanFeaturesEditor } from '@/components/subscriptions/plan-features-editor';
+import type { PlanFeature } from '@/lib/plan-features';
+import { parsePlanFeatures } from '@/lib/plan-features';
 
 interface PlanFormValues {
   name: string;
@@ -14,11 +17,11 @@ interface PlanFormValues {
   appleProductId: string;
   androidProductId: string;
   status: 'active' | 'inactive';
-  features: Record<string, unknown>;
+  features: PlanFeature[];
 }
 
 interface PlanFormProps {
-  initialValues?: PlanFormValues;
+  initialValues?: Partial<PlanFormValues> & { features?: unknown };
   onSubmit: (values: PlanFormValues) => void;
   isSubmitting?: boolean;
 }
@@ -32,10 +35,38 @@ export function PlanForm({ initialValues, onSubmit, isSubmitting }: PlanFormProp
   const [appleProductId, setAppleProductId] = useState(initialValues?.appleProductId ?? '');
   const [androidProductId, setAndroidProductId] = useState(initialValues?.androidProductId ?? '');
   const [status, setStatus] = useState<'active' | 'inactive'>(initialValues?.status ?? 'active');
+  const [features, setFeatures] = useState<PlanFeature[]>(() =>
+    parsePlanFeatures(initialValues?.features),
+  );
+
+  useEffect(() => {
+    if (initialValues) {
+      setFeatures(parsePlanFeatures(initialValues.features));
+    }
+  }, [initialValues]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ name, description, price, durationDays, planType, appleProductId, androidProductId, status, features: {} });
+
+    const cleanedFeatures = features
+      .map((feature) => ({
+        name: feature.name.trim(),
+        included: feature.included,
+        ...(feature.description?.trim() ? { description: feature.description.trim() } : {}),
+      }))
+      .filter((feature) => feature.name.length > 0);
+
+    onSubmit({
+      name,
+      description,
+      price,
+      durationDays,
+      planType,
+      appleProductId,
+      androidProductId,
+      status,
+      features: cleanedFeatures,
+    });
   };
 
   return (
@@ -96,9 +127,16 @@ export function PlanForm({ initialValues, onSubmit, isSubmitting }: PlanFormProp
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardContent className="pt-6">
+          <PlanFeaturesEditor features={features} onChange={setFeatures} />
+        </CardContent>
+      </Card>
+
       <div className="flex justify-end gap-3">
         <Button type="submit" disabled={isSubmitting}>
-          {initialValues ? 'Update Plan' : 'Create Plan'}
+          {initialValues?.name ? 'Update Plan' : 'Create Plan'}
         </Button>
       </div>
     </form>

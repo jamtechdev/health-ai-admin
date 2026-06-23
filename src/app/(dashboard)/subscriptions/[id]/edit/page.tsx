@@ -19,32 +19,6 @@ export default function EditPlanPage() {
   const updatePlan = useUpdatePlan();
   const isDelayedLoading = useDelayedLoading(isLoading);
 
-  const handleSubmit = async (values: {
-    name: string;
-    description: string;
-    price: number;
-    durationDays: number;
-    planType: 'free' | 'premium';
-    appleProductId: string;
-    androidProductId: string;
-    status: 'active' | 'inactive';
-    features: Record<string, unknown>;
-  }) => {
-    try {
-      await updatePlan.mutateAsync({
-        id: planId,
-        ...values,
-        description: values.description || undefined,
-        appleProductId: values.appleProductId || undefined,
-        androidProductId: values.androidProductId || undefined,
-      });
-      toast.success('Plan updated successfully');
-      router.push(`/subscriptions/${planId}`);
-    } catch {
-      toast.error('Failed to update plan');
-    }
-  };
-
   if (isDelayedLoading) {
     return <VitalsLoader label="Loading plan details" />;
   }
@@ -63,7 +37,7 @@ export default function EditPlanPage() {
     <PageShell
       eyebrow="Billing"
       title={`Edit: ${plan.name}`}
-      description="Update subscription plan details and pricing."
+      description="Update subscription plan details, pricing, and features."
       actions={
         <Button variant="outline" onClick={() => router.push(`/subscriptions/${planId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Cancel
@@ -71,6 +45,7 @@ export default function EditPlanPage() {
       }
     >
       <PlanForm
+        isSubmitting={updatePlan.isPending}
         initialValues={{
           name: plan.name,
           description: plan.description ?? '',
@@ -80,9 +55,23 @@ export default function EditPlanPage() {
           appleProductId: plan.appleProductId ?? '',
           androidProductId: plan.androidProductId ?? '',
           status: plan.status,
-          features: plan.features ?? {},
+          features: plan.features,
         }}
-        onSubmit={handleSubmit}
+        onSubmit={async (values) => {
+          try {
+            await updatePlan.mutateAsync({
+              id: planId,
+              ...values,
+              description: values.description || undefined,
+              appleProductId: values.appleProductId || undefined,
+              androidProductId: values.androidProductId || undefined,
+            });
+            toast.success('Plan updated successfully');
+            router.push(`/subscriptions/${planId}`);
+          } catch {
+            toast.error('Failed to update plan');
+          }
+        }}
       />
     </PageShell>
   );

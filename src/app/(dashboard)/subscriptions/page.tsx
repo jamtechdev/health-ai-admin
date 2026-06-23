@@ -9,6 +9,7 @@ import { PageShell } from '@/components/ui/page-shell';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { usePlansList, useDeletePlan } from '@/hooks/api/use-plans';
 import { plansService } from '@/services/plans.service';
+import { parsePlanFeatures } from '@/lib/plan-features';
 import type { PlanRecord } from '@/types/plan';
 import { exportCsv } from '@/lib/csv';
 
@@ -44,6 +45,18 @@ export default function SubscriptionsPage() {
     },
     { key: 'price', header: 'Price', render: (row) => `$${Number(row.price).toFixed(2)}` },
     { key: 'durationDays', header: 'Duration', render: (row) => `${row.durationDays} days` },
+    {
+      key: 'features',
+      header: 'Features',
+      render: (row) => {
+        const count = parsePlanFeatures(row.features).length;
+        return (
+          <span className="text-sm text-text-secondary">
+            {count} {count === 1 ? 'feature' : 'features'}
+          </span>
+        );
+      },
+    },
     { key: 'appleProductId', header: 'Apple ID', render: (row) => row.appleProductId ?? '—' },
     { key: 'androidProductId', header: 'Android ID', render: (row) => row.androidProductId ?? '—' },
     {

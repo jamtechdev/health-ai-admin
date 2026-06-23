@@ -3,7 +3,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { plansService } from '@/services/plans.service';
 import { queryKeys } from './query-keys';
-import type { PlanRecord } from '@/types/plan';
+import type { PlanFeature } from '@/types/plan';
+
+type PlanMutationPayload = {
+  name: string;
+  description?: string;
+  price: number;
+  durationDays: number;
+  planType: 'free' | 'premium';
+  appleProductId?: string;
+  androidProductId?: string;
+  status?: 'active' | 'inactive';
+  features?: PlanFeature[];
+};
 
 export function usePlansList(page: number, search: string) {
   return useQuery({
@@ -24,17 +36,7 @@ export function usePlan(id: string) {
 export function useCreatePlan() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload: {
-      name: string;
-      description?: string;
-      price: number;
-      durationDays: number;
-      planType: 'free' | 'premium';
-      appleProductId?: string;
-      androidProductId?: string;
-      status?: 'active' | 'inactive';
-      features?: Record<string, unknown>;
-    }) => plansService.create(payload),
+    mutationFn: (payload: PlanMutationPayload) => plansService.create(payload),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.plans.all });
     },
@@ -44,17 +46,8 @@ export function useCreatePlan() {
 export function useUpdatePlan() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...payload }: { id: string } & {
-      name?: string;
-      description?: string;
-      price?: number;
-      durationDays?: number;
-      planType?: 'free' | 'premium';
-      appleProductId?: string;
-      androidProductId?: string;
-      status?: 'active' | 'inactive';
-      features?: Record<string, unknown>;
-    }) => plansService.update(id, payload),
+    mutationFn: ({ id, ...payload }: { id: string } & Partial<PlanMutationPayload>) =>
+      plansService.update(id, payload),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.plans.all });
     },

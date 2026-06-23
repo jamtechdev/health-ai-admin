@@ -1,6 +1,12 @@
 export type PlanType = 'free' | 'premium';
 export type PlanStatus = 'active' | 'inactive';
 
+export interface PlanFeature {
+  name: string;
+  included: boolean;
+  description?: string;
+}
+
 export interface PlanRecord {
   id: string;
   name: string;
@@ -11,7 +17,7 @@ export interface PlanRecord {
   appleProductId: string | null;
   androidProductId: string | null;
   status: PlanStatus;
-  features: Record<string, unknown> | null;
+  features: PlanFeature[];
   createdAt: string;
   updatedAt: string;
 }

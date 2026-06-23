@@ -1,6 +1,18 @@
 import { BaseService } from '@/lib/api/base.service';
 import type { ListParams } from '@/lib/api/types';
-import type { PlanRecord } from '@/types/plan';
+import type { PlanFeature, PlanRecord } from '@/types/plan';
+
+type PlanPayload = {
+  name: string;
+  description?: string;
+  price: number;
+  durationDays: number;
+  planType: 'free' | 'premium';
+  appleProductId?: string;
+  androidProductId?: string;
+  status?: 'active' | 'inactive';
+  features?: PlanFeature[];
+};
 
 class PlansService extends BaseService {
   list(params?: ListParams) {
@@ -11,34 +23,11 @@ class PlansService extends BaseService {
     return this.get<PlanRecord>(`/subscriptions/plans/${id}`);
   }
 
-  create(payload: {
-    name: string;
-    description?: string;
-    price: number;
-    durationDays: number;
-    planType: 'free' | 'premium';
-    appleProductId?: string;
-    androidProductId?: string;
-    status?: 'active' | 'inactive';
-    features?: Record<string, unknown>;
-  }) {
+  create(payload: PlanPayload) {
     return this.post<PlanRecord>('/subscriptions/plans', payload);
   }
 
-  update(
-    id: string,
-    payload: {
-      name?: string;
-      description?: string;
-      price?: number;
-      durationDays?: number;
-      planType?: 'free' | 'premium';
-      appleProductId?: string;
-      androidProductId?: string;
-      status?: 'active' | 'inactive';
-      features?: Record<string, unknown>;
-    },
-  ) {
+  update(id: string, payload: Partial<PlanPayload>) {
     return this.put<PlanRecord>(`/subscriptions/plans/${id}`, payload);
   }
 
