@@ -2,43 +2,79 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye } from 'lucide-react';
+import { Eye, Plus, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
-import { useAdminSubscriptions } from '@/hooks/api/use-platform-health';
-import { platformHealthService } from '@/services/platform-health.service';
-import type { SubscriptionRecord } from '@/types/platform-health';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { usePlansList, useDeletePlan } from '@/hooks/api/use-plans';
+import { plansService } from '@/services/plans.service';
+import type { PlanRecord } from '@/types/plan';
 import { exportCsv } from '@/lib/csv';
-import { toast } from 'sonner';
 
 export default function SubscriptionsPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useAdminSubscriptions(page, search);
-  const rows = data?.items ?? [];
+  const { data, isLoading } = usePlansList(page, search);
+  const deletePlan = useDeletePlan();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const columns: Column<SubscriptionRecord>[] = [
-    { key: 'user', header: 'User', render: (row) => row.User?.name ?? row.userId },
-    { key: 'email', header: 'Email', render: (row) => row.User?.email ?? '—' },
-    { key: 'status', header: 'Status' },
-    { key: 'customer', header: 'Stripe customer', render: (row) => row.stripeCustomerId ?? '—' },
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    try {
+      await deletePlan.mutateAsync(deleteId);
+      toast.success('Plan deleted');
+    } catch {
+      toast.error('Failed to delete plan');
+    }
+    setDeleteId(null);
+  };
+
+  const columns: Column<PlanRecord>[] = [
+    { key: 'name', header: 'Name' },
     {
-      key: 'expiresAt',
-      header: 'Expires',
-      render: (row) => (row.expiresAt ? new Date(row.expiresAt).toLocaleDateString() : '—'),
+      key: 'planType',
+      header: 'Type',
+      render: (row) => (
+        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${row.planType === 'free' ? 'bg-blue-500/10 text-blue-600' : 'bg-purple-500/10 text-purple-600'}`}>
+          {row.planType}
+        </span>
+      ),
+    },
+    { key: 'price', header: 'Price', render: (row) => `$${Number(row.price).toFixed(2)}` },
+    { key: 'durationDays', header: 'Duration', render: (row) => `${row.durationDays} days` },
+    { key: 'appleProductId', header: 'Apple ID', render: (row) => row.appleProductId ?? '—' },
+    { key: 'androidProductId', header: 'Android ID', render: (row) => row.androidProductId ?? '—' },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (row) => (
+        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${row.status === 'active' ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
+          {row.status}
+        </span>
+      ),
     },
     {
       key: 'actions',
       header: 'Actions',
       render: (row) => (
-        <button
-          onClick={() => router.push(`/subscriptions/${row.id}`)}
-          className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
-          title="View details"
-        >
-          <Eye className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.push(`/subscriptions/${row.id}`)}
+            className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-gray-500"
+            title="View details"
+          >
+            <Eye className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setDeleteId(row.id)}
+            className="rounded p-1.5 cursor-pointer transition-colors hover:bg-red-50 text-red-400 hover:text-red-600"
+            title="Delete plan"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
       ),
     },
   ];
@@ -46,13 +82,20 @@ export default function SubscriptionsPage() {
   return (
     <PageShell
       eyebrow="Billing"
-      title="Subscriptions"
-      
-      description="Stripe-ready subscription monitoring for mobile app users."
+      title="Subscription Plans"
+      description="Manage Apple IAP subscription plans, pricing, and product IDs."
+      actions={
+        <button
+          onClick={() => router.push('/subscriptions/create')}
+          className="inline-flex h-9 items-center justify-center rounded-button bg-brand-primary px-4 text-sm font-medium text-white transition-colors hover:bg-brand-primary/90"
+        >
+          <Plus className="mr-2 h-4 w-4" /> New Plan
+        </button>
+      }
     >
       <DataTable
         columns={columns}
-        data={rows}
+        data={data?.items ?? []}
         isLoading={isLoading}
         search={search}
         onSearchChange={(value) => {
@@ -60,27 +103,37 @@ export default function SubscriptionsPage() {
           setPage(1);
         }}
         page={page}
-        totalPages={data?.meta.totalPages ?? 1}
+        totalPages={data?.meta?.totalPages ?? 1}
         onPageChange={setPage}
         onExport={async () => {
           try {
-            const result = await platformHealthService.adminSubscriptions({ limit: 0, search, export: 1 });
+            const result = await plansService.list({ limit: 0, search: search || undefined });
             exportCsv(
-              'subscriptions.csv',
+              'plans.csv',
               result.items.map((row) => ({
-                user: row.User?.name,
-                email: row.User?.email,
+                name: row.name,
+                type: row.planType,
+                price: row.price,
+                durationDays: row.durationDays,
+                appleProductId: row.appleProductId,
+                androidProductId: row.androidProductId,
                 status: row.status,
-                stripeCustomerId: row.stripeCustomerId,
-                stripeSubscriptionId: row.stripeSubscriptionId,
-                expiresAt: row.expiresAt,
               })),
             );
-            toast.success('Exported subscriptions');
+            toast.success('Exported plans');
           } catch {
-            toast.error('Failed to export subscriptions');
+            toast.error('Failed to export plans');
           }
         }}
+      />
+      <ConfirmDialog
+        open={!!deleteId}
+        onOpenChange={() => setDeleteId(null)}
+        title="Delete Plan"
+        description="Are you sure you want to delete this plan? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={handleDelete}
       />
     </PageShell>
   );

@@ -60,9 +60,7 @@ export interface ConnectedDeviceRecord {
 export interface SubscriptionRecord {
   id: string;
   userId: string;
-  stripeCustomerId?: string | null;
-  stripeSubscriptionId?: string | null;
-  status: 'trialing' | 'active' | 'past_due' | 'canceled' | 'expired';
+  status: 'active' | 'expired' | 'cancelled';
   expiresAt?: string | null;
   createdAt?: string;
   User?: EmbeddedUser;

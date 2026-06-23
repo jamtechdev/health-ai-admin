@@ -60,7 +60,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       items: [
         { href: '/wearables', label: 'Wearables', icon: Watch },
         { href: '/insights', label: 'AI Insights', icon: Sparkles },
-        { href: '/subscriptions', label: 'Subscriptions', icon: CreditCard },
+        { href: '/subscriptions', label: 'Plans', icon: CreditCard },
         { href: '/device-sync-logs', label: 'Sync Logs', icon: RadioTower },
       ],
     },
