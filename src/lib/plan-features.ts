@@ -5,28 +5,29 @@ export interface PlanFeature {
 }
 
 export function parsePlanFeatures(value: unknown): PlanFeature[] {
-  if (!value) return [];
+  if (!value || !Array.isArray(value)) return [];
 
-  if (Array.isArray(value)) {
-    return value
-      .map((item) => {
-        if (!item || typeof item !== 'object') return null;
-        const record = item as Record<string, unknown>;
-        const name = typeof record.name === 'string' ? record.name.trim() : '';
-        if (!name) return null;
-        return {
-          name,
-          included: Boolean(record.included),
-          description:
-            typeof record.description === 'string' && record.description.trim()
-              ? record.description.trim()
-              : undefined,
-        } satisfies PlanFeature;
-      })
-      .filter((item): item is PlanFeature => item !== null);
+  const features: PlanFeature[] = [];
+
+  for (const item of value) {
+    if (!item || typeof item !== 'object') continue;
+    const record = item as Record<string, unknown>;
+    const name = typeof record.name === 'string' ? record.name.trim() : '';
+    if (!name) continue;
+
+    const feature: PlanFeature = {
+      name,
+      included: Boolean(record.included),
+    };
+
+    if (typeof record.description === 'string' && record.description.trim()) {
+      feature.description = record.description.trim();
+    }
+
+    features.push(feature);
   }
 
-  return [];
+  return features;
 }
 
 export function createEmptyFeature(): PlanFeature {
