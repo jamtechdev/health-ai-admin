@@ -7,7 +7,8 @@
       "namespace": "android_app",
       "package_name": "com.emc26ventures.tovapulse",
       "sha256_cert_fingerprints": [
-        "55:B9:78:8D:95:D3:CF:BC:7D:06:7C:E5:B2:74:3C:34:7A:74:9A:88:63:4A:D3:06:7B:52:0F:7C:8F:29:6B:ED"
+        "55:B9:78:8D:95:D3:CF:BC:7D:06:7C:E5:B2:74:3C:34:7A:74:9A:88:63:4A:D3:06:7B:52:0F:7C:8F:29:6B:ED",
+        "D6:F5:8C:AC:78:E6:18:A0:FC:1F:2A:6F:01:58:4E:E1:78:16:96:44:41:97:04:45:E6:65:52:EB:52:8A:A3:57"
       ]
     }
   }
