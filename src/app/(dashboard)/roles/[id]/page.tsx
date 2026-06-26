@@ -91,7 +91,7 @@ export default function RoleViewPage() {
 
         {/* Permissions List */}
         <div className="lg:col-span-2">
-          <Card className="h-full">
+          <Card>
             <CardHeader className="border-b border-brand-border/50 pb-4">
               <CardTitle className="flex items-center gap-2">
                 <Lock className="h-5 w-5 text-brand-tertiary" />

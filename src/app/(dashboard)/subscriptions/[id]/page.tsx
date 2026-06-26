@@ -97,7 +97,7 @@ export default function PlanViewPage() {
         </div>
 
         <div className="lg:col-span-2 space-y-6">
-          <Card className="h-full">
+          <Card>
             <CardHeader className="border-b border-brand-border/50 pb-4">
               <CardTitle className="flex items-center gap-2">
                 <Tag className="h-5 w-5 text-brand-tertiary" />
