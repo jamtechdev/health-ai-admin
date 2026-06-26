@@ -43,12 +43,6 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       ],
     },
     {
-      title: 'Content',
-      items: [
-        { href: '/pages', label: 'Pages', icon: FileText },
-      ],
-    },
-    {
       title: 'People',
       items: [
         { href: '/users', label: 'Users', icon: Users, aliases: ['/consumers', '/profile'] },
@@ -68,6 +62,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       title: 'System',
       items: [
         // { href: '/api-logs', label: 'API Logs', icon: FileText },
+        { href: '/pages', label: 'Pages', icon: FileText },
         { href: '/notifications', label: 'Notifications', icon: Bell },
         { href: '/notifications/compose', label: 'Push Notification', icon: Send },
         { href: '/contacts', label: 'Contacts', icon: Mail },
@@ -83,9 +78,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       <div className="border-b border-brand-border/70 px-5 py-5">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-primary text-sm font-black text-white shadow-[0_16px_34px_rgba(220,38,38,0.24)]">
-              TP
-            </span>
+            <img src="/logo.png" alt="TovaPulse" className="h-11 w-11 shrink-0 rounded-2xl shadow-[0_16px_34px_rgba(220,38,38,0.24)]" />
             <div className="min-w-0">
               <span className="block truncate text-lg font-bold tracking-tight text-foreground">TovaPulse</span>
               <span className="text-xs font-medium text-text-muted">Admin Control Center</span>

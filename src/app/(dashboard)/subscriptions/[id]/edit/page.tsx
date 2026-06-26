@@ -34,16 +34,17 @@ export default function EditPlanPage() {
   }
 
   return (
-    <PageShell
-      eyebrow="Billing"
-      title={`Edit: ${plan.name}`}
-      description="Update subscription plan details, pricing, and features."
-      actions={
+    <>
+      <div className="mb-4">
         <Button variant="outline" onClick={() => router.push(`/subscriptions/${planId}`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Cancel
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back
         </Button>
-      }
-    >
+      </div>
+      <PageShell
+        eyebrow="Billing"
+        title={`Edit: ${plan.name}`}
+        description="Update subscription plan details, pricing, and features."
+      >
       <PlanForm
         isSubmitting={updatePlan.isPending}
         initialValues={{
@@ -74,5 +75,6 @@ export default function EditPlanPage() {
         }}
       />
     </PageShell>
+    </>
   );
 }

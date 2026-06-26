@@ -21,8 +21,12 @@ const nextConfig: NextConfig = {
         destination: `${API_BACKEND}/api/v1/:path*`,
       },
       {
-        source: '/api/public/delete-account',
-        destination: `${API_BACKEND}/delete-account`,
+        source: '/api/public/delete-account/send-otp',
+        destination: `${API_BACKEND}/api/v1/public/delete-account/send-otp`,
+      },
+      {
+        source: '/api/public/delete-account/verify-otp',
+        destination: `${API_BACKEND}/api/v1/public/delete-account/verify-otp`,
       },
       {
         source: '/api/public/contact',

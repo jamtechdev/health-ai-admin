@@ -44,16 +44,17 @@ export default function EditCMSPage() {
   }
 
   return (
-    <PageShell 
-      eyebrow="Content Management" 
-      title={`Edit: ${page.title}`} 
-      description="Update page content and settings."
-      actions={
+    <>
+      <div className="mb-4">
         <Button variant="outline" onClick={() => router.push(`/pages/${pageId}`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Cancel
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back
         </Button>
-      }
-    >
+      </div>
+      <PageShell 
+        eyebrow="Content Management" 
+        title={`Edit: ${page.title}`} 
+        description="Update page content and settings."
+      >
       <PageForm 
         initialValues={{
           title: page.title,
@@ -64,5 +65,6 @@ export default function EditCMSPage() {
         onSubmit={handleSubmit} 
       />
     </PageShell>
+    </>
   );
 }

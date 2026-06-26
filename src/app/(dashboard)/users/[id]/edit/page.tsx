@@ -112,20 +112,26 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
   };
 
   return (
-    <PageShell
-      eyebrow="People"
-      title="Edit User"
-      description={user.email}
-      className="mx-auto max-w-3xl"
-      actions={
+    <>
+      <div className="mb-4">
         <Button variant="outline" onClick={() => router.push('/users')}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Back
         </Button>
-      }
-    >
+      </div>
+      <PageShell
+        eyebrow="People"
+        title="Edit User"
+        description={user.email}
+      >
 
       <div className="rounded-card border border-brand-border/80 bg-surface/85 p-4 shadow-soft sm:p-6">
         <div className="space-y-5">
+          <div className="flex justify-end">
+            <Button onClick={handleSave} disabled={updateUser.isPending}>
+              <Save className="mr-2 h-4 w-4" />
+              {updateUser.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </div>
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-surface-secondary">
               {avatar ? (
@@ -342,16 +348,9 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
           </div>
 
           {error && <p className="text-sm text-brand-critical">{error}</p>}
-
-          <div className="flex flex-col justify-end gap-3 border-t border-brand-border pt-4 sm:flex-row">
-            <Button variant="outline" onClick={() => router.push('/users')}>Cancel</Button>
-            <Button onClick={handleSave} disabled={updateUser.isPending}>
-              <Save className="mr-2 h-4 w-4" />
-              {updateUser.isPending ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </div>
         </div>
       </div>
     </PageShell>
+    </>
   );
 }

@@ -14,7 +14,7 @@ import { LandingWorkflowSection } from './landing-workflow-section';
 
 export function LandingPage() {
   return (
-    <motion.div className="relative h-full overflow-x-hidden overflow-y-auto bg-background text-foreground">
+    <motion.div className="relative bg-background text-foreground">
       <LandingBackground />
       <LandingHeader />
 

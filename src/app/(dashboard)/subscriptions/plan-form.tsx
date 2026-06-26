@@ -73,6 +73,11 @@ export function PlanForm({ initialValues, onSubmit, isSubmitting }: PlanFormProp
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
         <CardContent className="space-y-4 pt-6">
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isSubmitting}>
+              {initialValues?.name ? 'Update Plan' : 'Create Plan'}
+            </Button>
+          </div>
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-foreground">Name</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Plan name" required />
@@ -134,11 +139,6 @@ export function PlanForm({ initialValues, onSubmit, isSubmitting }: PlanFormProp
         </CardContent>
       </Card>
 
-      <div className="flex justify-end gap-3">
-        <Button type="submit" disabled={isSubmitting}>
-          {initialValues?.name ? 'Update Plan' : 'Create Plan'}
-        </Button>
-      </div>
     </form>
   );
 }

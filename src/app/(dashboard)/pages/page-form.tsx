@@ -35,6 +35,11 @@ export function PageForm({ initialValues, onSubmit }: PageFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
         <CardContent className="space-y-4 pt-6">
+          <div className="flex justify-end">
+            <Button type="submit">
+              {initialValues ? 'Update Page' : 'Create Page'}
+            </Button>
+          </div>
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-foreground">Title</label>
             <Input
@@ -93,11 +98,6 @@ export function PageForm({ initialValues, onSubmit }: PageFormProps) {
           </div>
         </CardContent>
       </Card>
-      <div className="flex justify-end gap-3">
-        <Button type="submit">
-          {initialValues ? 'Update Page' : 'Create Page'}
-        </Button>
-      </div>
     </form>
   );
 }

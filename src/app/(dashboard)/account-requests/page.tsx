@@ -42,7 +42,7 @@ function ConfirmActionModal({
             : `This will permanently delete ${request.user?.name ?? 'this user'} and all related data. This cannot be undone.`}
         </p>
         <div className="mt-6 flex justify-end gap-3">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button variant="outline" onClick={onClose}>Back</Button>
           <Button
             variant={isRevert ? 'secondary' : 'destructive'}
             onClick={onConfirm}

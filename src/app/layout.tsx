@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${geistMono.variable} h-full overflow-hidden`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${geistMono.variable} h-full`}>
       <head>
         {process.env.NODE_ENV === 'production' && (
           <Script
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         )}
       </head>
-      <body className="h-full antialiased overflow-hidden">
+      <body className="h-full antialiased">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

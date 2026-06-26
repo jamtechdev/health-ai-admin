@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, Plus, Trash2 } from 'lucide-react';
+import { Edit, Eye, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
@@ -79,6 +79,13 @@ export default function SubscriptionsPage() {
             title="View details"
           >
             <Eye className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => router.push(`/subscriptions/${row.id}/edit`)}
+            className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-orange-500"
+            title="Edit plan"
+          >
+            <Edit className="h-4 w-4" />
           </button>
           <button
             onClick={() => setDeleteId(row.id)}

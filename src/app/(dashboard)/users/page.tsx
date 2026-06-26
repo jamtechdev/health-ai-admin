@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Power, PowerOff, RotateCcw, Eye, Watch } from 'lucide-react';
+import { Edit, Trash2, Power, PowerOff, RotateCcw, Eye, Watch } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -88,7 +88,7 @@ function ConfirmDeleteModal({
           <Button variant="destructive" onClick={() => setMode('permanent')} className="justify-center">
             Permanent Delete — removes all data
           </Button>
-          <Button variant="outline" onClick={onClose} className="justify-center">Cancel</Button>
+          <Button variant="outline" onClick={onClose} className="justify-center">Back</Button>
         </div>
       </div>
     </div>
@@ -240,9 +240,9 @@ export default function UsersPage() {
             <button
               onClick={() => router.push(`/users/${row.id}/edit`)}
               className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-orange-500"
-              title="Edit"
+              title="Edit user"
             >
-              <Pencil className="h-4 w-4" />
+              <Edit className="h-4 w-4" />
             </button>
             {!isSuperAdmin && (
               <button

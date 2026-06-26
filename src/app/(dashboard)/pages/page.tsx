@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, Plus, Pencil, ExternalLink, Trash2 } from 'lucide-react';
+import { Edit, Eye, Plus, ExternalLink, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable, type Column } from '@/components/data-table';
 import { PageShell } from '@/components/ui/page-shell';
@@ -35,13 +35,13 @@ function ActionsRow({ row }: { row: PageRecord }) {
       >
         <Eye className="h-4 w-4" />
       </button>
-      <Link
-        href={`/pages/${row.id}/edit`}
+      <button
+        onClick={() => router.push(`/pages/${row.id}/edit`)}
         className="rounded p-1.5 cursor-pointer transition-colors hover:bg-surface-secondary text-orange-500"
-        title="Edit"
+        title="Edit page"
       >
-        <Pencil className="h-4 w-4" />
-      </Link>
+        <Edit className="h-4 w-4" />
+      </button>
       <a
         href={`/${row.slug}`}
         target="_blank"

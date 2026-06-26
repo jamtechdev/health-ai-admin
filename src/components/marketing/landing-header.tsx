@@ -14,9 +14,7 @@ export function LandingHeader({ showApiStatus = false }: LandingHeaderProps) {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3 rounded-2xl border border-brand-border/70 bg-surface/70 px-3 py-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-primary text-sm font-black text-white">
-              TP
-            </span>
+            <img src="/logo.png" alt="TovaPulse" className="h-9 w-9 rounded-xl" />
             <span className="text-lg font-bold tracking-tight text-foreground">TovaPulse</span>
           </div>
         </div>

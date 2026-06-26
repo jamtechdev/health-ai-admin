@@ -91,9 +91,7 @@ export default function LoginPage() {
       <div className="relative z-10 grid min-h-screen lg:grid-cols-[1.08fr_0.92fr]">
         <section className="hidden border-r border-brand-border/70 bg-surface/35 px-10 py-12 backdrop-blur-xl lg:flex lg:flex-col lg:justify-between xl:px-16">
           <Link href="/" className="inline-flex w-fit items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-primary text-base font-black text-white shadow-[0_16px_40px_rgba(220,38,38,0.24)]">
-              TP
-            </span>
+            <img src="/logo.png" alt="TovaPulse" className="h-12 w-12 rounded-2xl shadow-[0_16px_40px_rgba(220,38,38,0.24)]" />
             <span className="text-2xl font-bold tracking-tight">TovaPulse</span>
           </Link>
 
@@ -104,7 +102,7 @@ export default function LoginPage() {
             transition={{ duration: 0.4 }}
           >
             <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-[2rem] border border-brand-primary/30 bg-brand-primary-glow ring-1 ring-brand-primary/20">
-              <span className="text-3xl font-black text-brand-primary">TP</span>
+              <img src="/logo.png" alt="TovaPulse" className="h-24 w-24 rounded-[2rem]" />
             </div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-brand-primary">
               Admin Dashboard
@@ -132,9 +130,7 @@ export default function LoginPage() {
             <div className="mb-8 flex flex-col items-center text-center">
               <Link href="/" className="mb-7 inline-flex items-center justify-center lg:hidden">
                 <div className="flex items-center gap-3 rounded-2xl border border-brand-border/80 bg-background/45 px-4 py-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary text-sm font-black text-white">
-                    TP
-                  </span>
+                  <img src="/logo.png" alt="TovaPulse" className="h-10 w-10 rounded-xl" />
                   <span className="text-xl font-bold tracking-tight text-foreground">TovaPulse</span>
                 </div>
               </Link>

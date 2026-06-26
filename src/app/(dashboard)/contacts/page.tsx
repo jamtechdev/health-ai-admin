@@ -422,8 +422,8 @@ export default function ContactsPage() {
               onChange={(event) => setReplyMessage(event.target.value)}
               placeholder="Write a professional reply. The user will receive a branded TovaPulse email."
             />
-            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-              <Button variant="outline" onClick={() => setReplyingTo(null)}>Cancel</Button>
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
+              <Button variant="outline" onClick={() => setReplyingTo(null)}>Back</Button>
               <Button onClick={handleReply} disabled={replyMutation.isPending}>
                 {replyMutation.isPending ? 'Sending...' : 'Send reply'}
               </Button>
