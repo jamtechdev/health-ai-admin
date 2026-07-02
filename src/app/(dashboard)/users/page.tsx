@@ -166,7 +166,7 @@ export default function UsersPage() {
         <span className="flex items-center gap-1.5">
           {row.name}
           {row.activeSubscription?.status === 'active' && (
-            <BadgeCheck className="h-4 w-4 text-blue-500 shrink-0" title="Subscribed" />
+            <BadgeCheck className="h-4 w-4 text-blue-500 shrink-0" aria-label="Subscribed" />
           )}
         </span>
       ),
