@@ -1,3 +1,18 @@
+export interface UserSubscriptionRecord {
+  id: string;
+  planId: string;
+  planName: string | null;
+  status: 'active' | 'expired' | 'cancelled' | 'refunded' | 'pending';
+  platform: 'android' | 'ios' | null;
+  startDate: string;
+  expiryDate: string | null;
+  purchaseDate: string | null;
+  transactionId: string | null;
+  autoRenew: boolean;
+  isTrial: boolean;
+  Plan?: { name: string; planType: string; price?: number; durationDays?: number; description?: string | null };
+}
+
 export interface UserRecord {
   id: string;
   email: string;
@@ -8,6 +23,8 @@ export interface UserRecord {
   deletedAt?: string | null;
   createdAt: string;
   profile?: UserHealthProfileData | null;
+  activeSubscription?: UserSubscriptionRecord | null;
+  subscriptionHistory?: UserSubscriptionRecord[];
 }
 
 export interface UserHealthProfileData {

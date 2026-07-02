@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Pencil, Shield, Calendar, Mail, User, Activity, Clock } from 'lucide-react';
+import { ArrowLeft, Pencil, Shield, Calendar, User, Activity, Clock, CreditCard, BadgeCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageShell } from '@/components/ui/page-shell';
@@ -95,6 +95,99 @@ export default function UserViewPage() {
 
         {/* Roles & Activity Card */}
         <div className="lg:col-span-2 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-blue-500" />
+                Subscription
+                {user.activeSubscription && <BadgeCheck className="h-5 w-5 text-blue-500" />}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {user.activeSubscription ? (
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                    <span className="text-sm text-text-muted">Plan</span>
+                    <span className="font-semibold text-blue-600">{user.activeSubscription.Plan?.name ?? user.activeSubscription.planName ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                    <span className="text-sm text-text-muted">Type</span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      user.activeSubscription.Plan?.planType === 'premium' ? 'bg-blue-500/15 text-blue-600' : 'bg-surface-secondary text-text-muted'
+                    }`}>{user.activeSubscription.Plan?.planType ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                    <span className="text-sm text-text-muted">Status</span>
+                    <span className="rounded-full px-2 py-0.5 text-xs font-medium bg-brand-secondary/15 text-brand-secondary">{user.activeSubscription.status.toUpperCase()}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                    <span className="text-sm text-text-muted">Platform</span>
+                    <span className="font-medium capitalize">{user.activeSubscription.platform ?? 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                    <span className="text-sm text-text-muted">Start Date</span>
+                    <span className="font-medium">{new Date(user.activeSubscription.startDate).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                    <span className="text-sm text-text-muted">Expiry Date</span>
+                    <span className={`font-medium ${
+                      user.activeSubscription.expiryDate && new Date(user.activeSubscription.expiryDate) < new Date() ? 'text-red-500' : ''
+                    }`}>
+                      {user.activeSubscription.expiryDate ? new Date(user.activeSubscription.expiryDate).toLocaleDateString() : 'Lifetime'}
+                    </span>
+                  </div>
+                  {user.activeSubscription.purchaseDate && (
+                    <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                      <span className="text-sm text-text-muted">Purchase Date</span>
+                      <span className="font-medium">{new Date(user.activeSubscription.purchaseDate).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
+                    <span className="text-sm text-text-muted">Auto Renew</span>
+                    <span className="font-medium">{user.activeSubscription.autoRenew ? 'Yes' : 'No'}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm text-text-muted">Trial</span>
+                    <span className="font-medium">{user.activeSubscription.isTrial ? 'Yes' : 'No'}</span>
+                  </div>
+                  {user.activeSubscription.Plan?.price !== undefined && (
+                    <div className="mt-3 p-3 rounded-lg bg-blue-500/5 border border-blue-500/20">
+                      <span className="text-xs text-blue-600 font-medium block mb-1">Plan Price</span>
+                      <span className="text-lg font-bold">${user.activeSubscription.Plan.price}</span>
+                      {user.activeSubscription.Plan.durationDays && (
+                        <span className="text-xs text-text-muted ml-1">/ {user.activeSubscription.Plan.durationDays} days</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-text-muted italic text-sm">No active subscription.</div>
+              )}
+              {(user as any).subscriptionHistory?.filter((s: any) => s.status !== 'active').length > 0 && (
+                <div className="mt-4">
+                  <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-2">History</p>
+                  <div className="space-y-2">
+                    {(user as any).subscriptionHistory
+                      .filter((s: any) => s.status !== 'active')
+                      .map((s: any) => (
+                        <div key={s.id} className="flex justify-between items-center text-sm py-1.5 border-b border-brand-border/30">
+                          <span className="text-text-muted">{s.Plan?.name ?? s.planName ?? '—'}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-text-muted">{s.expiryDate ? new Date(s.expiryDate).toLocaleDateString() : '—'}</span>
+                            <span className={`rounded-full px-1.5 py-0.5 text-xs font-medium ${
+                              s.status === 'expired' ? 'bg-surface-secondary text-text-muted'
+                              : s.status === 'cancelled' ? 'bg-amber-500/15 text-amber-600'
+                              : 'bg-brand-critical/15 text-brand-critical'
+                            }`}>{s.status}</span>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

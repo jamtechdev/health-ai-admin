@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Edit, Trash2, Power, PowerOff, RotateCcw, Eye, Watch } from 'lucide-react';
+import { Edit, Trash2, Power, PowerOff, RotateCcw, Eye, Watch, BadgeCheck } from 'lucide-react';
 import { DataTable, type Column } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -159,8 +159,35 @@ export default function UsersPage() {
   };
 
   const columns: Column<UserRecord>[] = [
-    { key: 'name', header: 'Name' },
+    {
+      key: 'name',
+      header: 'Name',
+      render: (row) => (
+        <span className="flex items-center gap-1.5">
+          {row.name}
+          {row.activeSubscription?.status === 'active' && (
+            <BadgeCheck className="h-4 w-4 text-blue-500 shrink-0" title="Subscribed" />
+          )}
+        </span>
+      ),
+    },
     { key: 'email', header: 'Email' },
+    {
+      key: 'activeSubscription',
+      header: 'Subscription',
+      render: (row) => {
+        const sub = row.activeSubscription;
+        if (!sub) return <span className="text-text-muted text-xs">—</span>;
+        const planType = (sub.Plan?.planType ?? '').toLowerCase();
+        return (
+          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+            planType === 'premium' ? 'bg-blue-500/15 text-blue-600' : 'bg-surface-secondary text-text-muted'
+          }`}>
+            {sub.Plan?.name ?? sub.planName ?? planType}
+          </span>
+        );
+      },
+    },
     {
       key: 'status',
       header: 'Status',
