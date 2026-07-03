@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { Lock } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { authService } from '@/services/auth.service';
@@ -30,6 +30,7 @@ export default function LoginPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (hasHydrated && (isAuthenticated || hasStoredSession())) {
@@ -162,13 +163,23 @@ export default function LoginPage() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-text-secondary">Password</label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  className="h-12 border-brand-border/80 bg-background/50"
-                  {...register('password')}
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    className="h-12 border-brand-border/80 bg-background/50 pr-10"
+                    {...register('password')}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="mt-1 text-xs text-brand-critical">{errors.password.message}</p>
                 )}
