@@ -1,12 +1,14 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Pencil, Shield, Calendar, User, Activity, Clock, CreditCard, BadgeCheck } from 'lucide-react';
+import { ArrowLeft, Pencil, Shield, Calendar, User, Activity, Clock, CreditCard, BadgeCheck, RefreshCw, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageShell } from '@/components/ui/page-shell';
 import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useUser } from '@/hooks/api/use-users';
+import { useCheckUserSubscription } from '@/hooks/api/use-subscriptions';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
 
 export default function UserViewPage() {
@@ -16,6 +18,20 @@ export default function UserViewPage() {
 
   const { data: user, isLoading } = useUser(userId);
   const isDelayedLoading = useDelayedLoading(isLoading);
+
+  const storeCheck = useCheckUserSubscription();
+  const storeResult = storeCheck.data;
+
+  const handleStoreCheck = () => {
+    storeCheck.mutate(userId, {
+      onError: (err: unknown) => {
+        const message =
+          (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+          'Failed to check subscription with the store';
+        toast.error(message);
+      },
+    });
+  };
 
   if (isDelayedLoading) {
     return <VitalsLoader label="Loading user profile" />;
@@ -97,13 +113,114 @@ export default function UserViewPage() {
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-blue-500" />
-                Subscription
-                {user.activeSubscription && <BadgeCheck className="h-5 w-5 text-blue-500" />}
-              </CardTitle>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5 text-blue-500" />
+                  Subscription
+                  {user.activeSubscription && <BadgeCheck className="h-5 w-5 text-blue-500" />}
+                </CardTitle>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleStoreCheck}
+                  disabled={storeCheck.isPending}
+                >
+                  <RefreshCw className={`mr-2 h-4 w-4 ${storeCheck.isPending ? 'animate-spin' : ''}`} />
+                  {storeCheck.isPending ? 'Checking store…' : 'Check with store'}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
+              {storeResult && (
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">
+                      Live store status
+                    </p>
+                    {storeResult.store?.source && (
+                      <span className="rounded-full px-2 py-0.5 text-xs font-medium bg-blue-500/10 text-blue-600">
+                        {storeResult.store.source === 'app_store' ? 'Apple App Store' : 'Google Play'}
+                        {storeResult.store.environment ? ` · ${storeResult.store.environment}` : ''}
+                      </span>
+                    )}
+                  </div>
+
+                  {storeResult.storeError ? (
+                    <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-sm">
+                      <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+                      <span className="text-amber-700">{storeResult.storeError}</span>
+                    </div>
+                  ) : !storeResult.hasStorePurchase ? (
+                    <div className="rounded-lg border border-brand-border/50 bg-surface-secondary/40 p-3 text-sm text-text-muted italic">
+                      No store-backed (Apple/Google) purchase found for this user.
+                    </div>
+                  ) : storeResult.store ? (
+                    <div className={`rounded-lg border p-3 ${
+                      storeResult.store.status.is_subscribed
+                        ? 'border-brand-secondary/30 bg-brand-secondary/5'
+                        : 'border-red-500/30 bg-red-500/5'
+                    }`}>
+                      <div className="flex items-center gap-2 mb-3">
+                        {storeResult.store.status.is_subscribed ? (
+                          <CheckCircle2 className="h-5 w-5 text-brand-secondary" />
+                        ) : (
+                          <XCircle className="h-5 w-5 text-red-500" />
+                        )}
+                        <span className="font-semibold">
+                          {storeResult.store.status.is_subscribed
+                            ? 'Active on store'
+                            : storeResult.store.status.is_expired
+                              ? 'Expired on store'
+                              : 'Not subscribed'}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                        <div className="flex justify-between col-span-2 sm:col-span-1">
+                          <span className="text-text-muted">Product</span>
+                          <span className="font-medium truncate ml-2" title={storeResult.store.status.productId ?? ''}>
+                            {storeResult.store.status.productId ?? '—'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between col-span-2 sm:col-span-1">
+                          <span className="text-text-muted">Plan</span>
+                          <span className="font-medium">{storeResult.store.status.subscription?.plan_name ?? '—'}</span>
+                        </div>
+                        <div className="flex justify-between col-span-2 sm:col-span-1">
+                          <span className="text-text-muted">Expires</span>
+                          <span className="font-medium">
+                            {storeResult.store.status.subscription?.expires_date
+                              ? new Date(storeResult.store.status.subscription.expires_date).toLocaleString()
+                              : '—'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between col-span-2 sm:col-span-1">
+                          <span className="text-text-muted">Days left</span>
+                          <span className="font-medium">{storeResult.store.status.subscription?.days_remaining ?? 0}</span>
+                        </div>
+                        <div className="flex justify-between col-span-2 sm:col-span-1">
+                          <span className="text-text-muted">Auto renew</span>
+                          <span className="font-medium">{storeResult.store.status.subscription?.auto_renew ? 'Yes' : 'No'}</span>
+                        </div>
+                        {storeResult.store.subscriptionState && (
+                          <div className="flex justify-between col-span-2 sm:col-span-1">
+                            <span className="text-text-muted">State</span>
+                            <span className="font-medium text-xs">{storeResult.store.subscriptionState}</span>
+                          </div>
+                        )}
+                        {storeResult.store.status.subscription?.original_transaction_id && (
+                          <div className="flex justify-between col-span-2">
+                            <span className="text-text-muted">Transaction</span>
+                            <span className="font-mono text-xs truncate ml-2">
+                              {storeResult.store.status.subscription.original_transaction_id}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              )}
+
               {user.activeSubscription ? (
                 <div className="space-y-3">
                   <div className="flex justify-between items-center py-2 border-b border-brand-border/50">
