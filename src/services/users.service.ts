@@ -16,7 +16,7 @@ class UsersService extends BaseService {
   }
 
   update(id: string, payload: UpdateUserPayload) {
-    return this.patch<UserRecord>(`/users/${id}`, payload);
+    return this.post<UserRecord>(`/users/${id}`, payload);
   }
 
   remove(id: string, action?: 'soft' | 'hard', reason?: string) {
