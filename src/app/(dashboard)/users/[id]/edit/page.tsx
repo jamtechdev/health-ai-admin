@@ -12,6 +12,7 @@ import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useUser, useUpdateUser } from '@/hooks/api/use-users';
 import { api } from '@/lib/api/client';
 import { API_BASE_URL } from '@/constants/api';
+import { getApiErrorMessage } from '@/lib/api/response';
 import type { UpdateUserPayload, UserRecord } from '@/types/user';
 import type { RoleRecord } from '@/types/role';
 import type { UploadRecord } from '@/types/upload';
@@ -76,9 +77,24 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
   }, []);
 
   const handleSave = async () => {
-    console.log('Saving user...', { name, email, avatar });
     if (!name.trim() || !email.trim()) {
       setError('Name and email are required');
+      return;
+    }
+    if (age !== null && (age < 1 || age > 150)) {
+      setError('Age must be between 1 and 150');
+      return;
+    }
+    if (weightKg !== null && (weightKg < 1 || weightKg > 999)) {
+      setError('Weight must be between 1 and 999');
+      return;
+    }
+    if (heightCm !== null && (heightCm < 1 || heightCm > 999)) {
+      setError('Height must be between 1 and 999');
+      return;
+    }
+    if (sleepGoal !== null && (sleepGoal < 1 || sleepGoal > 24)) {
+      setError('Sleep goal must be between 1 and 24 hours');
       return;
     }
     setError('');
@@ -100,14 +116,12 @@ function EditUserForm({ user, userId }: { user: UserRecord; userId: string }) {
         activityLevel: activityLevel ?? null,
         sleepGoal: sleepGoal !== null ? Number(sleepGoal) : null,
       };
-      console.log('Payload:', payload);
       if (password.trim()) payload.password = password;
       await updateUser.mutateAsync({ id: userId, payload });
       toast.success('User updated successfully');
       router.push('/users');
     } catch (err) {
-      console.error('Save failed:', err);
-      setError('Failed to update user');
+      setError(getApiErrorMessage(err, 'Failed to update user'));
     }
   };
 
