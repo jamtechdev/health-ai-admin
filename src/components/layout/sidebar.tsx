@@ -19,6 +19,7 @@ import {
   FileText,
   Send,
   Mail,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUnreadNotificationsCount } from '@/hooks/api/use-notifications';
@@ -53,6 +54,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       title: 'Health AI',
       items: [
         { href: '/wearables', label: 'Wearables', icon: Watch },
+        { href: '/health-history', label: 'Health History', icon: BarChart3 },
         { href: '/insights', label: 'AI Insights', icon: Sparkles },
         { href: '/subscriptions', label: 'Plans', icon: CreditCard },
         { href: '/device-sync-logs', label: 'Sync Logs', icon: RadioTower },

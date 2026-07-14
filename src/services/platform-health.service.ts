@@ -10,6 +10,7 @@ import type {
   DeviceSyncLogRecord,
   HealthMetricRecord,
   HealthPlatformOverview,
+  HistoryResponse,
   SubscriptionRecord,
 } from '@/types/platform-health';
 
@@ -68,6 +69,14 @@ class PlatformHealthService extends BaseService {
 
   adminApiLogs(params?: ListParams) {
     return this.getPaginated<ApiLogRecord>('/admin/analytics/api-logs', params);
+  }
+
+  dailySnapshotsHistory(from: string, to: string) {
+    return this.get<HistoryResponse>('/daily-snapshots', { history: 'true', from, to });
+  }
+
+  consumerDailySnapshots(userId: string, from: string, to: string) {
+    return this.get<HistoryResponse>(`/admin/health/consumers/${userId}/daily-snapshots`, { from, to });
   }
 }
 

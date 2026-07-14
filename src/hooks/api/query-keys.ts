@@ -48,6 +48,10 @@ export const queryKeys = {
       ['platform-health', 'admin-subscriptions', page, search] as const,
     adminSyncLogs: (page: number) => ['platform-health', 'admin-sync-logs', page] as const,
     adminApiLogs: (page: number) => ['platform-health', 'admin-api-logs', page] as const,
+    dailySnapshots: (from: string, to: string) =>
+      ['platform-health', 'daily-snapshots', from, to] as const,
+    consumerDailySnapshots: (userId: string, from: string, to: string) =>
+      ['platform-health', 'consumer-daily-snapshots', userId, from, to] as const,
   },
   accountRequests: {
     all: ['account-requests'] as const,

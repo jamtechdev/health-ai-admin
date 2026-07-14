@@ -120,6 +120,42 @@ export interface ConsumerTableRow extends ConsumerListItem {
   id: string;
 }
 
+export interface MetricGridItem {
+  label: string;
+  value: string;
+  unit: string;
+}
+
+export interface TrendSeries {
+  recovery: number[];
+  steps: number[];
+  heartRate: number[];
+}
+
+export interface HistorySession {
+  id: string;
+  name: string;
+  value: number;
+  unit: string;
+  recordedAt: string;
+}
+
+export interface HistoryRange {
+  from: string;
+  to: string;
+  label: string;
+  days: number;
+  helperText: string;
+}
+
+export interface HistoryResponse {
+  range: HistoryRange;
+  metrics: MetricGridItem[];
+  trends: TrendSeries;
+  sessions: HistorySession[];
+  activitySummary: Record<string, unknown>[];
+}
+
 export interface ConsumerDashboard {
   profile: UserHealthProfile;
   devices: ConnectedDeviceRecord[];

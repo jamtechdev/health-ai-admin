@@ -118,3 +118,18 @@ export function useAdminApiLogs(page: number) {
     queryFn: () => platformHealthService.adminApiLogs({ page, limit: 20 }),
   });
 }
+
+export function useAdminDailySnapshots(from: string, to: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.dailySnapshots(from, to),
+    queryFn: () => platformHealthService.dailySnapshotsHistory(from, to),
+  });
+}
+
+export function useConsumerDailySnapshots(userId: string, from: string, to: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.consumerDailySnapshots(userId, from, to),
+    queryFn: () => platformHealthService.consumerDailySnapshots(userId, from, to),
+    enabled: Boolean(userId),
+  });
+}
