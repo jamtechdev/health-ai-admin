@@ -56,7 +56,7 @@ export default function WearablesPage() {
       eyebrow="Health Signals"
       title="Wearables"
       
-      description="Monitor Apple Health, Oura, Fitbit, Garmin, and Health Connect device connections."
+      description="Monitor Apple Health, Oura, and Health Connect device connections."
     >
       <DataTable
         columns={columns}

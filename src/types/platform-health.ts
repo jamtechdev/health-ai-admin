@@ -50,7 +50,7 @@ export interface AiInsightRecord {
 export interface ConnectedDeviceRecord {
   id: string;
   userId: string;
-  provider: 'apple_health' | 'oura' | 'fitbit' | 'garmin' | 'health_connect';
+  provider: 'apple_health' | 'oura' | 'health_connect';
   status: 'connected' | 'disconnected' | 'error';
   lastSyncAt?: string | null;
   metadata?: object | null;
@@ -69,7 +69,7 @@ export interface SubscriptionRecord {
 export interface DeviceSyncLogRecord {
   id: string;
   userId: string;
-  provider: 'apple_health' | 'oura' | 'fitbit' | 'garmin' | 'health_connect';
+  provider: 'apple_health' | 'oura' | 'health_connect';
   status: 'queued' | 'running' | 'success' | 'failed';
   startedAt?: string | null;
   finishedAt?: string | null;

@@ -58,7 +58,7 @@ export const modules = [
   {
     icon: Smartphone,
     title: 'Wearable Integrations',
-    description: 'Manage Apple Health, Oura, Fitbit, Garmin, sync logs, failed retries, and connection status.',
+    description: 'Manage Apple Health, Oura, sync logs, failed retries, and connection status.',
   },
   {
     icon: Shield,
