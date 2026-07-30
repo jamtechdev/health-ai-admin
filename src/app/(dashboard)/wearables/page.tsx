@@ -15,7 +15,7 @@ export default function WearablesPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useAdminWearables(page, search);
+  const { data, isLoading, isFetching } = useAdminWearables(page, search);
   const rows = data?.items ?? [];
 
   const columns: Column<ConnectedDeviceRecord>[] = [
@@ -61,7 +61,7 @@ export default function WearablesPage() {
       <DataTable
         columns={columns}
         data={rows}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         search={search}
         onSearchChange={(value) => {
           setSearch(value);
@@ -69,6 +69,8 @@ export default function WearablesPage() {
         }}
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 20}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
         onExport={async () => {
           try {

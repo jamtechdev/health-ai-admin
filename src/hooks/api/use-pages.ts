@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { pagesService } from '@/services/pages.service';
 import { queryKeys } from './query-keys';
 import type { PageRecord } from '@/types/page';
@@ -10,6 +10,7 @@ export function usePagesList(page: number, search: string) {
     queryKey: queryKeys.pages.list(page, search),
     queryFn: () =>
       pagesService.list({ page, limit: 10, search: search || undefined }),
+    placeholderData: keepPreviousData,
   });
 }
 

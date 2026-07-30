@@ -52,6 +52,8 @@ export default function DeviceSyncLogsPage() {
         isLoading={isLoading}
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 20}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
         onExport={async () => {
           try {

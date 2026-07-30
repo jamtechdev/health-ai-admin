@@ -186,6 +186,8 @@ export default function AccountRequestsPage() {
           isLoading={isLoading}
           page={page}
           totalPages={data?.meta?.totalPages ?? 1}
+          pageSize={data?.meta?.limit ?? 10}
+          totalItems={data?.meta?.total}
           onPageChange={setPage}
           emptyMessage="No deletion requests found."
         />

@@ -108,6 +108,25 @@ input[type='button'] {
   color: var(--text-primary);
 }
 
+/* Thin, unobtrusive scrollbar for sidebar nav only */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--border) 80%, transparent) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--border) 85%, transparent);
+}
+
 /* ── TipTap Editor Styles ── */
 .tiptap {
   color: var(--text-primary);

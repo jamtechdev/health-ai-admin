@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { usersService } from '@/services/users.service';
 import { queryKeys } from './query-keys';
 import type { CreateUserPayload, UpdateUserPayload } from '@/types/user';
@@ -13,6 +13,7 @@ export function useUsersList(page: number, search: string) {
       if (search) params.search = search;
       return usersService.list(params);
     },
+    placeholderData: keepPreviousData,
   });
 }
 

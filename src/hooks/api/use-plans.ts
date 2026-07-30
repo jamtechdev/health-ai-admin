@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { plansService } from '@/services/plans.service';
 import { queryKeys } from './query-keys';
 import type { PlanFeature } from '@/types/plan';
@@ -22,6 +22,7 @@ export function usePlansList(page: number, search: string) {
     queryKey: queryKeys.plans.list(page, search),
     queryFn: () =>
       plansService.list({ page, limit: 10, search: search || undefined }),
+    placeholderData: keepPreviousData,
   });
 }
 

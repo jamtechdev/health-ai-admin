@@ -32,7 +32,11 @@ export function PageShell({
           <h2 className={cn("mt-1 text-2xl font-bold tracking-tight sm:text-3xl", titleColor)}>{title}</h2>
           {description && <p className="mt-2 max-w-3xl text-sm leading-6 text-text-muted">{description}</p>}
         </div>
-        {actions && <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">{actions}</div>}
+        {actions && (
+          <div className="relative z-0 flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+            {actions}
+          </div>
+        )}
       </div>
       {children}
     </section>

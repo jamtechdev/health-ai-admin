@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
@@ -13,16 +13,18 @@ import {
   CreditCard,
   LineChart,
   RadioTower,
-  Activity,
   X,
   AlertTriangle,
   FileText,
   Send,
   Mail,
   BarChart3,
+  LogOut,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUnreadNotificationsCount } from '@/hooks/api/use-notifications';
+import { useAuthStore } from '@/store/auth.store';
+import { authService } from '@/services/auth.service';
 
 interface NavItem {
   href: string;
@@ -33,7 +35,20 @@ interface NavItem {
 
 export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onClose?: () => void }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const logout = useAuthStore((s) => s.logout);
   const { data: unreadCount } = useUnreadNotificationsCount();
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch {
+      /* ignore */
+    }
+    logout();
+    onNavigate?.();
+    router.push('/login');
+  };
 
   const navGroups: { title: string; items: NavItem[] }[] = [
     {
@@ -63,40 +78,46 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
     {
       title: 'System',
       items: [
-        // { href: '/api-logs', label: 'API Logs', icon: FileText },
         { href: '/pages', label: 'Pages', icon: FileText },
         { href: '/notifications', label: 'Notifications', icon: Bell },
         { href: '/notifications/compose', label: 'Push Notification', icon: Send },
-        { href: '/contacts', label: 'Contacts', icon: Mail },
+        { href: '/contacts', label: 'Contact Requests', icon: Mail },
         { href: '/activity-logs', label: 'Activity Logs', icon: History },
-        // { href: '/audit-logs', label: 'Audit Logs', icon: FileText },
         { href: '/settings', label: 'Settings', icon: Settings },
       ],
     },
   ];
 
   return (
-    <aside className="flex h-full w-72 max-w-[86vw] flex-col border-r border-brand-border/80 bg-background/95 shadow-[24px_0_80px_rgba(0,0,0,0.32)] backdrop-blur-xl lg:w-72">
-      <div className="border-b border-brand-border/70 px-5 py-5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <img src="/logo.png" alt="TovaPulse" className="h-11 w-11 shrink-0 rounded-2xl shadow-[0_16px_34px_rgba(220,38,38,0.24)]" />
-            <div className="min-w-0">
-              <span className="block truncate text-lg font-bold tracking-tight text-foreground">TovaPulse</span>
-              <span className="text-xs font-medium text-text-muted">Admin Control Center</span>
-            </div>
+    <aside className="flex h-full w-72 max-w-[86vw] flex-col overflow-hidden border-r border-brand-border bg-background lg:w-72">
+      {/* Match main header height (h-16) so the top seam aligns cleanly */}
+      <div className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-brand-border px-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <img
+            src="/logo.png"
+            alt="TovaPulse"
+            className="h-9 w-9 shrink-0 rounded-xl"
+          />
+          <div className="min-w-0">
+            <span className="block truncate text-base font-bold tracking-tight text-foreground">
+              TovaPulse
+            </span>
+            <span className="block truncate text-[11px] font-medium text-text-muted">
+              Admin Control Center
+            </span>
           </div>
-          <button
-            type="button"
-            className="rounded-xl p-2 text-text-muted transition hover:bg-surface-secondary hover:text-foreground lg:hidden"
-            onClick={onClose}
-            aria-label="Close sidebar"
-          >
-            <X className="h-4 w-4" />
-          </button>
         </div>
+        <button
+          type="button"
+          className="rounded-lg p-2 text-text-muted transition hover:bg-surface-secondary hover:text-foreground lg:hidden"
+          onClick={onClose}
+          aria-label="Close sidebar"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
-      <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
+
+      <nav className="sidebar-scroll flex-1 space-y-5 overflow-y-auto overflow-x-hidden px-3 py-4">
         {navGroups.map((group) => (
           <div key={group.title} className="space-y-1">
             <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-disabled">
@@ -114,7 +135,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
                       (pathname === s || pathname.startsWith(`${s}/`)),
                   )) ||
                 item.aliases?.some((alias) => pathname === alias || pathname.startsWith(`${alias}/`));
-              
+
               const isNotifications = item.href === '/notifications';
 
               return (
@@ -125,7 +146,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
                   className={cn(
                     'group relative flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-all',
                     active
-                      ? 'bg-brand-primary/15 text-brand-primary shadow-[0_18px_42px_rgba(220,38,38,0.14)]'
+                      ? 'bg-brand-primary/15 text-brand-primary'
                       : 'text-text-secondary hover:bg-surface-secondary/80 hover:text-foreground',
                   )}
                 >
@@ -141,25 +162,29 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
                   </span>
                   <span className="truncate">{item.label}</span>
                   {isNotifications && !!unreadCount && unreadCount > 0 && (
-                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-primary px-1 text-[10px] font-bold text-white shadow-[0_4px_12px_rgba(220,38,38,0.3)]">
+                    <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-primary px-1 text-[10px] font-bold text-white">
                       {unreadCount > 99 ? '99+' : unreadCount}
                     </span>
                   )}
-                  {active && <span className="absolute inset-y-3 right-2 w-1 rounded-full bg-brand-primary" />}
+                  {active && (
+                    <span className="absolute inset-y-3 right-2 w-1 rounded-full bg-brand-primary" />
+                  )}
                 </Link>
               );
             })}
           </div>
         ))}
       </nav>
-      <div className="border-t border-brand-border/70 p-4">
-        <div className="rounded-2xl border border-brand-border/80 bg-surface/70 p-3">
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <Activity className="h-4 w-4 text-brand-primary" />
-            Live Operations
-          </div>
-          <p className="mt-1 text-xs leading-5 text-text-muted">API, users, wearables, and insights are managed here.</p>
-        </div>
+
+      <div className="shrink-0 border-t border-brand-border p-4">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-brand-primary to-[#b91c1c] px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(220,38,38,0.28)] transition hover:brightness-110 active:scale-[0.99]"
+        >
+          <LogOut className="h-4 w-4" />
+          Log Out
+        </button>
       </div>
     </aside>
   );

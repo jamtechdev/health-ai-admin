@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { rolesService } from '@/services/roles.service';
 import { queryKeys } from './query-keys';
 
@@ -9,6 +9,7 @@ export function useRolesList(page: number, search: string) {
     queryKey: queryKeys.roles.list(page, search),
     queryFn: () =>
       rolesService.list({ page, limit: 10, search: search || undefined }),
+    placeholderData: keepPreviousData,
   });
 }
 

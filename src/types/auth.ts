@@ -3,7 +3,8 @@ import type { User } from '@/store/auth.store';
 export interface LoginPayload {
   email: string;
   password: string;
-  client?: 'admin' | 'app';
+  /** Admin website must send `admin`. Mobile omits this or sends `app`. */
+  client: 'admin';
 }
 
 export interface LoginResult {

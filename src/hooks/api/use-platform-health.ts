@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { platformHealthService } from '@/services/platform-health.service';
 import { queryKeys } from './query-keys';
@@ -16,6 +16,7 @@ export function useConsumersList(page: number, search: string) {
   return useQuery({
     queryKey: queryKeys.platformHealth.consumers(page, search),
     queryFn: () => platformHealthService.listConsumers({ page, limit: 20, search }),
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -88,6 +89,7 @@ export function useAdminWearables(page: number, search: string) {
   return useQuery({
     queryKey: queryKeys.platformHealth.adminWearables(page, search),
     queryFn: () => platformHealthService.adminWearables({ page, limit: 20, search }),
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -95,6 +97,7 @@ export function useAdminInsights(page: number, search: string) {
   return useQuery({
     queryKey: queryKeys.platformHealth.adminInsights(page, search),
     queryFn: () => platformHealthService.adminInsights({ page, limit: 20, search }),
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -102,6 +105,7 @@ export function useAdminSubscriptions(page: number, search: string) {
   return useQuery({
     queryKey: queryKeys.platformHealth.adminSubscriptions(page, search),
     queryFn: () => platformHealthService.adminSubscriptions({ page, limit: 20, search }),
+    placeholderData: keepPreviousData,
   });
 }
 

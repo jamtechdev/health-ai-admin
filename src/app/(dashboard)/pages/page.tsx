@@ -76,7 +76,7 @@ function ActionsRow({ row }: { row: PageRecord }) {
 export default function PagesPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = usePagesList(page, search);
+  const { data, isLoading, isFetching } = usePagesList(page, search);
 
   const columns: Column<PageRecord>[] = [
     { key: 'title', header: 'Title' },
@@ -117,11 +117,13 @@ export default function PagesPage() {
       <DataTable
         columns={columns}
         data={data?.items ?? []}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         search={search}
         onSearchChange={setSearch}
         page={page}
         totalPages={data?.meta?.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 10}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
         emptyMessage="No pages found"
       />

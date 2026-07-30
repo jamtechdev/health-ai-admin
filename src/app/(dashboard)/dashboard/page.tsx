@@ -79,7 +79,7 @@ export default function DashboardPage() {
               href="/contacts"
               className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground w-full sm:w-auto"
             >
-              Open contacts
+              Open contact requests
             </Link>
           </CardHeader>
           <CardContent className="space-y-4">

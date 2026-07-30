@@ -99,7 +99,7 @@ export default function UsersPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useUsersList(page, search);
+  const { data, isLoading, isFetching } = useUsersList(page, search);
   const [deletingUser, setDeletingUser] = useState<{ user: UserRecord; action: 'soft' | 'hard' } | null>(null);
 
   const updateUser = useUpdateUser();
@@ -315,7 +315,7 @@ export default function UsersPage() {
       <DataTable
         columns={columns}
         data={data?.items ?? []}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         search={search}
         onSearchChange={(v) => {
           setSearch(v);
@@ -323,6 +323,8 @@ export default function UsersPage() {
         }}
         page={page}
         totalPages={data?.meta?.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 10}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
         onExport={handleExport}
         emptyMessage="No users found."

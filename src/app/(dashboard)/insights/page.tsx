@@ -41,7 +41,7 @@ export default function InsightsPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useAdminInsights(page, search);
+  const { data, isLoading, isFetching } = useAdminInsights(page, search);
   const rows = data?.items ?? [];
 
   const columnsWithRouter: Column<AiInsightRecord>[] = columns.map(col => {
@@ -71,7 +71,7 @@ export default function InsightsPage() {
       <DataTable
         columns={columnsWithRouter}
         data={rows}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         search={search}
         onSearchChange={(value) => {
           setSearch(value);
@@ -79,6 +79,8 @@ export default function InsightsPage() {
         }}
         page={page}
         totalPages={data?.meta.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 20}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
         onExport={async () => {
           try {

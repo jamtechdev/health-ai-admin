@@ -13,7 +13,7 @@ export default function ConsumersPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useConsumersList(page, search);
+  const { data, isLoading, isFetching } = useConsumersList(page, search);
 
   const columns: Column<ConsumerTableRow>[] = [
     {
@@ -87,7 +87,7 @@ export default function ConsumersPage() {
       <DataTable
         columns={columns}
         data={rows}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         search={search}
         onSearchChange={(v) => {
           setSearch(v);
@@ -95,6 +95,8 @@ export default function ConsumersPage() {
         }}
         page={page}
         totalPages={data?.meta?.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 20}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
         emptyMessage="No app users yet. Users appear here after mobile app registration."
       />

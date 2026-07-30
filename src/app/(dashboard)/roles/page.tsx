@@ -12,7 +12,7 @@ export default function RolesPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = useRolesList(page, search);
+  const { data, isLoading, isFetching } = useRolesList(page, search);
 
   const columns: Column<RoleRecord>[] = [
     { key: 'name', header: 'Name' },
@@ -44,11 +44,13 @@ export default function RolesPage() {
       <DataTable
         columns={columns}
         data={data?.items ?? []}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         search={search}
         onSearchChange={setSearch}
         page={page}
         totalPages={data?.meta?.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 10}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
       />
     </PageShell>

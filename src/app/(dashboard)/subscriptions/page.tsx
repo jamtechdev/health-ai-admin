@@ -17,7 +17,7 @@ export default function SubscriptionsPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data, isLoading } = usePlansList(page, search);
+  const { data, isLoading, isFetching } = usePlansList(page, search);
   const deletePlan = useDeletePlan();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
@@ -116,7 +116,7 @@ export default function SubscriptionsPage() {
       <DataTable
         columns={columns}
         data={data?.items ?? []}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         search={search}
         onSearchChange={(value) => {
           setSearch(value);
@@ -124,6 +124,8 @@ export default function SubscriptionsPage() {
         }}
         page={page}
         totalPages={data?.meta?.totalPages ?? 1}
+        pageSize={data?.meta?.limit ?? 10}
+        totalItems={data?.meta?.total}
         onPageChange={setPage}
         onExport={async () => {
           try {
