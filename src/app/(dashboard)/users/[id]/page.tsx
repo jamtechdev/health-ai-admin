@@ -1,15 +1,178 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Pencil, Shield, Calendar, User, Activity, Clock, CreditCard, BadgeCheck, RefreshCw, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Pencil, Shield, Calendar, User, Activity, Clock, CreditCard, BadgeCheck, RefreshCw, CheckCircle2, XCircle, AlertTriangle, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { PageShell } from '@/components/ui/page-shell';
 import { VitalsLoader } from '@/components/ui/vitals-loader';
 import { useUser } from '@/hooks/api/use-users';
-import { useCheckUserSubscription } from '@/hooks/api/use-subscriptions';
+import { useCheckUserSubscription, useGrantPro } from '@/hooks/api/use-subscriptions';
 import { useDelayedLoading } from '@/hooks/use-delayed-loading';
+import type { GrantProPayload } from '@/types/subscription';
+
+type GrantMode = 'unlimited' | 'duration' | 'until';
+
+const DURATION_PRESETS = [
+  { label: '7 days', days: 7 },
+  { label: '30 days', days: 30 },
+  { label: '90 days', days: 90 },
+  { label: '1 year', days: 365 },
+] as const;
+
+function GrantProModal({
+  open,
+  onClose,
+  userName,
+  isPending,
+  onGrant,
+}: {
+  open: boolean;
+  onClose: () => void;
+  userName: string;
+  isPending: boolean;
+  onGrant: (payload: GrantProPayload) => void;
+}) {
+  const [mode, setMode] = useState<GrantMode>('unlimited');
+  const [durationDays, setDurationDays] = useState(30);
+  const [customDays, setCustomDays] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+
+  if (!open) return null;
+
+  const minDate = new Date();
+  minDate.setDate(minDate.getDate() + 1);
+  const minDateStr = minDate.toISOString().slice(0, 10);
+
+  const handleSubmit = () => {
+    if (mode === 'unlimited') {
+      onGrant({ unlimited: true });
+      return;
+    }
+    if (mode === 'duration') {
+      const days = customDays.trim() ? Number(customDays) : durationDays;
+      if (!Number.isFinite(days) || days < 1) {
+        toast.error('Enter a valid number of days');
+        return;
+      }
+      onGrant({ durationDays: Math.floor(days) });
+      return;
+    }
+    if (!expiryDate) {
+      toast.error('Pick an expiry date');
+      return;
+    }
+    onGrant({ expiryDate: new Date(`${expiryDate}T23:59:59`).toISOString() });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+      <div
+        className="w-full max-w-md rounded-card border border-brand-border bg-surface p-6 shadow-soft"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="text-lg font-bold flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-blue-500" />
+          Grant Pro
+        </h3>
+        <p className="mt-1.5 text-sm text-text-muted">
+          Give <span className="font-medium text-foreground">{userName}</span> premium access.
+          Any current active subscription will be replaced.
+        </p>
+
+        <div className="mt-5 space-y-4">
+          <div className="grid grid-cols-3 gap-2">
+            {(
+              [
+                { id: 'unlimited', label: 'Unlimited' },
+                { id: 'duration', label: 'Duration' },
+                { id: 'until', label: 'Until date' },
+              ] as const
+            ).map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setMode(opt.id)}
+                className={`rounded-button border px-2 py-2 text-sm font-medium transition-colors ${
+                  mode === opt.id
+                    ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
+                    : 'border-brand-border text-text-muted hover:bg-surface-secondary'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {mode === 'unlimited' && (
+            <p className="text-sm text-text-muted rounded-lg bg-surface-secondary/50 p-3">
+              Lifetime Pro — no expiry date. Remains active until revoked or replaced.
+            </p>
+          )}
+
+          {mode === 'duration' && (
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                {DURATION_PRESETS.map((p) => (
+                  <button
+                    key={p.days}
+                    type="button"
+                    onClick={() => {
+                      setDurationDays(p.days);
+                      setCustomDays('');
+                    }}
+                    className={`rounded-button border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      !customDays && durationDays === p.days
+                        ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
+                        : 'border-brand-border text-text-muted hover:bg-surface-secondary'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <div>
+                <label className="text-xs font-medium text-text-muted mb-1.5 block">Custom days</label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={3650}
+                  placeholder="e.g. 14"
+                  value={customDays}
+                  onChange={(e) => setCustomDays(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
+          {mode === 'until' && (
+            <div>
+              <label className="text-xs font-medium text-text-muted mb-1.5 block">Expires on</label>
+              <Input
+                type="date"
+                min={minDateStr}
+                value={expiryDate}
+                onChange={(e) => setExpiryDate(e.target.value)}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 flex justify-end gap-3">
+          <Button variant="outline" onClick={onClose} disabled={isPending}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} disabled={isPending}>
+            {isPending ? 'Granting…' : 'Grant Pro'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function UserViewPage() {
   const params = useParams();
@@ -21,6 +184,8 @@ export default function UserViewPage() {
 
   const storeCheck = useCheckUserSubscription();
   const storeResult = storeCheck.data;
+  const grantPro = useGrantPro();
+  const [grantOpen, setGrantOpen] = useState(false);
 
   const handleStoreCheck = () => {
     storeCheck.mutate(userId, {
@@ -31,6 +196,28 @@ export default function UserViewPage() {
         toast.error(message);
       },
     });
+  };
+
+  const handleGrantPro = (payload: GrantProPayload) => {
+    grantPro.mutate(
+      { userId, payload },
+      {
+        onSuccess: (sub) => {
+          toast.success(
+            sub.expiryDate
+              ? `Pro granted until ${new Date(sub.expiryDate).toLocaleDateString()}`
+              : 'Lifetime Pro granted',
+          );
+          setGrantOpen(false);
+        },
+        onError: (err: unknown) => {
+          const message =
+            (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+            'Failed to grant Pro';
+          toast.error(message);
+        },
+      },
+    );
   };
 
   if (isDelayedLoading) {
@@ -119,15 +306,21 @@ export default function UserViewPage() {
                   Subscription
                   {user.activeSubscription && <BadgeCheck className="h-5 w-5 text-blue-500" />}
                 </CardTitle>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleStoreCheck}
-                  disabled={storeCheck.isPending}
-                >
-                  <RefreshCw className={`mr-2 h-4 w-4 ${storeCheck.isPending ? 'animate-spin' : ''}`} />
-                  {storeCheck.isPending ? 'Checking store…' : 'Check with store'}
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" onClick={() => setGrantOpen(true)}>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Grant Pro
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleStoreCheck}
+                    disabled={storeCheck.isPending}
+                  >
+                    <RefreshCw className={`mr-2 h-4 w-4 ${storeCheck.isPending ? 'animate-spin' : ''}`} />
+                    {storeCheck.isPending ? 'Checking store…' : 'Check with store'}
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
@@ -399,6 +592,14 @@ export default function UserViewPage() {
           </Card>
         </div>
       </div>
+
+      <GrantProModal
+        open={grantOpen}
+        onClose={() => setGrantOpen(false)}
+        userName={user.name}
+        isPending={grantPro.isPending}
+        onGrant={handleGrantPro}
+      />
     </PageShell>
   );
 }

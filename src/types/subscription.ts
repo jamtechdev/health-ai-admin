@@ -45,3 +45,25 @@ export interface AdminUserSubscriptionCheck {
   store: StoreCheckResult | null;
   storeError: string | null;
 }
+
+export type GrantProPayload = {
+  unlimited?: boolean;
+  durationDays?: number;
+  expiryDate?: string | null;
+  planId?: string;
+};
+
+export interface GrantedSubscription {
+  id: string;
+  userId: string;
+  planId: string;
+  planName: string | null;
+  planType: string | null;
+  platform: string | null;
+  status: string;
+  expiryDate: string | null;
+  startDate: string;
+  autoRenew: boolean;
+  isTrial: boolean;
+  daysRemaining: number;
+}
