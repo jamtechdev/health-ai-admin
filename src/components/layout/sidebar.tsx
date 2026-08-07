@@ -13,6 +13,7 @@ import {
   CreditCard,
   LineChart,
   RadioTower,
+  Smartphone,
   X,
   AlertTriangle,
   FileText,
@@ -62,6 +63,7 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       title: 'People',
       items: [
         { href: '/users', label: 'Users', icon: Users, aliases: ['/consumers', '/profile'] },
+        { href: '/user-devices', label: 'Device Logins', icon: Smartphone },
         { href: '/account-requests', label: 'Account Requests', icon: AlertTriangle },
       ],
     },

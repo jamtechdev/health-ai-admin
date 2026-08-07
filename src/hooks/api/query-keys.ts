@@ -52,6 +52,10 @@ export const queryKeys = {
       ['platform-health', 'daily-snapshots', from, to] as const,
     consumerDailySnapshots: (userId: string, from: string, to: string) =>
       ['platform-health', 'consumer-daily-snapshots', userId, from, to] as const,
+    adminUserDevices: (page: number, search: string) =>
+      ['platform-health', 'admin-user-devices', page, search] as const,
+    adminActiveSessions: (page: number, search: string) =>
+      ['platform-health', 'admin-active-sessions', page, search] as const,
   },
   accountRequests: {
     all: ['account-requests'] as const,

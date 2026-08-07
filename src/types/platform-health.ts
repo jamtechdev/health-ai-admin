@@ -165,3 +165,41 @@ export interface ConsumerDashboard {
   integrations: { oura: boolean; openai: boolean };
   pushTokens?: Array<{ platform: string; token: string; updatedAt: string }>;
 }
+
+export interface UserDeviceDirectoryItem {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  clientDeviceId: string;
+  platform: string | null;
+  provider: string | null;
+  playerId: string | null;
+  modelName: string | null;
+  appVersion: string | null;
+  lastIp: string | null;
+  userAgent: string | null;
+  timezone: string | null;
+  lastSeenAt: string;
+  lastHealthSyncAt: string | null;
+  isDebug: boolean | null;
+  deviceType: 'debug' | 'release' | null;
+  loginStatus: 'logged_in' | 'logged_out';
+  activeSessionCount: number;
+  pushPlatforms: string[];
+  wearableProviders: string[];
+}
+
+export interface ActiveSessionItem {
+  id: string;
+  sessionId: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  ip: string | null;
+  userAgent: string | null;
+  platformGuess: string;
+  createdAt: string;
+  expiresAt: string;
+  isActive: boolean;
+}

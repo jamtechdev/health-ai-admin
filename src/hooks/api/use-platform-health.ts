@@ -137,3 +137,19 @@ export function useConsumerDailySnapshots(userId: string, from: string, to: stri
     enabled: Boolean(userId),
   });
 }
+
+export function useAdminUserDevices(page: number, search: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminUserDevices(page, search),
+    queryFn: () => platformHealthService.adminUserDevices({ page, limit: 20, search }),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useAdminActiveSessions(page: number, search: string) {
+  return useQuery({
+    queryKey: queryKeys.platformHealth.adminActiveSessions(page, search),
+    queryFn: () => platformHealthService.adminActiveSessions({ page, limit: 20, search }),
+    placeholderData: keepPreviousData,
+  });
+}

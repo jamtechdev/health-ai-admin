@@ -4,6 +4,7 @@ import type {
   AdminAnalyticsOverview,
   ApiLogRecord,
   AiInsightRecord,
+  ActiveSessionItem,
   ConnectedDeviceRecord,
   ConsumerDashboard,
   ConsumerListItem,
@@ -12,6 +13,7 @@ import type {
   HealthPlatformOverview,
   HistoryResponse,
   SubscriptionRecord,
+  UserDeviceDirectoryItem,
 } from '@/types/platform-health';
 
 class PlatformHealthService extends BaseService {
@@ -77,6 +79,14 @@ class PlatformHealthService extends BaseService {
 
   consumerDailySnapshots(userId: string, from: string, to: string) {
     return this.get<HistoryResponse>(`/admin/health/consumers/${userId}/daily-snapshots`, { from, to });
+  }
+
+  adminUserDevices(params?: ListParams) {
+    return this.getPaginated<UserDeviceDirectoryItem>('/admin/health/user-devices', params);
+  }
+
+  adminActiveSessions(params?: ListParams) {
+    return this.getPaginated<ActiveSessionItem>('/admin/health/active-sessions', params);
   }
 }
 
