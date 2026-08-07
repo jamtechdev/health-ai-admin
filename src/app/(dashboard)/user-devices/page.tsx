@@ -212,7 +212,7 @@ export default function UserDevicesPage() {
           pageSize={devicesQuery.data?.meta?.limit ?? 20}
           totalItems={devicesQuery.data?.meta?.total}
           onPageChange={setPage}
-          emptyMessage="No device logins recorded yet. Ask the app to send device_id headers on login / push-token."
+          emptyMessage="No device logins recorded yet. App must send device_id on /app/push-token (or dashboard / ingest)."
           onExport={async () => {
             try {
               const result = await platformHealthService.adminUserDevices({
